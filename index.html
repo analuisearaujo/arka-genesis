@@ -4,381 +4,42 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+content="width=device-width, initial-scale=1.0">
 
 <title>ARKA Genesis</title>
 
-<style>
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-
-    margin: 0;
-
-    background: #050505;
-
-    color: white;
-
-    font-family: Arial, sans-serif;
-
-}
-
-
-/* HEADER */
-
-header {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    padding: 22px 7%;
-
-    border-bottom: 1px solid #222;
-
-}
-
-.logo {
-
-    color: #D4AF37;
-
-    font-size: 25px;
-
-    font-weight: bold;
-
-    letter-spacing: 5px;
-
-}
-
-nav {
-
-    display: flex;
-
-    gap: 25px;
-
-}
-
-nav a {
-
-    color: #888;
-
-    text-decoration: none;
-
-    font-size: 14px;
-
-}
-
-
-/* HERO */
-
-.hero {
-
-    min-height: 75vh;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    text-align: center;
-
-    padding: 70px 20px;
-
-}
-
-.hero-content {
-
-    max-width: 800px;
-
-}
-
-.tag {
-
-    color: #D4AF37;
-
-    letter-spacing: 5px;
-
-    font-size: 12px;
-
-}
-
-h1 {
-
-    font-size: clamp(50px, 10vw, 90px);
-
-    margin: 25px 0;
-
-    line-height: 1;
-
-}
-
-.subtitle {
-
-    color: #999;
-
-    font-size: 19px;
-
-    line-height: 1.6;
-
-}
-
-
-/* BOTÃO */
-
-.main-button {
-
-    margin-top: 30px;
-
-    padding: 18px 35px;
-
-    border: none;
-
-    border-radius: 50px;
-
-    background: #D4AF37;
-
-    color: #050505;
-
-    font-size: 17px;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-}
-
-
-/* OPÇÕES */
-
-.options {
-
-    display: none;
-
-    max-width: 320px;
-
-    margin: 25px auto;
-
-}
-
-.option {
-
-    display: block;
-
-    width: 100%;
-
-    padding: 16px;
-
-    margin: 10px 0;
-
-    background: #111;
-
-    color: white;
-
-    border: 1px solid #333;
-
-    border-radius: 30px;
-
-    cursor: pointer;
-
-    font-size: 16px;
-
-}
-
-.option:hover {
-
-    border-color: #D4AF37;
-
-    color: #D4AF37;
-
-}
-
-
-/* IMAGEM */
-
-#preview {
-
-    display: none;
-
-    width: 100%;
-
-    max-width: 350px;
-
-    margin: 30px auto;
-
-    border-radius: 20px;
-
-    border: 1px solid #333;
-
-}
-
-
-/* RESULTADO */
-
-#result {
-
-    display: none;
-
-    max-width: 400px;
-
-    margin: 30px auto;
-
-    padding: 25px;
-
-    background: #101010;
-
-    border: 1px solid #292929;
-
-    border-radius: 20px;
-
-}
-
-#result h2 {
-
-    color: #D4AF37;
-
-}
-
-
-/* CARDS */
-
-.features {
-
-    display: flex;
-
-    justify-content: center;
-
-    gap: 20px;
-
-    flex-wrap: wrap;
-
-    padding: 40px 7% 80px;
-
-}
-
-.card {
-
-    width: 230px;
-
-    padding: 25px;
-
-    background: #0d0d0d;
-
-    border: 1px solid #222;
-
-    border-radius: 20px;
-
-}
-
-.card h3 {
-
-    color: #D4AF37;
-
-}
-
-.card p {
-
-    color: #888;
-
-    line-height: 1.5;
-
-}
-
-
-/* FOOTER */
-
-footer {
-
-    text-align: center;
-
-    padding: 30px;
-
-    border-top: 1px solid #222;
-
-    color: #555;
-
-}
-
-
-/* CELULAR */
-
-@media (max-width: 600px) {
-
-    header {
-
-        padding: 20px;
-
-    }
-
-    nav {
-
-        gap: 10px;
-
-    }
-
-    nav a {
-
-        font-size: 11px;
-
-    }
-
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
 
 </head>
 
-
 <body>
-
 
 <header>
 
-<div class="logo">
-ARKA
-</div>
+<div class="logo">ARKA</div>
 
 <nav>
 
-<a href="#">
-Explorar
-</a>
-
-<a href="#">
-Mapa
-</a>
-
-<a href="#">
-Espécies
-</a>
+<a href="#">Explorar</a>
+<a href="#">Mapa</a>
+<a href="#">Espécies</a>
 
 </nav>
 
 </header>
 
-
-
 <section class="hero">
 
 <div class="hero-content">
-
 
 <div class="tag">
 ARKA GENESIS
 </div>
 
-
 <h1>
 Conheça a vida.
 </h1>
-
 
 <p class="subtitle">
 
@@ -387,44 +48,21 @@ registrar e compreender a biodiversidade.
 
 </p>
 
+<div class="botoes">
 
+<label for="camera" class="botao">
 
-<button
-class="main-button"
-onclick="mostrarOpcoes()">
-
-📷 Identificar um animal
-
-</button>
-
-
-
-<div
-id="options"
-class="options">
-
-
-<label
-class="option"
-for="camera">
-
-📷 Tirar uma foto
+📷 Tirar foto
 
 </label>
 
+<label for="gallery" class="botao">
 
-<label
-class="option"
-for="gallery">
-
-🖼️ Escolher da galeria
+🖼️ Galeria
 
 </label>
-
 
 </div>
-
-
 
 <input
 id="camera"
@@ -433,99 +71,64 @@ accept="image/*"
 capture="environment"
 hidden>
 
-
 <input
 id="gallery"
 type="file"
 accept="image/*"
 hidden>
 
+<img id="preview">
 
-<img
-id="preview"
-alt="Imagem selecionada">
+<div id="analise"></div>
 
+<div id="resultado">
 
-<div id="result">
+<div class="resultado-card">
 
-<h2>
-Imagem selecionada
-</h2>
+<div class="resultado-topo">
 
-<p>
-A ARKA recebeu sua fotografia.
-</p>
+<div>
 
-<p style="color:#888;">
+<h2>Crotalus durissus</h2>
 
-A inteligência de identificação
-será conectada em uma próxima etapa.
-
-</p>
+<p>Possível identificação</p>
 
 </div>
 
+<div class="badge">
+
+94%
+
+</div>
+
+</div>
+
+<div class="status">
+
+Peçonhenta • Demonstração
+
+</div>
+
+<p>
+
+A inteligência artificial será conectada
+na próxima versão da ARKA.
+
+</p>
+
+<button class="salvar">
+
+Salvar observação
+
+</button>
+
+</div>
+
+</div>
 
 </div>
 
 </section>
-
-
-
-<section class="features">
-
-
-<div class="card">
-
-<h3>
-Identificar
-</h3>
-
-<p>
-
-Utilize uma fotografia para
-identificar espécies.
-
-</p>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Registrar
-</h3>
-
-<p>
-
-Transforme observações em
-dados de biodiversidade.
-
-</p>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Explorar
-</h3>
-
-<p>
-
-Explore espécies e registros
-da biodiversidade.
-
-</p>
-
-</div>
-
-
-</section>
-
-
 
 <footer>
 
@@ -533,74 +136,7 @@ ARKA Genesis © 2026
 
 </footer>
 
-
-
-<script>
-
-function mostrarOpcoes() {
-
-    const options =
-        document.getElementById("options");
-
-    if (options.style.display === "block") {
-
-        options.style.display = "none";
-
-    } else {
-
-        options.style.display = "block";
-
-    }
-
-}
-
-
-function processarImagem(event) {
-
-    const arquivo =
-        event.target.files[0];
-
-    if (!arquivo) return;
-
-
-    const preview =
-        document.getElementById("preview");
-
-    const result =
-        document.getElementById("result");
-
-
-    preview.src =
-        URL.createObjectURL(arquivo);
-
-    preview.style.display =
-        "block";
-
-
-    result.style.display =
-        "block";
-
-}
-
-
-document
-    .getElementById("camera")
-    .addEventListener(
-        "change",
-        processarImagem
-    );
-
-
-document
-    .getElementById("gallery")
-    .addEventListener(
-        "change",
-        processarImagem
-    );
-
-</script>
-
+<script src="script.js"></script>
 
 </body>
-
 </html>
