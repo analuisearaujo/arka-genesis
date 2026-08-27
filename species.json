@@ -1,0 +1,38 @@
+[
+  {
+    "scientific_name":"Crotalus durissus",
+    "common_name":"Cascavel",
+    "family":"Viperidae",
+    "venomous":true,
+    "habitat":"Cerrado, Caatinga e campos abertos",
+    "conservation_status":"LC",
+    "description":"Serpente com chocalho na ponta da cauda."
+  },
+  {
+    "scientific_name":"Bothrops jararaca",
+    "common_name":"Jararaca",
+    "family":"Viperidae",
+    "venomous":true,
+    "habitat":"Mata Atlântica",
+    "conservation_status":"LC",
+    "description":"Serpente de fosseta."
+  },
+  {
+    "scientific_name":"Boa constrictor",
+    "common_name":"Jiboia",
+    "family":"Boidae",
+    "venomous":false,
+    "habitat":"Diversos biomas",
+    "conservation_status":"LC",
+    "description":"Constritora de grande porte."
+  },
+  {
+    "scientific_name":"Micrurus corallinus",
+    "common_name":"Coral-verdadeira",
+    "family":"Elapidae",
+    "venomous":true,
+    "habitat":"Mata Atlântica",
+    "conservation_status":"LC",
+    "description":"Serpente coral."
+  }
+]
