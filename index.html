@@ -854,6 +854,68 @@ async function salvarObservacao() {
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-</body>
+    <script>
+const SUPABASE_URL = "https://haoqywnqxeydylfzxqzz.supabase.co";
+const SUPABASE_KEY = "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7";
 
-</html>
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const camera = document.getElementById("camera");
+const gallery = document.getElementById("gallery");
+const preview = document.getElementById("preview");
+const analise = document.getElementById("analise");
+const resultado = document.getElementById("resultado");
+const mensagem = document.getElementById("mensagem");
+
+let arquivoSelecionado = null;
+
+camera.addEventListener("change", processarImagem);
+gallery.addEventListener("change", processarImagem);
+
+function processarImagem(event) {
+  const arquivo = event.target.files[0];
+  if (!arquivo) return;
+
+  arquivoSelecionado = arquivo;
+
+  preview.src = URL.createObjectURL(arquivo);
+  preview.style.display = "block";
+
+  analise.innerHTML = "🧠 Preparando imagem...";
+  resultado.style.display = "none";
+
+  setTimeout(() => {
+    analise.innerHTML = "Imagem recebida pela ARKA.";
+    resultado.style.display = "block";
+  }, 1000);
+}
+
+async function salvarObservacao() {
+
+  if (!arquivoSelecionado) {
+    mensagem.innerHTML = "Escolha uma foto primeiro.";
+    mensagem.className = "mensagem erro";
+    return;
+  }
+
+  const { error } = await supabase
+    .from("observations")
+    .insert({
+      species: "Crotalus durissus",
+      confidence: 0.94,
+      image_url: null,
+      latitude: null,
+      longitude: null
+    });
+
+  if (error) {
+    mensagem.innerHTML = "Erro: " + error.message;
+    mensagem.className = "mensagem erro";
+    console.error(error);
+    return;
+  }
+
+  mensagem.innerHTML = "✅ Observação salva!";
+  mensagem.className = "mensagem sucesso";
+}
+</script>
