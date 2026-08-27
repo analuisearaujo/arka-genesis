@@ -1,0 +1,27 @@
+{
+  "dataset_name": "ARKA Dataset V1",
+  "version": "0.1.0",
+  "purpose": "Pesquisa e desenvolvimento de identificação visual de espécies",
+  "species": [
+    {
+      "scientific_name": "Crotalus durissus",
+      "common_name": "Cascavel",
+      "images": []
+    },
+    {
+      "scientific_name": "Bothrops jararaca",
+      "common_name": "Jararaca",
+      "images": []
+    },
+    {
+      "scientific_name": "Boa constrictor",
+      "common_name": "Jiboia",
+      "images": []
+    },
+    {
+      "scientific_name": "Micrurus corallinus",
+      "common_name": "Coral-verdadeira",
+      "images": []
+    }
+  ]
+}
