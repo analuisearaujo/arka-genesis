@@ -3,143 +3,637 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 
-<title>ARKA Genesis</title>
-  
-<link rel="stylesheet" href="docs/design-system/tokens.css">
-<link rel="stylesheet" href="style.css">
-  
-<link rel="stylesheet" href="style.css">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ARKA Genesis</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #050505;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+        }
+
+        /* HEADER */
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 7%;
+            border-bottom: 1px solid #222222;
+        }
+
+        .logo {
+            color: #D4AF37;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 5px;
+        }
+
+        nav {
+            display: flex;
+            gap: 24px;
+        }
+
+        nav a {
+            color: #999999;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        nav a:hover {
+            color: #FFFFFF;
+        }
+
+        /* HERO */
+
+        .hero {
+            min-height: 78vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 70px 20px;
+        }
+
+        .hero-content {
+            width: 100%;
+            max-width: 760px;
+        }
+
+        .tag {
+            color: #D4AF37;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 5px;
+        }
+
+        h1 {
+            margin: 24px 0;
+            font-size: clamp(52px, 10vw, 90px);
+            line-height: 0.95;
+            letter-spacing: -4px;
+        }
+
+        .subtitle {
+            max-width: 600px;
+            margin: 0 auto;
+            color: #999999;
+            font-size: 18px;
+            line-height: 1.7;
+        }
+
+        /* BOTÕES */
+
+        .botoes {
+            max-width: 340px;
+            margin: 38px auto;
+        }
+
+        .botao {
+            display: block;
+            width: 100%;
+            padding: 17px;
+            margin: 12px 0;
+
+            background: #111111;
+            color: #FFFFFF;
+
+            border: 1px solid #333333;
+            border-radius: 999px;
+
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+
+            transition: 0.2s;
+        }
+
+        .botao:hover {
+            border-color: #D4AF37;
+            color: #D4AF37;
+        }
+
+        /* PREVIEW DA FOTO */
+
+        #preview {
+            display: none;
+
+            width: 100%;
+            max-width: 360px;
+
+            margin: 30px auto;
+
+            border-radius: 24px;
+            border: 1px solid #333333;
+        }
+
+        /* TEXTO DE ANÁLISE */
+
+        #analise {
+            margin-top: 20px;
+            color: #D4AF37;
+        }
+
+        /* RESULTADO */
+
+        #resultado {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .resultado-card {
+            padding: 28px;
+
+            background: #111111;
+
+            border: 1px solid #262626;
+            border-radius: 24px;
+
+            text-align: left;
+        }
+
+        .resultado-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .resultado-topo h2 {
+            margin: 0;
+            color: #D4AF37;
+        }
+
+        .resultado-topo p {
+            margin: 6px 0;
+            color: #999999;
+        }
+
+        .badge {
+            padding: 10px 14px;
+
+            background: #D4AF37;
+            color: #050505;
+
+            border-radius: 999px;
+
+            font-weight: bold;
+        }
+
+        .status {
+            margin: 20px 0;
+            color: #C9B05A;
+        }
+
+        .salvar {
+            width: 100%;
+            margin-top: 20px;
+            padding: 16px;
+
+            background: #D4AF37;
+            color: #050505;
+
+            border: none;
+            border-radius: 16px;
+
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* CARDS */
+
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+
+            padding: 40px 7% 80px;
+        }
+
+        .card {
+            width: 230px;
+
+            padding: 25px;
+
+            background: #111111;
+
+            border: 1px solid #222222;
+            border-radius: 20px;
+        }
+
+        .card h3 {
+            color: #D4AF37;
+        }
+
+        .card p {
+            color: #888888;
+            line-height: 1.5;
+        }
+
+        /* FOOTER */
+
+        footer {
+            padding: 30px;
+
+            text-align: center;
+
+            border-top: 1px solid #222222;
+
+            color: #555555;
+        }
+
+        /* CELULAR */
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 20px;
+            }
+
+            nav {
+                gap: 12px;
+            }
+
+            nav a {
+                font-size: 11px;
+            }
+
+            h1 {
+                font-size: 55px;
+            }
+
+            .hero {
+                padding-top: 50px;
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-<header>
 
-<div class="logo">ARKA</div>
+    <!-- HEADER -->
 
-<nav>
+    <header>
 
-<a href="#">Explorar</a>
-<a href="#">Mapa</a>
-<a href="#">Espécies</a>
+        <div class="logo">
+            ARKA
+        </div>
 
-</nav>
+        <nav>
 
-</header>
+            <a href="#">
+                Explorar
+            </a>
 
-<section class="hero">
+            <a href="#">
+                Mapa
+            </a>
 
-<div class="hero-content">
+            <a href="#">
+                Espécies
+            </a>
 
-<div class="tag">
-ARKA GENESIS
-</div>
+        </nav>
 
-<h1>
-Conheça a vida.
-</h1>
+    </header>
 
-<p class="subtitle">
 
-Uma nova inteligência para identificar,
-registrar e compreender a biodiversidade.
+    <!-- HERO -->
 
-</p>
+    <section class="hero">
 
-<div class="botoes">
+        <div class="hero-content">
 
-<label for="camera" class="botao">
 
-📷 Tirar foto
+            <div class="tag">
+                ARKA GENESIS
+            </div>
 
-</label>
 
-<label for="gallery" class="botao">
+            <h1>
+                Conheça a vida.
+            </h1>
 
-🖼️ Galeria
 
-</label>
+            <p class="subtitle">
 
-</div>
+                Uma nova inteligência para identificar,
+                registrar e compreender a biodiversidade.
 
-<input
-id="camera"
-type="file"
-accept="image/*"
-capture="environment"
-hidden>
+            </p>
 
-<input
-id="gallery"
-type="file"
-accept="image/*"
-hidden>
 
-<img id="preview">
+            <!-- BOTÕES -->
 
-<div id="analise"></div>
+            <div class="botoes">
 
-<div id="resultado">
 
-<div class="resultado-card">
+                <label
+                    for="camera"
+                    class="botao">
 
-<div class="resultado-topo">
+                    📷 Tirar uma foto
 
-<div>
+                </label>
 
-<h2>Crotalus durissus</h2>
 
-<p>Possível identificação</p>
+                <label
+                    for="gallery"
+                    class="botao">
 
-</div>
+                    🖼️ Escolher da galeria
 
-<div class="badge">
+                </label>
 
-94%
 
-</div>
+            </div>
 
-</div>
 
-<div class="status">
+            <!-- INPUT DA CÂMERA -->
 
-Peçonhenta • Demonstração
+            <input
+                id="camera"
+                type="file"
+                accept="image/*"
+                capture="environment"
+                hidden>
 
-</div>
 
-<p>
+            <!-- INPUT DA GALERIA -->
 
-A inteligência artificial será conectada
-na próxima versão da ARKA.
+            <input
+                id="gallery"
+                type="file"
+                accept="image/*"
+                hidden>
 
-</p>
 
-<button class="salvar">
+            <!-- PREVIEW -->
 
-Salvar observação
+            <img
+                id="preview"
+                alt="Fotografia selecionada">
 
-</button>
 
-</div>
+            <!-- STATUS -->
 
-</div>
+            <div id="analise"></div>
 
-</div>
 
-</section>
+            <!-- RESULTADO -->
 
-<footer>
+            <div id="resultado">
 
-ARKA Genesis © 2026
 
-</footer>
+                <div class="resultado-card">
 
-<script src="script.js"></script>
+
+                    <div class="resultado-topo">
+
+
+                        <div>
+
+                            <h2>
+                                ARKA Vision
+                            </h2>
+
+                            <p>
+                                Análise de imagem
+                            </p>
+
+                        </div>
+
+
+                        <div class="badge">
+                            BETA
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="status">
+
+                        Imagem recebida
+
+                    </div>
+
+
+                    <p>
+
+                        A fotografia foi recebida
+                        pela ARKA Genesis.
+
+                    </p>
+
+
+                    <p style="color:#777777;">
+
+                        A identificação automática
+                        será conectada ao ARKA Vision
+                        em uma próxima versão.
+
+                    </p>
+
+
+                    <button
+                        class="salvar"
+                        onclick="salvarObservacao()">
+
+                        Salvar observação
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- FUNCIONALIDADES -->
+
+    <section class="features">
+
+
+        <div class="card">
+
+            <h3>
+                Identificar
+            </h3>
+
+            <p>
+
+                Utilize uma fotografia para
+                identificar uma espécie.
+
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                Registrar
+            </h3>
+
+            <p>
+
+                Transforme observações em
+                dados de biodiversidade.
+
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                Explorar
+            </h3>
+
+            <p>
+
+                Explore espécies e registros
+                da biodiversidade.
+
+            </p>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        ARKA Genesis © 2026
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+
+        const camera =
+            document.getElementById("camera");
+
+
+        const gallery =
+            document.getElementById("gallery");
+
+
+        camera.addEventListener(
+            "change",
+            processarImagem
+        );
+
+
+        gallery.addEventListener(
+            "change",
+            processarImagem
+        );
+
+
+        function processarImagem(event) {
+
+
+            const arquivo =
+                event.target.files[0];
+
+
+            if (!arquivo) {
+
+                return;
+
+            }
+
+
+            const preview =
+                document.getElementById("preview");
+
+
+            const analise =
+                document.getElementById("analise");
+
+
+            const resultado =
+                document.getElementById("resultado");
+
+
+            preview.src =
+                URL.createObjectURL(arquivo);
+
+
+            preview.style.display =
+                "block";
+
+
+            resultado.style.display =
+                "none";
+
+
+            analise.innerHTML =
+                "🧠 Preparando análise...";
+
+
+            setTimeout(function() {
+
+
+                analise.innerHTML =
+                    "Imagem recebida pela ARKA.";
+
+
+                resultado.style.display =
+                    "block";
+
+
+            }, 1200);
+
+        }
+
+
+        function salvarObservacao() {
+
+
+            alert(
+                "A função de salvamento será conectada ao banco de dados da ARKA na próxima etapa."
+            );
+
+        }
+
+
+    </script>
+
 
 </body>
+
 </html>
