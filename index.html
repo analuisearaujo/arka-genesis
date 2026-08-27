@@ -854,11 +854,11 @@ async function salvarObservacao() {
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <script>
-const SUPABASE_URL = "https://haoqywnqxeydylfzxqzz.supabase.co";
-const SUPABASE_KEY = "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7";
-
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<script>
+const supabase = window.supabase.createClient(
+  "https://haoqywnqxeydylfzxqzz.supabase.co",
+  "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7"
+);
 
 const camera = document.getElementById("camera");
 const gallery = document.getElementById("gallery");
@@ -872,8 +872,8 @@ let arquivoSelecionado = null;
 camera.addEventListener("change", processarImagem);
 gallery.addEventListener("change", processarImagem);
 
-function processarImagem(event) {
-  const arquivo = event.target.files[0];
+function processarImagem(e) {
+  const arquivo = e.target.files[0];
   if (!arquivo) return;
 
   arquivoSelecionado = arquivo;
@@ -882,19 +882,16 @@ function processarImagem(event) {
   preview.style.display = "block";
 
   analise.innerHTML = "🧠 Preparando imagem...";
-  resultado.style.display = "none";
 
   setTimeout(() => {
-    analise.innerHTML = "Imagem recebida pela ARKA.";
+    analise.innerHTML = "";
     resultado.style.display = "block";
   }, 1000);
 }
 
 async function salvarObservacao() {
-
   if (!arquivoSelecionado) {
     mensagem.innerHTML = "Escolha uma foto primeiro.";
-    mensagem.className = "mensagem erro";
     return;
   }
 
@@ -909,13 +906,11 @@ async function salvarObservacao() {
     });
 
   if (error) {
-    mensagem.innerHTML = "Erro: " + error.message;
-    mensagem.className = "mensagem erro";
+    mensagem.innerHTML = "Erro do Supabase: " + error.message;
     console.error(error);
     return;
   }
 
-  mensagem.innerHTML = "✅ Observação salva!";
-  mensagem.className = "mensagem sucesso";
+  mensagem.innerHTML = "✅ Observação salva com sucesso!";
 }
 </script>
