@@ -1,65 +1,858 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ARKA Genesis</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #050505;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 7%;
+            border-bottom: 1px solid #222;
+        }
+
+        .logo {
+            color: #D4AF37;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 5px;
+        }
+
+        nav {
+            display: flex;
+            gap: 24px;
+        }
+
+        nav a {
+            color: #999;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+
+        .hero {
+            min-height: 78vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 70px 20px;
+        }
+
+        .hero-content {
+            width: 100%;
+            max-width: 760px;
+        }
+
+        .tag {
+            color: #D4AF37;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 5px;
+        }
+
+        h1 {
+            margin: 24px 0;
+            font-size: clamp(52px, 10vw, 90px);
+            line-height: 0.95;
+            letter-spacing: -4px;
+        }
+
+        .subtitle {
+            max-width: 600px;
+            margin: 0 auto;
+            color: #999;
+            font-size: 18px;
+            line-height: 1.7;
+        }
+
+        .botoes {
+            max-width: 340px;
+            margin: 38px auto;
+        }
+
+        .botao {
+            display: block;
+            width: 100%;
+            padding: 17px;
+            margin: 12px 0;
+            background: #111;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .botao:hover {
+            border-color: #D4AF37;
+            color: #D4AF37;
+        }
+
+        #preview {
+            display: none;
+            width: 100%;
+            max-width: 360px;
+            margin: 30px auto;
+            border-radius: 24px;
+            border: 1px solid #333;
+        }
+
+        #analise {
+            margin-top: 20px;
+            color: #D4AF37;
+        }
+
+        #resultado {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .resultado-card {
+            padding: 28px;
+            background: #111;
+            border: 1px solid #262626;
+            border-radius: 24px;
+            text-align: left;
+        }
+
+        .resultado-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .resultado-topo h2 {
+            margin: 0;
+            color: #D4AF37;
+        }
+
+        .resultado-topo p {
+            margin: 6px 0;
+            color: #999;
+        }
+
+        .badge {
+            padding: 10px 14px;
+            background: #D4AF37;
+            color: #050505;
+            border-radius: 999px;
+            font-weight: bold;
+        }
+
+        .status {
+            margin: 20px 0;
+            color: #C9B05A;
+        }
+
+        .salvar {
+            width: 100%;
+            margin-top: 20px;
+            padding: 16px;
+            background: #D4AF37;
+            color: #050505;
+            border: none;
+            border-radius: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .salvar:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .mensagem {
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .sucesso {
+            color: #D4AF37;
+        }
+
+        .erro {
+            color: #ff7777;
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 40px 7% 80px;
+        }
+
+        .card {
+            width: 230px;
+            padding: 25px;
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 20px;
+        }
+
+        .card h3 {
+            color: #D4AF37;
+        }
+
+        .card p {
+            color: #888;
+            line-height: 1.5;
+        }
+
+        footer {
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #222;
+            color: #555;
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 20px;
+            }
+
+            nav {
+                gap: 12px;
+            }
+
+            nav a {
+                font-size: 11px;
+            }
+
+            h1 {
+                font-size: 55px;
+            }
+
+            .hero {
+                padding-top: 50px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        ARKA
+    </div>
+
+    <nav>
+
+        <a href="#">
+            Explorar
+        </a>
+
+        <a href="#">
+            Mapa
+        </a>
+
+        <a href="#">
+            Espécies
+        </a>
+
+    </nav>
+
+</header>
+
+
+<section class="hero">
+
+    <div class="hero-content">
+
+
+        <div class="tag">
+            ARKA GENESIS
+        </div>
+
+
+        <h1>
+            Conheça a vida.
+        </h1>
+
+
+        <p class="subtitle">
+
+            Uma nova inteligência para identificar,
+            registrar e compreender a biodiversidade.
+
+        </p>
+
+
+        <div class="botoes">
+
+
+            <label
+                for="camera"
+                class="botao">
+
+                📷 Tirar uma foto
+
+            </label>
+
+
+            <label
+                for="gallery"
+                class="botao">
+
+                🖼️ Escolher da galeria
+
+            </label>
+
+
+        </div>
+
+
+        <input
+            id="camera"
+            type="file"
+            accept="image/*"
+            capture="environment"
+            hidden>
+
+
+        <input
+            id="gallery"
+            type="file"
+            accept="image/*"
+            hidden>
+
+
+        <img
+            id="preview"
+            alt="Fotografia selecionada">
+
+
+        <div id="analise"></div>
+
+
+        <div id="resultado">
+
+
+            <div class="resultado-card">
+
+
+                <div class="resultado-topo">
+
+                    <div>
+
+                        <h2>
+                            ARKA Vision
+                        </h2>
+
+                        <p>
+                            Registro de observação
+                        </p>
+
+                    </div>
+
+
+                    <div class="badge">
+                        BETA
+                    </div>
+
+                </div>
+
+
+                <div class="status">
+
+                    Possível identificação:
+                    <strong>
+                        Crotalus durissus
+                    </strong>
+
+                </div>
+
+
+                <p>
+
+                    Esta identificação é apenas
+                    uma demonstração da interface.
+                    A IA real ainda será desenvolvida.
+
+                </p>
+
+
+                <button
+                    id="salvar"
+                    class="salvar"
+                    onclick="salvarObservacao()">
+
+                    Salvar observação
+
+                </button>
+
+
+                <div
+                    id="mensagem"
+                    class="mensagem">
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<section class="features">
+
+
+    <div class="card">
+
+        <h3>
+            Identificar
+        </h3>
+
+        <p>
+
+            Utilize uma fotografia para
+            identificar uma espécie.
+
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>
+            Registrar
+        </h3>
+
+        <p>
+
+            Transforme observações em
+            dados de biodiversidade.
+
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>
+            Explorar
+        </h3>
+
+        <p>
+
+            Explore registros da
+            biodiversidade.
+
+        </p>
+
+    </div>
+
+
+</section>
+
+
+<footer>
+
+    ARKA Genesis © 2026
+
+</footer>
+
+
 <script>
-const SUPABASE_URL = "https://haoqywnqxeydylfzxqzz.supabase.co";
-const SUPABASE_KEY = "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const camera = document.getElementById("camera");
-const gallery = document.getElementById("gallery");
-const preview = document.getElementById("preview");
-const analise = document.getElementById("analise");
-const resultado = document.getElementById("resultado");
-const mensagem = document.getElementById("mensagem");
+/* =========================================
+   CONFIGURAÇÃO SUPABASE
+========================================= */
+
+
+const SUPABASE_URL =
+    "https://haoqywnqxeydylfzxqzz.supabase.co";
+
+
+const SUPABASE_KEY =
+    "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7";
+
+
+/* =========================================
+   ELEMENTOS
+========================================= */
+
+
+const camera =
+    document.getElementById("camera");
+
+
+const gallery =
+    document.getElementById("gallery");
+
+
+const preview =
+    document.getElementById("preview");
+
+
+const analise =
+    document.getElementById("analise");
+
+
+const resultado =
+    document.getElementById("resultado");
+
+
+const mensagem =
+    document.getElementById("mensagem");
+
 
 let arquivoSelecionado = null;
 
-camera.addEventListener("change", processarImagem);
-gallery.addEventListener("change", processarImagem);
+
+/* =========================================
+   CÂMERA
+========================================= */
+
+
+camera.addEventListener(
+    "change",
+    processarImagem
+);
+
+
+/* =========================================
+   GALERIA
+========================================= */
+
+
+gallery.addEventListener(
+    "change",
+    processarImagem
+);
+
+
+/* =========================================
+   PROCESSAR IMAGEM
+========================================= */
+
 
 function processarImagem(event) {
-  const arquivo = event.target.files[0];
-  if (!arquivo) return;
 
-  arquivoSelecionado = arquivo;
 
-  preview.src = URL.createObjectURL(arquivo);
-  preview.style.display = "block";
+    const arquivo =
+        event.target.files[0];
 
-  analise.innerHTML = "🧠 Preparando imagem...";
-  resultado.style.display = "none";
 
-  setTimeout(() => {
-    analise.innerHTML = "Imagem recebida pela ARKA.";
-    resultado.style.display = "block";
-  }, 1000);
+    if (!arquivo) {
+        return;
+    }
+
+
+    arquivoSelecionado =
+        arquivo;
+
+
+    preview.src =
+        URL.createObjectURL(arquivo);
+
+
+    preview.style.display =
+        "block";
+
+
+    resultado.style.display =
+        "none";
+
+
+    mensagem.innerHTML =
+        "";
+
+
+    analise.innerHTML =
+        "🧠 Preparando imagem...";
+
+
+    setTimeout(function() {
+
+
+        analise.innerHTML =
+            "Imagem recebida pela ARKA.";
+
+
+        resultado.style.display =
+            "block";
+
+
+    }, 1000);
+
 }
+
+
+/* =========================================
+   OBTER LOCALIZAÇÃO
+========================================= */
+
+
+function obterLocalizacao() {
+
+
+    return new Promise(function(resolve) {
+
+
+        if (!navigator.geolocation) {
+
+            resolve({
+                latitude: null,
+                longitude: null
+            });
+
+            return;
+        }
+
+
+        navigator.geolocation.getCurrentPosition(
+
+            function(position) {
+
+                resolve({
+
+                    latitude:
+                        position.coords.latitude,
+
+                    longitude:
+                        position.coords.longitude
+
+                });
+
+            },
+
+            function() {
+
+                resolve({
+
+                    latitude: null,
+                    longitude: null
+
+                });
+
+            },
+
+            {
+                enableHighAccuracy: false,
+                timeout: 5000,
+                maximumAge: 60000
+            }
+
+        );
+
+    });
+
+}
+
+
+/* =========================================
+   SALVAR OBSERVAÇÃO
+========================================= */
+
 
 async function salvarObservacao() {
 
-  if (!arquivoSelecionado) {
-    mensagem.innerHTML = "Escolha uma foto primeiro.";
-    mensagem.className = "mensagem erro";
-    return;
-  }
 
-  const { error } = await supabase
-    .from("observations")
-    .insert({
-      species: "Crotalus durissus",
-      confidence: 0.94,
-      image_url: null,
-      latitude: null,
-      longitude: null
-    });
+    if (!arquivoSelecionado) {
 
-  if (error) {
-    mensagem.innerHTML = "Erro: " + error.message;
-    mensagem.className = "mensagem erro";
-    console.error(error);
-    return;
-  }
+        mensagem.innerHTML =
+            "Escolha uma fotografia primeiro.";
 
-  mensagem.innerHTML = "✅ Observação salva!";
-  mensagem.className = "mensagem sucesso";
+        mensagem.className =
+            "mensagem erro";
+
+        return;
+
+    }
+
+
+    const botao =
+        document.getElementById("salvar");
+
+
+    botao.disabled =
+        true;
+
+
+    botao.innerText =
+        "Salvando...";
+
+
+    mensagem.innerHTML =
+        "Conectando ao banco da ARKA...";
+
+
+    mensagem.className =
+        "mensagem";
+
+
+    try {
+
+
+        const local =
+            await obterLocalizacao();
+
+
+        const dados = {
+
+            species:
+                "Crotalus durissus",
+
+            confidence:
+                0.94,
+
+            image_url:
+                null,
+
+            latitude:
+                local.latitude,
+
+            longitude:
+                local.longitude
+
+        };
+
+
+        const resposta =
+            await fetch(
+
+                SUPABASE_URL +
+                "/rest/v1/observations",
+
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "apikey":
+                            SUPABASE_KEY,
+
+                        "Authorization":
+                            "Bearer " +
+                            SUPABASE_KEY,
+
+                        "Prefer":
+                            "return=representation"
+
+                    },
+
+                    body:
+                        JSON.stringify(dados)
+
+                }
+
+            );
+
+
+        if (!resposta.ok) {
+
+
+            const textoErro =
+                await resposta.text();
+
+
+            throw new Error(
+                textoErro
+            );
+
+        }
+
+
+        mensagem.innerHTML =
+            "✓ Observação salva com sucesso no banco da ARKA.";
+
+
+        mensagem.className =
+            "mensagem sucesso";
+
+
+        botao.innerText =
+            "Observação salva ✓";
+
+
+    }
+
+
+    catch (erro) {
+
+
+        console.error(
+            "Erro ARKA:",
+            erro
+        );
+
+
+        mensagem.innerHTML =
+            "Não foi possível salvar. " +
+            "Verifique a Policy de INSERT da tabela observations.";
+
+
+        mensagem.className =
+            "mensagem erro";
+
+
+        botao.disabled =
+            false;
+
+
+        botao.innerText =
+            "Tentar novamente";
+
+
+    }
+
+
 }
+
+
 </script>
+
+
+</body>
+
+</html>
