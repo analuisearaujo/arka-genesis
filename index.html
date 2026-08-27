@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
@@ -19,7 +19,7 @@
         body {
             margin: 0;
             background: #050505;
-            color: #FFFFFF;
+            color: #ffffff;
             font-family: Arial, sans-serif;
         }
 
@@ -28,7 +28,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 22px 7%;
-            border-bottom: 1px solid #222222;
+            border-bottom: 1px solid #222;
         }
 
         .logo {
@@ -44,13 +44,13 @@
         }
 
         nav a {
-            color: #999999;
+            color: #999;
             text-decoration: none;
             font-size: 14px;
         }
 
         nav a:hover {
-            color: #FFFFFF;
+            color: #fff;
         }
 
         .hero {
@@ -84,7 +84,7 @@
         .subtitle {
             max-width: 600px;
             margin: 0 auto;
-            color: #999999;
+            color: #999;
             font-size: 18px;
             line-height: 1.7;
         }
@@ -99,17 +99,13 @@
             width: 100%;
             padding: 17px;
             margin: 12px 0;
-
-            background: #111111;
-            color: #FFFFFF;
-
-            border: 1px solid #333333;
+            background: #111;
+            color: #fff;
+            border: 1px solid #333;
             border-radius: 999px;
-
             cursor: pointer;
             font-size: 15px;
             font-weight: 500;
-
             transition: 0.2s;
         }
 
@@ -120,14 +116,11 @@
 
         #preview {
             display: none;
-
             width: 100%;
             max-width: 360px;
-
             margin: 30px auto;
-
             border-radius: 24px;
-            border: 1px solid #333333;
+            border: 1px solid #333;
         }
 
         #analise {
@@ -142,12 +135,9 @@
 
         .resultado-card {
             padding: 28px;
-
-            background: #111111;
-
+            background: #111;
             border: 1px solid #262626;
             border-radius: 24px;
-
             text-align: left;
         }
 
@@ -165,17 +155,14 @@
 
         .resultado-topo p {
             margin: 6px 0;
-            color: #999999;
+            color: #999;
         }
 
         .badge {
             padding: 10px 14px;
-
             background: #D4AF37;
             color: #050505;
-
             border-radius: 999px;
-
             font-weight: bold;
         }
 
@@ -188,13 +175,10 @@
             width: 100%;
             margin-top: 20px;
             padding: 16px;
-
             background: #D4AF37;
             color: #050505;
-
             border: none;
             border-radius: 16px;
-
             font-weight: bold;
             cursor: pointer;
         }
@@ -204,23 +188,33 @@
             cursor: not-allowed;
         }
 
+        .mensagem {
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .sucesso {
+            color: #D4AF37;
+        }
+
+        .erro {
+            color: #ff7777;
+        }
+
         .features {
             display: flex;
             justify-content: center;
             gap: 20px;
             flex-wrap: wrap;
-
             padding: 40px 7% 80px;
         }
 
         .card {
             width: 230px;
-
             padding: 25px;
-
-            background: #111111;
-
-            border: 1px solid #222222;
+            background: #111;
+            border: 1px solid #222;
             border-radius: 20px;
         }
 
@@ -229,18 +223,15 @@
         }
 
         .card p {
-            color: #888888;
+            color: #888;
             line-height: 1.5;
         }
 
         footer {
             padding: 30px;
-
             text-align: center;
-
-            border-top: 1px solid #222222;
-
-            color: #555555;
+            border-top: 1px solid #222;
+            color: #555;
         }
 
         @media (max-width: 600px) {
@@ -385,7 +376,7 @@
                         </h2>
 
                         <p>
-                            Análise de imagem
+                            Registro de observação
                         </p>
 
                     </div>
@@ -401,16 +392,18 @@
                 <div class="status">
 
                     Possível identificação:
-                    Crotalus durissus
+                    <strong>
+                        Crotalus durissus
+                    </strong>
 
                 </div>
 
 
                 <p>
 
-                    A imagem foi preparada para
-                    ser registrada na base de
-                    observações da ARKA.
+                    Esta identificação é apenas
+                    uma demonstração da interface.
+                    A IA real ainda será desenvolvida.
 
                 </p>
 
@@ -423,6 +416,13 @@
                     Salvar observação
 
                 </button>
+
+
+                <div
+                    id="mensagem"
+                    class="mensagem">
+
+                </div>
 
 
             </div>
@@ -479,8 +479,8 @@
 
         <p>
 
-            Explore espécies e registros
-            da biodiversidade.
+            Explore registros da
+            biodiversidade.
 
         </p>
 
@@ -499,211 +499,356 @@
 
 <script>
 
-    /*
-     * ARKA GENESIS
-     * Supabase connection
-     */
 
-    const SUPABASE_URL =
-        "https://haoqywnqxeydylfzxqzz.supabase.co";
-
-    const SUPABASE_KEY =
-        "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7";
+/* =========================================
+   CONFIGURAÇÃO SUPABASE
+========================================= */
 
 
-    const camera =
-        document.getElementById("camera");
+const SUPABASE_URL =
+    "https://haoqywnqxeydylfzxqzz.supabase.co";
 
 
-    const gallery =
-        document.getElementById("gallery");
+const SUPABASE_KEY =
+    "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7";
 
 
-    camera.addEventListener(
-        "change",
-        processarImagem
-    );
+/* =========================================
+   ELEMENTOS
+========================================= */
 
 
-    gallery.addEventListener(
-        "change",
-        processarImagem
-    );
+const camera =
+    document.getElementById("camera");
 
 
-    let arquivoSelecionado = null;
+const gallery =
+    document.getElementById("gallery");
 
 
-    function processarImagem(event) {
-
-        const arquivo =
-            event.target.files[0];
+const preview =
+    document.getElementById("preview");
 
 
-        if (!arquivo) {
-            return;
-        }
+const analise =
+    document.getElementById("analise");
 
 
-        arquivoSelecionado = arquivo;
+const resultado =
+    document.getElementById("resultado");
 
 
-        const preview =
-            document.getElementById("preview");
+const mensagem =
+    document.getElementById("mensagem");
 
 
-        const analise =
-            document.getElementById("analise");
+let arquivoSelecionado = null;
 
 
-        const resultado =
-            document.getElementById("resultado");
+/* =========================================
+   CÂMERA
+========================================= */
 
 
-        preview.src =
-            URL.createObjectURL(arquivo);
+camera.addEventListener(
+    "change",
+    processarImagem
+);
 
 
-        preview.style.display =
-            "block";
+/* =========================================
+   GALERIA
+========================================= */
 
 
-        resultado.style.display =
-            "none";
+gallery.addEventListener(
+    "change",
+    processarImagem
+);
+
+
+/* =========================================
+   PROCESSAR IMAGEM
+========================================= */
+
+
+function processarImagem(event) {
+
+
+    const arquivo =
+        event.target.files[0];
+
+
+    if (!arquivo) {
+        return;
+    }
+
+
+    arquivoSelecionado =
+        arquivo;
+
+
+    preview.src =
+        URL.createObjectURL(arquivo);
+
+
+    preview.style.display =
+        "block";
+
+
+    resultado.style.display =
+        "none";
+
+
+    mensagem.innerHTML =
+        "";
+
+
+    analise.innerHTML =
+        "🧠 Preparando imagem...";
+
+
+    setTimeout(function() {
 
 
         analise.innerHTML =
-            "🧠 Preparando análise...";
+            "Imagem recebida pela ARKA.";
 
 
-        setTimeout(function() {
-
-            analise.innerHTML =
-                "Imagem recebida pela ARKA.";
+        resultado.style.display =
+            "block";
 
 
-            resultado.style.display =
-                "block";
+    }, 1000);
 
-        }, 1200);
-
-    }
+}
 
 
-    async function salvarObservacao() {
+/* =========================================
+   OBTER LOCALIZAÇÃO
+========================================= */
 
 
-        if (!arquivoSelecionado) {
+function obterLocalizacao() {
 
-            alert(
-                "Escolha uma imagem primeiro."
-            );
+
+    return new Promise(function(resolve) {
+
+
+        if (!navigator.geolocation) {
+
+            resolve({
+                latitude: null,
+                longitude: null
+            });
 
             return;
-
         }
 
 
-        const botao =
-            document.getElementById("salvar");
+        navigator.geolocation.getCurrentPosition(
 
+            function(position) {
 
-        botao.disabled = true;
+                resolve({
 
-        botao.innerText =
-            "Salvando...";
+                    latitude:
+                        position.coords.latitude,
 
+                    longitude:
+                        position.coords.longitude
 
-        try {
+                });
 
+            },
 
-            const resposta =
-                await fetch(
-                    SUPABASE_URL +
-                    "/rest/v1/observations",
-                    {
+            function() {
 
-                        method: "POST",
+                resolve({
 
-                        headers: {
+                    latitude: null,
+                    longitude: null
 
-                            "Content-Type":
-                                "application/json",
+                });
 
-                            "apikey":
-                                SUPABASE_KEY,
+            },
 
-                            "Authorization":
-                                "Bearer " +
-                                SUPABASE_KEY,
-
-                            "Prefer":
-                                "return=minimal"
-
-                        },
-
-                        body: JSON.stringify({
-
-                            species:
-                                "Crotalus durissus",
-
-                            confidence:
-                                0.94,
-
-                            image_url:
-                                null,
-
-                            latitude:
-                                null,
-
-                            longitude:
-                                null
-
-                        })
-
-                    }
-                );
-
-
-            if (!resposta.ok) {
-
-                const erro =
-                    await resposta.text();
-
-                throw new Error(erro);
-
+            {
+                enableHighAccuracy: false,
+                timeout: 5000,
+                maximumAge: 60000
             }
 
+        );
 
-            alert(
-                "✅ Observação salva com sucesso na ARKA!"
+    });
+
+}
+
+
+/* =========================================
+   SALVAR OBSERVAÇÃO
+========================================= */
+
+
+async function salvarObservacao() {
+
+
+    if (!arquivoSelecionado) {
+
+        mensagem.innerHTML =
+            "Escolha uma fotografia primeiro.";
+
+        mensagem.className =
+            "mensagem erro";
+
+        return;
+
+    }
+
+
+    const botao =
+        document.getElementById("salvar");
+
+
+    botao.disabled =
+        true;
+
+
+    botao.innerText =
+        "Salvando...";
+
+
+    mensagem.innerHTML =
+        "Conectando ao banco da ARKA...";
+
+
+    mensagem.className =
+        "mensagem";
+
+
+    try {
+
+
+        const local =
+            await obterLocalizacao();
+
+
+        const dados = {
+
+            species:
+                "Crotalus durissus",
+
+            confidence:
+                0.94,
+
+            image_url:
+                null,
+
+            latitude:
+                local.latitude,
+
+            longitude:
+                local.longitude
+
+        };
+
+
+        const resposta =
+            await fetch(
+
+                SUPABASE_URL +
+                "/rest/v1/observations",
+
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "apikey":
+                            SUPABASE_KEY,
+
+                        "Authorization":
+                            "Bearer " +
+                            SUPABASE_KEY,
+
+                        "Prefer":
+                            "return=representation"
+
+                    },
+
+                    body:
+                        JSON.stringify(dados)
+
+                }
+
             );
 
 
-            botao.innerText =
-                "Observação salva ✓";
+        if (!resposta.ok) {
 
 
-        } catch (erro) {
+            const textoErro =
+                await resposta.text();
 
 
-            console.error(erro);
-
-
-            alert(
-                "❌ Não foi possível salvar a observação.\n\n" +
-                "Verifique a Policy de INSERT e as colunas da tabela."
+            throw new Error(
+                textoErro
             );
-
-
-            botao.disabled = false;
-
-            botao.innerText =
-                "Salvar observação";
 
         }
 
+
+        mensagem.innerHTML =
+            "✓ Observação salva com sucesso no banco da ARKA.";
+
+
+        mensagem.className =
+            "mensagem sucesso";
+
+
+        botao.innerText =
+            "Observação salva ✓";
+
+
     }
+
+
+    catch (erro) {
+
+
+        console.error(
+            "Erro ARKA:",
+            erro
+        );
+
+
+        mensagem.innerHTML =
+            "Não foi possível salvar. " +
+            "Verifique a Policy de INSERT da tabela observations.";
+
+
+        mensagem.className =
+            "mensagem erro";
+
+
+        botao.disabled =
+            false;
+
+
+        botao.innerText =
+            "Tentar novamente";
+
+
+    }
+
+
+}
+
 
 </script>
 
