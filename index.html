@@ -828,9 +828,7 @@ async function salvarObservacao() {
 
 
         mensagem.innerHTML =
-            "Não foi possível salvar. " +
-            "Verifique a Policy de INSERT da tabela observations.";
-
+    "Erro do Supabase: " + erro.message;
 
         mensagem.className =
             "mensagem erro";
