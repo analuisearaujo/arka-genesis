@@ -23,8 +23,6 @@
             font-family: Arial, sans-serif;
         }
 
-        /* HEADER */
-
         header {
             display: flex;
             justify-content: space-between;
@@ -54,8 +52,6 @@
         nav a:hover {
             color: #FFFFFF;
         }
-
-        /* HERO */
 
         .hero {
             min-height: 78vh;
@@ -93,8 +89,6 @@
             line-height: 1.7;
         }
 
-        /* BOTÕES */
-
         .botoes {
             max-width: 340px;
             margin: 38px auto;
@@ -124,8 +118,6 @@
             color: #D4AF37;
         }
 
-        /* PREVIEW DA FOTO */
-
         #preview {
             display: none;
 
@@ -138,14 +130,10 @@
             border: 1px solid #333333;
         }
 
-        /* TEXTO DE ANÁLISE */
-
         #analise {
             margin-top: 20px;
             color: #D4AF37;
         }
-
-        /* RESULTADO */
 
         #resultado {
             display: none;
@@ -211,7 +199,10 @@
             cursor: pointer;
         }
 
-        /* CARDS */
+        .salvar:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         .features {
             display: flex;
@@ -242,8 +233,6 @@
             line-height: 1.5;
         }
 
-        /* FOOTER */
-
         footer {
             padding: 30px;
 
@@ -253,8 +242,6 @@
 
             color: #555555;
         }
-
-        /* CELULAR */
 
         @media (max-width: 600px) {
 
@@ -288,350 +275,437 @@
 <body>
 
 
-    <!-- HEADER -->
+<header>
 
-    <header>
+    <div class="logo">
+        ARKA
+    </div>
 
-        <div class="logo">
-            ARKA
+    <nav>
+
+        <a href="#">
+            Explorar
+        </a>
+
+        <a href="#">
+            Mapa
+        </a>
+
+        <a href="#">
+            Espécies
+        </a>
+
+    </nav>
+
+</header>
+
+
+<section class="hero">
+
+    <div class="hero-content">
+
+
+        <div class="tag">
+            ARKA GENESIS
         </div>
 
-        <nav>
 
-            <a href="#">
-                Explorar
-            </a>
-
-            <a href="#">
-                Mapa
-            </a>
-
-            <a href="#">
-                Espécies
-            </a>
-
-        </nav>
-
-    </header>
+        <h1>
+            Conheça a vida.
+        </h1>
 
 
-    <!-- HERO -->
+        <p class="subtitle">
 
-    <section class="hero">
+            Uma nova inteligência para identificar,
+            registrar e compreender a biodiversidade.
 
-        <div class="hero-content">
-
-
-            <div class="tag">
-                ARKA GENESIS
-            </div>
+        </p>
 
 
-            <h1>
-                Conheça a vida.
-            </h1>
+        <div class="botoes">
 
 
-            <p class="subtitle">
+            <label
+                for="camera"
+                class="botao">
 
-                Uma nova inteligência para identificar,
-                registrar e compreender a biodiversidade.
+                📷 Tirar uma foto
 
-            </p>
-
-
-            <!-- BOTÕES -->
-
-            <div class="botoes">
+            </label>
 
 
-                <label
-                    for="camera"
-                    class="botao">
+            <label
+                for="gallery"
+                class="botao">
 
-                    📷 Tirar uma foto
+                🖼️ Escolher da galeria
 
-                </label>
-
-
-                <label
-                    for="gallery"
-                    class="botao">
-
-                    🖼️ Escolher da galeria
-
-                </label>
+            </label>
 
 
-            </div>
+        </div>
 
 
-            <!-- INPUT DA CÂMERA -->
-
-            <input
-                id="camera"
-                type="file"
-                accept="image/*"
-                capture="environment"
-                hidden>
+        <input
+            id="camera"
+            type="file"
+            accept="image/*"
+            capture="environment"
+            hidden>
 
 
-            <!-- INPUT DA GALERIA -->
-
-            <input
-                id="gallery"
-                type="file"
-                accept="image/*"
-                hidden>
+        <input
+            id="gallery"
+            type="file"
+            accept="image/*"
+            hidden>
 
 
-            <!-- PREVIEW -->
-
-            <img
-                id="preview"
-                alt="Fotografia selecionada">
+        <img
+            id="preview"
+            alt="Fotografia selecionada">
 
 
-            <!-- STATUS -->
-
-            <div id="analise"></div>
+        <div id="analise"></div>
 
 
-            <!-- RESULTADO -->
-
-            <div id="resultado">
+        <div id="resultado">
 
 
-                <div class="resultado-card">
+            <div class="resultado-card">
 
 
-                    <div class="resultado-topo">
+                <div class="resultado-topo">
 
+                    <div>
 
-                        <div>
+                        <h2>
+                            ARKA Vision
+                        </h2>
 
-                            <h2>
-                                ARKA Vision
-                            </h2>
-
-                            <p>
-                                Análise de imagem
-                            </p>
-
-                        </div>
-
-
-                        <div class="badge">
-                            BETA
-                        </div>
-
+                        <p>
+                            Análise de imagem
+                        </p>
 
                     </div>
 
 
-                    <div class="status">
-
-                        Imagem recebida
-
+                    <div class="badge">
+                        BETA
                     </div>
-
-
-                    <p>
-
-                        A fotografia foi recebida
-                        pela ARKA Genesis.
-
-                    </p>
-
-
-                    <p style="color:#777777;">
-
-                        A identificação automática
-                        será conectada ao ARKA Vision
-                        em uma próxima versão.
-
-                    </p>
-
-
-                    <button
-                        class="salvar"
-                        onclick="salvarObservacao()">
-
-                        Salvar observação
-
-                    </button>
-
 
                 </div>
 
 
+                <div class="status">
+
+                    Possível identificação:
+                    Crotalus durissus
+
+                </div>
+
+
+                <p>
+
+                    A imagem foi preparada para
+                    ser registrada na base de
+                    observações da ARKA.
+
+                </p>
+
+
+                <button
+                    id="salvar"
+                    class="salvar"
+                    onclick="salvarObservacao()">
+
+                    Salvar observação
+
+                </button>
+
+
             </div>
 
 
         </div>
 
-    </section>
+
+    </div>
+
+</section>
 
 
-    <!-- FUNCIONALIDADES -->
-
-    <section class="features">
+<section class="features">
 
 
-        <div class="card">
+    <div class="card">
 
-            <h3>
-                Identificar
-            </h3>
+        <h3>
+            Identificar
+        </h3>
 
-            <p>
+        <p>
 
-                Utilize uma fotografia para
-                identificar uma espécie.
+            Utilize uma fotografia para
+            identificar uma espécie.
 
-            </p>
+        </p>
 
-        </div>
-
-
-        <div class="card">
-
-            <h3>
-                Registrar
-            </h3>
-
-            <p>
-
-                Transforme observações em
-                dados de biodiversidade.
-
-            </p>
-
-        </div>
+    </div>
 
 
-        <div class="card">
+    <div class="card">
 
-            <h3>
-                Explorar
-            </h3>
+        <h3>
+            Registrar
+        </h3>
 
-            <p>
+        <p>
 
-                Explore espécies e registros
-                da biodiversidade.
+            Transforme observações em
+            dados de biodiversidade.
 
-            </p>
+        </p>
 
-        </div>
-
-
-    </section>
+    </div>
 
 
-    <!-- FOOTER -->
+    <div class="card">
 
-    <footer>
+        <h3>
+            Explorar
+        </h3>
 
-        ARKA Genesis © 2026
+        <p>
 
-    </footer>
+            Explore espécies e registros
+            da biodiversidade.
 
+        </p>
 
-    <!-- JAVASCRIPT -->
-
-    <script>
-
-
-        const camera =
-            document.getElementById("camera");
+    </div>
 
 
-        const gallery =
-            document.getElementById("gallery");
+</section>
 
 
-        camera.addEventListener(
-            "change",
-            processarImagem
-        );
+<footer>
+
+    ARKA Genesis © 2026
+
+</footer>
 
 
-        gallery.addEventListener(
-            "change",
-            processarImagem
-        );
+<script>
+
+    /*
+     * ARKA GENESIS
+     * Supabase connection
+     */
+
+    const SUPABASE_URL =
+        "https://haoqywnqxeydylfzxqzz.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7";
 
 
-        function processarImagem(event) {
+    const camera =
+        document.getElementById("camera");
 
 
-            const arquivo =
-                event.target.files[0];
+    const gallery =
+        document.getElementById("gallery");
 
 
-            if (!arquivo) {
+    camera.addEventListener(
+        "change",
+        processarImagem
+    );
 
-                return;
+
+    gallery.addEventListener(
+        "change",
+        processarImagem
+    );
+
+
+    let arquivoSelecionado = null;
+
+
+    function processarImagem(event) {
+
+        const arquivo =
+            event.target.files[0];
+
+
+        if (!arquivo) {
+            return;
+        }
+
+
+        arquivoSelecionado = arquivo;
+
+
+        const preview =
+            document.getElementById("preview");
+
+
+        const analise =
+            document.getElementById("analise");
+
+
+        const resultado =
+            document.getElementById("resultado");
+
+
+        preview.src =
+            URL.createObjectURL(arquivo);
+
+
+        preview.style.display =
+            "block";
+
+
+        resultado.style.display =
+            "none";
+
+
+        analise.innerHTML =
+            "🧠 Preparando análise...";
+
+
+        setTimeout(function() {
+
+            analise.innerHTML =
+                "Imagem recebida pela ARKA.";
+
+
+            resultado.style.display =
+                "block";
+
+        }, 1200);
+
+    }
+
+
+    async function salvarObservacao() {
+
+
+        if (!arquivoSelecionado) {
+
+            alert(
+                "Escolha uma imagem primeiro."
+            );
+
+            return;
+
+        }
+
+
+        const botao =
+            document.getElementById("salvar");
+
+
+        botao.disabled = true;
+
+        botao.innerText =
+            "Salvando...";
+
+
+        try {
+
+
+            const resposta =
+                await fetch(
+                    SUPABASE_URL +
+                    "/rest/v1/observations",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json",
+
+                            "apikey":
+                                SUPABASE_KEY,
+
+                            "Authorization":
+                                "Bearer " +
+                                SUPABASE_KEY,
+
+                            "Prefer":
+                                "return=minimal"
+
+                        },
+
+                        body: JSON.stringify({
+
+                            species:
+                                "Crotalus durissus",
+
+                            confidence:
+                                0.94,
+
+                            image_url:
+                                null,
+
+                            latitude:
+                                null,
+
+                            longitude:
+                                null
+
+                        })
+
+                    }
+                );
+
+
+            if (!resposta.ok) {
+
+                const erro =
+                    await resposta.text();
+
+                throw new Error(erro);
 
             }
 
 
-            const preview =
-                document.getElementById("preview");
+            alert(
+                "✅ Observação salva com sucesso na ARKA!"
+            );
 
 
-            const analise =
-                document.getElementById("analise");
+            botao.innerText =
+                "Observação salva ✓";
 
 
-            const resultado =
-                document.getElementById("resultado");
+        } catch (erro) {
 
 
-            preview.src =
-                URL.createObjectURL(arquivo);
-
-
-            preview.style.display =
-                "block";
-
-
-            resultado.style.display =
-                "none";
-
-
-            analise.innerHTML =
-                "🧠 Preparando análise...";
-
-
-            setTimeout(function() {
-
-
-                analise.innerHTML =
-                    "Imagem recebida pela ARKA.";
-
-
-                resultado.style.display =
-                    "block";
-
-
-            }, 1200);
-
-        }
-
-
-        function salvarObservacao() {
+            console.error(erro);
 
 
             alert(
-                "A função de salvamento será conectada ao banco de dados da ARKA na próxima etapa."
+                "❌ Não foi possível salvar a observação.\n\n" +
+                "Verifique a Policy de INSERT e as colunas da tabela."
             );
+
+
+            botao.disabled = false;
+
+            botao.innerText =
+                "Salvar observação";
 
         }
 
+    }
 
-    </script>
+</script>
 
 
 </body>
