@@ -1,0 +1,47 @@
+:root {
+
+    /* ARKA COLORS */
+
+    --arka-black: #050505;
+
+    --arka-surface: #111111;
+
+    --arka-gold: #D4AF37;
+
+    --arka-white: #FFFFFF;
+
+    --arka-gray: #999999;
+
+
+    /* TYPOGRAPHY */
+
+    --font-primary:
+        Inter,
+        Arial,
+        sans-serif;
+
+
+    /* SPACING */
+
+    --space-xs: 8px;
+
+    --space-sm: 12px;
+
+    --space-md: 20px;
+
+    --space-lg: 32px;
+
+    --space-xl: 48px;
+
+
+    /* RADIUS */
+
+    --radius-sm: 10px;
+
+    --radius-md: 16px;
+
+    --radius-lg: 24px;
+
+    --radius-pill: 999px;
+
+}
