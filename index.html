@@ -691,168 +691,70 @@ function obterLocalizacao() {
 ========================================= */
 
 
-async function salvarObservacao() {
 
 
-    if (!arquivoSelecionado) {
+        <script>
+const SUPABASE_URL = "https://haoqywnqxeydylfzxqzz.supabase.co";
+const SUPABASE_KEY = "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7";
 
-        mensagem.innerHTML =
-            "Escolha uma fotografia primeiro.";
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        mensagem.className =
-            "mensagem erro";
+const camera = document.getElementById("camera");
+const gallery = document.getElementById("gallery");
+const preview = document.getElementById("preview");
+const analise = document.getElementById("analise");
+const resultado = document.getElementById("resultado");
+const mensagem = document.getElementById("mensagem");
 
-        return;
+let arquivoSelecionado = null;
 
-    }
+camera.addEventListener("change", processarImagem);
+gallery.addEventListener("change", processarImagem);
 
+function processarImagem(event) {
+  const arquivo = event.target.files[0];
+  if (!arquivo) return;
 
-    const botao =
-        document.getElementById("salvar");
+  arquivoSelecionado = arquivo;
 
+  preview.src = URL.createObjectURL(arquivo);
+  preview.style.display = "block";
 
-    botao.disabled =
-        true;
+  analise.innerHTML = "🧠 Preparando imagem...";
+  resultado.style.display = "none";
 
-
-    botao.innerText =
-        "Salvando...";
-
-
-    mensagem.innerHTML =
-        "Conectando ao banco da ARKA...";
-
-
-    mensagem.className =
-        "mensagem";
-
-
-    try {
-
-
-        const local =
-            await obterLocalizacao();
-
-
-        const dados = {
-
-            species:
-                "Crotalus durissus",
-
-            confidence:
-                0.94,
-
-            image_url:
-                null,
-
-            latitude:
-                local.latitude,
-
-            longitude:
-                local.longitude
-
-        };
-
-
-        const resposta =
-            await fetch(
-
-                SUPABASE_URL +
-                "/rest/v1/observations",
-
-                {
-
-                    method: "POST",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json",
-
-                        "apikey":
-                            SUPABASE_KEY,
-
-                        "Authorization":
-                            "Bearer " +
-                            SUPABASE_KEY,
-
-                        "Prefer":
-                            "return=representation"
-
-                    },
-
-                    body:
-                        JSON.stringify(dados)
-
-                }
-
-            );
-
-
-        if (!resposta.ok) {
-
-
-            const textoErro =
-                await resposta.text();
-
-
-            throw new Error(
-                textoErro
-            );
-
-        }
-
-
-        mensagem.innerHTML =
-            "✓ Observação salva com sucesso no banco da ARKA.";
-
-
-        mensagem.className =
-            "mensagem sucesso";
-
-
-        botao.innerText =
-            "Observação salva ✓";
-
-
-    }
-
-
-    catch (erro) {
-
-
-        console.error(
-            "Erro ARKA:",
-            erro
-        );
-
-
-        mensagem.innerHTML =
-            "Não foi possível salvar. " +
-            "Verifique a Policy de INSERT da tabela observations.";
-
-
-        mensagem.className =
-            "mensagem erro";
-
-
-        botao.disabled =
-            false;
-
-
-        botao.innerText =
-            "Tentar novamente";
-
-
-    }
-
-
+  setTimeout(() => {
+    analise.innerHTML = "Imagem recebida pela ARKA.";
+    resultado.style.display = "block";
+  }, 1000);
 }
 
+async function salvarObservacao() {
 
+  if (!arquivoSelecionado) {
+    mensagem.innerHTML = "Escolha uma foto primeiro.";
+    mensagem.className = "mensagem erro";
+    return;
+  }
+
+  const { error } = await supabase
+    .from("observations")
+    .insert({
+      species: "Crotalus durissus",
+      confidence: 0.94,
+      image_url: null,
+      latitude: null,
+      longitude: null
+    });
+
+  if (error) {
+    mensagem.innerHTML = "Erro: " + error.message;
+    mensagem.className = "mensagem erro";
+    console.error(error);
+    return;
+  }
+
+  mensagem.innerHTML = "✅ Observação salva!";
+  mensagem.className = "mensagem sucesso";
+}
 </script>
-
-
-</body>
-
-</html>
