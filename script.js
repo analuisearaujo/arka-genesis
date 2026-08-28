@@ -13,6 +13,11 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
     "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7";
 
+const supabaseARKA =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
 // ========================================
 // ELEMENTOS DA INTERFACE
