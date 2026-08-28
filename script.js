@@ -239,11 +239,6 @@ if (botaoSalvar) {
 
 async function salvarObservacao() {
 
-
-    // ------------------------------------
-    // VERIFICAR FOTO
-    // ------------------------------------
-
     if (!arquivoSelecionado) {
 
         mostrarMensagem(
@@ -252,58 +247,154 @@ async function salvarObservacao() {
         );
 
         return;
-
     }
 
-
-    // ------------------------------------
-    // VERIFICAR SUPABASE
-    // ------------------------------------
 
     if (!supabaseARKA) {
 
         mostrarMensagem(
-            "A imagem está pronta, mas o banco ainda não está conectado.",
+            "O banco ainda não está conectado.",
             "erro"
         );
 
         return;
-
     }
 
 
-    // ------------------------------------
-    // ALTERAR BOTÃO
-    // ------------------------------------
-
     if (botaoSalvar) {
 
-        botaoSalvar.disabled =
-            true;
+        botaoSalvar.disabled = true;
 
         botaoSalvar.innerText =
-            "Salvando...";
+            "Enviando imagem...";
 
     }
 
 
     mostrarMensagem(
-        "🔄 Salvando observação...",
+        "📷 Enviando fotografia...",
         ""
     );
 
 
-    // ------------------------------------
-    // REGISTRO NO BANCO
-    // ------------------------------------
-
     try {
+
+        // ====================================
+        // 1. CRIAR NOME ÚNICO PARA A IMAGEM
+        // ====================================
+
+        const extensao =
+            arquivoSelecionado.name
+                .split(".")
+                .pop()
+                .toLowerCase();
+
+        const nomeArquivo =
+            Date.now() +
+            "-" +
+            Math.random()
+                .toString(36)
+                .substring(2) +
+            "." +
+            extensao;
+
+
+        const caminhoArquivo =
+            "observations/" +
+            nomeArquivo;
+
+
+        // ====================================
+        // 2. ENVIAR IMAGEM PARA O STORAGE
+        // ====================================
+
+        const upload =
+            await supabaseARKA
+                .storage
+                .from("animal - image")
+                .upload(
+                    caminhoArquivo,
+                    arquivoSelecionado,
+                    {
+                        contentType:
+                            arquivoSelecionado.type,
+
+                        upsert: false
+                    }
+                );
+
+
+        if (upload.error) {
+
+            console.error(
+                "ARKA — erro no upload:",
+                upload.error
+            );
+
+            mostrarMensagem(
+                "ERRO NO UPLOAD: " +
+                upload.error.message,
+                "erro"
+            );
+
+            if (botaoSalvar) {
+
+                botaoSalvar.disabled =
+                    false;
+
+                botaoSalvar.innerText =
+                    "Tentar novamente";
+
+            }
+
+            return;
+        }
+
+
+        // ====================================
+        // 3. OBTER URL PÚBLICA
+        // ====================================
+
+        const urlPublica =
+            supabaseARKA
+                .storage
+                .from("animal - image")
+                .getPublicUrl(
+                    caminhoArquivo
+                );
+
+
+        const imageUrl =
+            urlPublica.data.publicUrl;
+
+
+        console.log(
+            "ARKA — imagem enviada:",
+            imageUrl
+        );
+
+
+        // ====================================
+        // 4. SALVAR OBSERVAÇÃO
+        // ====================================
+
+        if (botaoSalvar) {
+
+            botaoSalvar.innerText =
+                "Salvando registro...";
+
+        }
+
+
+        mostrarMensagem(
+            "💾 Salvando observação...",
+            ""
+        );
+
 
         const resultadoBanco =
             await supabaseARKA
-
                 .from("observations")
-
                 .insert([
                     {
 
@@ -314,7 +405,7 @@ async function salvarObservacao() {
                             "Cascavel",
 
                         image_url:
-                            null,
+                            imageUrl,
 
                         latitude:
                             null,
@@ -330,24 +421,23 @@ async function salvarObservacao() {
 
                     }
                 ])
-
                 .select();
 
 
-        // --------------------------------
-        // ERRO DO SUPABASE
-        // --------------------------------
+        // ====================================
+        // 5. VERIFICAR ERRO DO BANCO
+        // ====================================
 
         if (resultadoBanco.error) {
 
             console.error(
-                "ARKA — erro Supabase:",
+                "ARKA — erro ao salvar observação:",
                 resultadoBanco.error
             );
 
 
             mostrarMensagem(
-                "ERRO REAL: " +
+                "ERRO AO SALVAR: " +
                 resultadoBanco.error.message,
                 "erro"
             );
@@ -364,13 +454,12 @@ async function salvarObservacao() {
             }
 
             return;
-
         }
 
 
-        // --------------------------------
-        // SUCESSO
-        // --------------------------------
+        // ====================================
+        // 6. SUCESSO
+        // ====================================
 
         console.log(
             "ARKA — observação salva:",
@@ -379,7 +468,7 @@ async function salvarObservacao() {
 
 
         mostrarMensagem(
-            "✅ Observação salva com sucesso!",
+            "✅ Fotografia e observação salvas com sucesso!",
             "sucesso"
         );
 
@@ -396,7 +485,6 @@ async function salvarObservacao() {
 
 
     } catch (erro) {
-
 
         console.error(
             "ARKA — erro inesperado:",
@@ -420,41 +508,6 @@ async function salvarObservacao() {
                 "Tentar novamente";
 
         }
-
-    }
-
-}
-
-
-// ========================================
-// MENSAGENS
-// ========================================
-
-function mostrarMensagem(
-    texto,
-    tipo
-) {
-
-    if (!mensagem) {
-
-        return;
-
-    }
-
-
-    mensagem.innerHTML =
-        texto;
-
-
-    mensagem.className =
-        "mensagem";
-
-
-    if (tipo) {
-
-        mensagem.classList.add(
-            tipo
-        );
 
     }
 
