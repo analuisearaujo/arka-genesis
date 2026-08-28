@@ -2,25 +2,27 @@
 // ARKA GENESIS — SCRIPT PRINCIPAL
 // ========================================
 
-
 // ========================================
-// CONFIGURAÇÃO SUPABASE
+// SUPABASE
 // ========================================
 
 const SUPABASE_URL =
     "https://haoqywnqxeydylfzxqzz.supabase.co";
 
 const SUPABASE_KEY =
-    "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7";
+    "SUA_PUBLISHABLE_KEY_AQUI";
 
+
+// Criar cliente somente uma vez
 const supabaseARKA =
     window.supabase.createClient(
         SUPABASE_URL,
         SUPABASE_KEY
     );
 
+
 // ========================================
-// ELEMENTOS DA INTERFACE
+// ELEMENTOS
 // ========================================
 
 const camera =
@@ -50,61 +52,6 @@ const botaoSalvar =
 // ========================================
 
 let arquivoSelecionado = null;
-
-
-
-// ========================================
-// INICIALIZAR SUPABASE
-// ========================================
-
-function iniciarBanco() {
-
-    try {
-
-        if (
-            window.supabase &&
-            SUPABASE_URL &&
-            SUPABASE_KEY &&
-            SUPABASE_KEY !== "SUA_PUBLISHABLE_KEY_AQUI"
-        ) {
-
-            supabaseARKA =
-                window.supabase.createClient(
-                    SUPABASE_URL,
-                    SUPABASE_KEY
-                );
-
-            console.log(
-                "ARKA: Supabase conectado."
-            );
-
-        } else {
-
-            console.warn(
-                "ARKA: Supabase não configurado."
-            );
-
-        }
-
-    } catch (erro) {
-
-        console.error(
-            "ARKA: erro ao iniciar Supabase.",
-            erro
-        );
-
-    
-
-    }
-
-}
-
-
-// ========================================
-// INICIAR BANCO
-// ========================================
-
-iniciarBanco();
 
 
 // ========================================
@@ -147,9 +94,7 @@ function processarImagem(event) {
 
 
     if (!arquivo) {
-
         return;
-
     }
 
 
@@ -157,10 +102,7 @@ function processarImagem(event) {
         arquivo;
 
 
-    // ------------------------------------
-    // MOSTRAR A IMAGEM PRIMEIRO
-    // ------------------------------------
-
+    // Mostrar a imagem imediatamente
     const leitor =
         new FileReader();
 
@@ -253,25 +195,24 @@ async function salvarObservacao() {
         return;
     }
 
-    if (!supabaseARKA) {
-
-        mostrarMensagem(
-            "Supabase não está conectado.",
-            "erro"
-        );
-
-        return;
-    }
 
     botaoSalvar.disabled = true;
-    botaoSalvar.innerText = "Enviando...";
+
+    botaoSalvar.innerText =
+        "Enviando fotografia...";
+
 
     mostrarMensagem(
-        "📷 Testando envio da fotografia...",
+        "📷 Enviando fotografia...",
         ""
     );
 
+
     try {
+
+        // ====================================
+        // CRIAR NOME ÚNICO
+        // ====================================
 
         const extensao =
             arquivoSelecionado.name
@@ -279,25 +220,21 @@ async function salvarObservacao() {
                 .pop()
                 .toLowerCase();
 
+
         const nomeArquivo =
-            "teste-" +
+            "observacao-" +
             Date.now() +
+            "-" +
+            Math.random()
+                .toString(36)
+                .substring(2) +
             "." +
             extensao;
 
-        console.log(
-            "ARKA: iniciando upload..."
-        );
 
-        console.log(
-            "Arquivo:",
-            arquivoSelecionado.name
-        );
-
-        console.log(
-            "Tamanho:",
-            arquivoSelecionado.size
-        );
+        // ====================================
+        // UPLOAD PARA O STORAGE
+        // ====================================
 
         const upload =
             await supabaseARKA
@@ -307,23 +244,28 @@ async function salvarObservacao() {
                     nomeArquivo,
                     arquivoSelecionado,
                     {
-                        cacheControl: "3600",
-                        upsert: true,
+                        cacheControl:
+                            "3600",
+
+                        upsert:
+                            false,
+
                         contentType:
                             arquivoSelecionado.type
                     }
                 );
 
-        console.log(
-            "ARKA: resposta do upload:",
-            upload
-        );
 
         if (upload.error) {
 
             throw upload.error;
 
         }
+
+
+        // ====================================
+        // URL PÚBLICA
+        // ====================================
 
         const publicUrl =
             supabaseARKA
@@ -333,37 +275,151 @@ async function salvarObservacao() {
                     nomeArquivo
                 );
 
+
+        const imageUrl =
+            publicUrl.data.publicUrl;
+
+
         console.log(
-            "URL da imagem:",
-            publicUrl.data.publicUrl
+            "ARKA — imagem enviada:",
+            imageUrl
         );
 
+
+        // ====================================
+        // SALVAR OBSERVAÇÃO
+        // ====================================
+
+        botaoSalvar.innerText =
+            "Salvando observação...";
+
+
         mostrarMensagem(
-            "✅ FOTO ENVIADA COM SUCESSO!",
+            "💾 Salvando observação...",
+            ""
+        );
+
+
+        const resultadoBanco =
+            await supabaseARKA
+                .from("observations")
+                .insert([
+                    {
+
+                        species:
+                            "Crotalus durissus",
+
+                        common_name:
+                            "Cascavel",
+
+                        image_url:
+                            imageUrl,
+
+                        latitude:
+                            null,
+
+                        longitude:
+                            null,
+
+                        location_name:
+                            "Teste ARKA Genesis",
+
+                        notes:
+                            "Observação criada pelo ARKA Genesis."
+
+                    }
+                ])
+                .select();
+
+
+        if (resultadoBanco.error) {
+
+            throw resultadoBanco.error;
+
+        }
+
+
+        // ====================================
+        // SUCESSO
+        // ====================================
+
+        console.log(
+            "ARKA — observação salva:",
+            resultadoBanco.data
+        );
+
+
+        mostrarMensagem(
+            "✅ Fotografia e observação salvas com sucesso!",
             "sucesso"
         );
 
-        botaoSalvar.disabled = true;
 
         botaoSalvar.innerText =
-            "Foto enviada";
+            "Observação salva";
 
-    } catch (erro) {
+
+        botaoSalvar.disabled =
+            true;
+
+    }
+
+
+    catch (erro) {
 
         console.error(
-            "ARKA — erro no upload:",
+            "ARKA — erro:",
             erro
         );
 
+
         mostrarMensagem(
-            "ERRO NO UPLOAD: " +
+            "ERRO REAL: " +
             erro.message,
             "erro"
         );
 
-        botaoSalvar.disabled = false;
+
+        botaoSalvar.disabled =
+            false;
+
 
         botaoSalvar.innerText =
             "Tentar novamente";
+
     }
+
+}
+
+
+// ========================================
+// MENSAGENS
+// ========================================
+
+function mostrarMensagem(
+    texto,
+    tipo
+) {
+
+    if (!mensagem) {
+        return;
+    }
+
+
+    mensagem.innerHTML =
+        texto;
+
+
+    mensagem.className =
+        "mensagem";
+
+
+    if (tipo) {
+
+        mensagem.classList.add(
+            tipo
+        );
+
+    }
+
 }
