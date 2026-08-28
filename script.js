@@ -20,16 +20,14 @@ function processarImagem(event) {
 
         preview.style.display = "block";
 
-        analise.innerHTML =
-            "Imagem carregada com sucesso.";
+        analise.innerHTML = "Imagem carregada com sucesso.";
 
         resultado.style.display = "block";
     };
 
     leitor.onerror = function() {
 
-        analise.innerHTML =
-            "Erro ao carregar a imagem.";
+        analise.innerHTML = "Erro ao carregar a imagem.";
 
     };
 
@@ -37,4 +35,5 @@ function processarImagem(event) {
 }
 
 camera.addEventListener("change", processarImagem);
+
 gallery.addEventListener("change", processarImagem);
