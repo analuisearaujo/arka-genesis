@@ -4,10 +4,22 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
     "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7";
 
-const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+let bancoARKA = null;
+
+function iniciarSupabase() {
+
+    if (
+        window.supabase &&
+        SUPABASE_URL &&
+        SUPABASE_KEY
+    ) {
+        bancoARKA =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_KEY
+            );
+    }
+}
 
 
 // ===============================
