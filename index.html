@@ -828,8 +828,7 @@ async function salvarObservacao() {
 
 
         mensagem.innerHTML =
-            "Não foi possível salvar. " +
-            "Verifique a Policy de INSERT da tabela observations.";
+    "ERRO REAL: " + erro.message;
 
 
         mensagem.className =
