@@ -8,16 +8,32 @@ function processarImagem(event) {
 
     const arquivo = event.target.files[0];
 
-    if (!arquivo) return;
+    if (!arquivo) {
+        return;
+    }
 
-    preview.src = URL.createObjectURL(arquivo);
+    const leitor = new FileReader();
 
-    preview.style.display = "block";
+    leitor.onload = function(e) {
 
-    analise.innerHTML = "Imagem carregada com sucesso.";
+        preview.src = e.target.result;
 
-    resultado.style.display = "block";
+        preview.style.display = "block";
+
+        analise.innerHTML = "Imagem carregada com sucesso.";
+
+        resultado.style.display = "block";
+    };
+
+    leitor.onerror = function() {
+
+        analise.innerHTML = "Erro ao carregar a imagem.";
+
+    };
+
+    leitor.readAsDataURL(arquivo);
 }
 
 camera.addEventListener("change", processarImagem);
+
 gallery.addEventListener("change", processarImagem);
