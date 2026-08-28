@@ -1,43 +1,75 @@
-const camera=document.getElementById("camera");
+const SUPABASE_URL = "https://haoqywnqxeydylfzxqzz.supabase.co/rest/v1/";
+const SUPABASE_KEY = "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7";
 
-const gallery=document.getElementById("gallery");
+const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 
-camera.addEventListener("change",processarImagem);
+const camera = document.getElementById("camera");
+const gallery = document.getElementById("gallery");
 
-gallery.addEventListener("change",processarImagem);
+camera.addEventListener("change", processarImagem);
+gallery.addEventListener("change", processarImagem);
 
-function processarImagem(event){
+let imagemSelecionada = null;
 
-const arquivo=event.target.files[0];
+function processarImagem(event) {
 
-if(!arquivo)return;
+    const arquivo = event.target.files[0];
 
-const preview=document.getElementById("preview");
+    if (!arquivo) return;
 
-const analise=document.getElementById("analise");
+    imagemSelecionada = arquivo;
 
-const resultado=document.getElementById("resultado");
+    const preview = document.getElementById("preview");
+    const analise = document.getElementById("analise");
+    const resultado = document.getElementById("resultado");
 
-preview.src=URL.createObjectURL(arquivo);
+    preview.src = URL.createObjectURL(arquivo);
+    preview.style.display = "block";
 
-preview.style.display="block";
+    resultado.style.display = "none";
 
-resultado.style.display="none";
+    analise.innerHTML = "🧠 Preparando análise...";
 
-analise.innerHTML="🧠 Preparando análise...";
+    setTimeout(() => {
 
-setTimeout(()=>{
+        analise.innerHTML = "";
 
-analise.innerHTML="";
+        resultado.style.display = "block";
 
-resultado.style.display="block";
-
-},1500);
-
+    }, 1500);
 }
 
-document.querySelector(".salvar").addEventListener("click",()=>{
+document.querySelector(".salvar").addEventListener("click", salvarObservacao);
 
-alert("Na próxima versão esta observação será salva automaticamente no banco da ARKA.");
+async function salvarObservacao() {
 
-});
+    if (!imagemSelecionada) {
+        alert("Selecione uma imagem primeiro.");
+        return;
+    }
+
+    const { data, error } = await supabase
+        .from("observations")
+        .insert([
+            {
+                species: "Crotalus durissus",
+                common_name: "Cascavel",
+                location_name: "Teste ARKA Genesis",
+                notes: "Observação criada pelo site."
+            }
+        ])
+        .select();
+
+    if (error) {
+        console.error("Erro ao salvar:", error);
+        alert("Não foi possível salvar a observação.");
+        return;
+    }
+
+    console.log("Observação salva:", data);
+
+    alert("✅ Observação salva com sucesso!");
+}
