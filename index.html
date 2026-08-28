@@ -262,9 +262,7 @@
 
 </head>
 
-
 <body>
-
 
 <header>
 
@@ -290,32 +288,24 @@
 
 </header>
 
-
 <section class="hero">
 
     <div class="hero-content">
-
 
         <div class="tag">
             ARKA GENESIS
         </div>
 
-
         <h1>
             Conheça a vida.
         </h1>
 
-
         <p class="subtitle">
-
             Uma nova inteligência para identificar,
             registrar e compreender a biodiversidade.
-
         </p>
 
-
         <div class="botoes">
-
 
             <label
                 for="camera"
@@ -325,7 +315,6 @@
 
             </label>
 
-
             <label
                 for="gallery"
                 class="botao">
@@ -334,9 +323,7 @@
 
             </label>
 
-
         </div>
-
 
         <input
             id="camera"
@@ -345,27 +332,21 @@
             capture="environment"
             hidden>
 
-
         <input
             id="gallery"
             type="file"
             accept="image/*"
             hidden>
 
-
         <img
             id="preview"
             alt="Fotografia selecionada">
 
-
         <div id="analise"></div>
-
 
         <div id="resultado">
 
-
             <div class="resultado-card">
-
 
                 <div class="resultado-topo">
 
@@ -381,13 +362,11 @@
 
                     </div>
 
-
                     <div class="badge">
                         BETA
                     </div>
 
                 </div>
-
 
                 <div class="status">
 
@@ -398,46 +377,34 @@
 
                 </div>
 
-
                 <p>
-
                     Esta identificação é apenas
                     uma demonstração da interface.
                     A IA real ainda será desenvolvida.
-
                 </p>
-
 
                 <button
                     id="salvar"
-                    class="salvar"
-                    onclick="salvarObservacao()">
+                    class="salvar">
 
                     Salvar observação
 
                 </button>
 
-
                 <div
                     id="mensagem"
                     class="mensagem">
-
                 </div>
-
 
             </div>
 
-
         </div>
-
 
     </div>
 
 </section>
 
-
 <section class="features">
-
 
     <div class="card">
 
@@ -446,14 +413,11 @@
         </h3>
 
         <p>
-
             Utilize uma fotografia para
             identificar uma espécie.
-
         </p>
 
     </div>
-
 
     <div class="card">
 
@@ -462,14 +426,11 @@
         </h3>
 
         <p>
-
             Transforme observações em
             dados de biodiversidade.
-
         </p>
 
     </div>
-
 
     <div class="card">
 
@@ -478,17 +439,13 @@
         </h3>
 
         <p>
-
             Explore registros da
             biodiversidade.
-
         </p>
 
     </div>
 
-
 </section>
-
 
 <footer>
 
@@ -496,270 +453,12 @@
 
 </footer>
 
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
+<!-- Código principal do ARKA Genesis -->
+<script src="Script.js"></script>
 
+</body>
 
-/* =========================================
-   CONFIGURAÇÃO SUPABASE
-========================================= */
-
-
-const SUPABASE_URL =
-    "https://haoqywnqxeydylfzxqzz.supabase.co";
-
-
-const SUPABASE_KEY =
-    "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7";
-
-
-/* =========================================
-   ELEMENTOS
-========================================= */
-
-
-const camera =
-    document.getElementById("camera");
-
-
-const gallery =
-    document.getElementById("gallery");
-
-
-const preview =
-    document.getElementById("preview");
-
-
-const analise =
-    document.getElementById("analise");
-
-
-const resultado =
-    document.getElementById("resultado");
-
-
-const mensagem =
-    document.getElementById("mensagem");
-
-
-let arquivoSelecionado = null;
-
-
-/* =========================================
-   CÂMERA
-========================================= */
-
-
-camera.addEventListener(
-    "change",
-    processarImagem
-);
-
-
-/* =========================================
-   GALERIA
-========================================= */
-
-
-gallery.addEventListener(
-    "change",
-    processarImagem
-);
-
-
-/* =========================================
-   PROCESSAR IMAGEM
-========================================= */
-
-
-function processarImagem(event) {
-
-
-    const arquivo =
-        event.target.files[0];
-
-
-    if (!arquivo) {
-        return;
-    }
-
-
-    arquivoSelecionado =
-        arquivo;
-
-
-    preview.src =
-        URL.createObjectURL(arquivo);
-
-
-    preview.style.display =
-        "block";
-
-
-    resultado.style.display =
-        "none";
-
-
-    mensagem.innerHTML =
-        "";
-
-
-    analise.innerHTML =
-        "🧠 Preparando imagem...";
-
-
-    setTimeout(function() {
-
-
-        analise.innerHTML =
-            "Imagem recebida pela ARKA.";
-
-
-        resultado.style.display =
-            "block";
-
-
-    }, 1000);
-
-}
-
-
-/* =========================================
-   OBTER LOCALIZAÇÃO
-========================================= */
-
-
-function obterLocalizacao() {
-
-
-    return new Promise(function(resolve) {
-
-
-        if (!navigator.geolocation) {
-
-            resolve({
-                latitude: null,
-                longitude: null
-            });
-
-            return;
-        }
-
-
-        navigator.geolocation.getCurrentPosition(
-
-            function(position) {
-
-                resolve({
-
-                    latitude:
-                        position.coords.latitude,
-
-                    longitude:
-                        position.coords.longitude
-
-                });
-
-            },
-
-            function() {
-
-
-    catch (erro) {
-
-
-        console.error(
-            "Erro ARKA:",
-            erro
-        );
-
-
-        mensagem.innerHTML =
-    "ERRO REAL: " + erro.message;
-
-
-        mensagem.className =
-            "mensagem erro";
-
-
-        botao.disabled =
-            false;
-
-
-        botao.innerText =
-            "Tentar novamente";
-
-
-    }
-
-
-}
-
-
-</script>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const supabase = window.supabase.createClient(
-  "https://haoqywnqxeydylfzxqzz.supabase.co",
-  "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7"
-);
-
-const camera = document.getElementById("camera");
-const gallery = document.getElementById("gallery");
-const preview = document.getElementById("preview");
-const analise = document.getElementById("analise");
-const resultado = document.getElementById("resultado");
-const mensagem = document.getElementById("mensagem");
-
-let arquivoSelecionado = null;
-
-camera.addEventListener("change", processarImagem);
-gallery.addEventListener("change", processarImagem);
-
-function processarImagem(e) {
-  const arquivo = e.target.files[0];
-  if (!arquivo) return;
-
-  arquivoSelecionado = arquivo;
-  preview.src = URL.createObjectURL(arquivo);
-  preview.style.display = "block";
-
-  analise.innerHTML = "🧠 Preparando imagem...";
-  resultado.style.display = "none";
-
-  setTimeout(() => {
-    analise.innerHTML = "";
-    resultado.style.display = "block";
-  }, 1000);
-}
-
-async function salvarObservacao() {
-  if (!arquivoSelecionado) {
-    mensagem.innerHTML = "Escolha uma foto primeiro.";
-    return;
-  }
-
-  mensagem.innerHTML = "🔄 Testando conexão com o banco...";
-
-  const { data, error } = await supabase
-    .from("observations")
-    .insert([{
-      Species: "TESTE_ARKA",
-      Confidence: 123456,
-      Image_url: null,
-      Latitude: null,
-      Longitude: null
-    }])
-    .select();
-
-  if (error) {
-    mensagem.innerHTML = "ERRO NOVO: " + error.message;
-    console.error("ERRO ARKA:", error);
-    return;
-  }
-
-  mensagem.innerHTML =
-    "✅ TESTE FUNCIONOU! ID: " + data[0].id;
-}
+</html>
