@@ -894,22 +894,25 @@ async function salvarObservacao() {
     return;
   }
 
-  const { error } = await supabase
-  .from("observations")
-  .insert([{
-    Species: "TESTE_AR​​KA",
-    Confidence: 123456,
-    Image_url: null,
-    Latitude: null,
-    Longitude: null
-  }]);
+  mensagem.innerHTML = "🔄 Testando conexão com o banco...";
+
+  const { data, error } = await supabase
+    .from("observations")
+    .insert([{
+      Species: "TESTE_ARKA",
+      Confidence: 123456,
+      Image_url: null,
+      Latitude: null,
+      Longitude: null
+    }])
+    .select();
 
   if (error) {
-    mensagem.innerHTML = "Erro do Supabase: " + error.message;
-    console.error(error);
+    mensagem.innerHTML = "ERRO NOVO: " + error.message;
+    console.error("ERRO ARKA:", error);
     return;
   }
 
-  mensagem.innerHTML = "✅ Observação salva com sucesso!";
+  mensagem.innerHTML =
+    "✅ TESTE FUNCIONOU! ID: " + data[0].id;
 }
-</script>
