@@ -897,11 +897,11 @@ async function salvarObservacao() {
   const { error } = await supabase
     .from("observations")
     .insert({
-      species: "Crotalus durissus",
-      confidence: 0.94,
-      image_url: null,
-      latitude: null,
-      longitude: null
+      Species: "Crotalus durissus",
+      Confidence: 0.94,
+      Image_url: null,
+      Latitude: null,
+      Longitude: null
     });
 
   if (error) {
