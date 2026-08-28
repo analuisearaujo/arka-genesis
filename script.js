@@ -51,7 +51,6 @@ const botaoSalvar =
 
 let arquivoSelecionado = null;
 
-let supabaseARKA = null;
 
 
 // ========================================
