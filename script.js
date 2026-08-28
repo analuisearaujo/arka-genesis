@@ -249,39 +249,25 @@ async function salvarObservacao() {
         return;
     }
 
-
     if (!supabaseARKA) {
 
         mostrarMensagem(
-            "O banco ainda não está conectado.",
+            "Supabase não está conectado.",
             "erro"
         );
 
         return;
     }
 
-
-    if (botaoSalvar) {
-
-        botaoSalvar.disabled = true;
-
-        botaoSalvar.innerText =
-            "Enviando imagem...";
-
-    }
-
+    botaoSalvar.disabled = true;
+    botaoSalvar.innerText = "Enviando...";
 
     mostrarMensagem(
-        "📷 Enviando fotografia...",
+        "📷 Testando envio da fotografia...",
         ""
     );
 
-
     try {
-
-        // ====================================
-        // 1. CRIAR NOME ÚNICO PARA A IMAGEM
-        // ====================================
 
         const extensao =
             arquivoSelecionado.name
@@ -290,225 +276,90 @@ async function salvarObservacao() {
                 .toLowerCase();
 
         const nomeArquivo =
+            "teste-" +
             Date.now() +
-            "-" +
-            Math.random()
-                .toString(36)
-                .substring(2) +
             "." +
             extensao;
 
+        console.log(
+            "ARKA: iniciando upload..."
+        );
 
-        const caminhoArquivo =
-            "observations/" +
-            nomeArquivo;
+        console.log(
+            "Arquivo:",
+            arquivoSelecionado.name
+        );
 
-
-        // ====================================
-        // 2. ENVIAR IMAGEM PARA O STORAGE
-        // ====================================
+        console.log(
+            "Tamanho:",
+            arquivoSelecionado.size
+        );
 
         const upload =
             await supabaseARKA
                 .storage
                 .from("animal - image")
                 .upload(
-                    caminhoArquivo,
+                    nomeArquivo,
                     arquivoSelecionado,
                     {
+                        cacheControl: "3600",
+                        upsert: true,
                         contentType:
-                            arquivoSelecionado.type,
-
-                        upsert: false
+                            arquivoSelecionado.type
                     }
                 );
 
+        console.log(
+            "ARKA: resposta do upload:",
+            upload
+        );
 
         if (upload.error) {
 
-            console.error(
-                "ARKA — erro no upload:",
-                upload.error
-            );
+            throw upload.error;
 
-            mostrarMensagem(
-                "ERRO NO UPLOAD: " +
-                upload.error.message,
-                "erro"
-            );
-
-            if (botaoSalvar) {
-
-                botaoSalvar.disabled =
-                    false;
-
-                botaoSalvar.innerText =
-                    "Tentar novamente";
-
-            }
-
-            return;
         }
 
-
-        // ====================================
-        // 3. OBTER URL PÚBLICA
-        // ====================================
-
-        const urlPublica =
+        const publicUrl =
             supabaseARKA
                 .storage
                 .from("animal - image")
                 .getPublicUrl(
-                    caminhoArquivo
+                    nomeArquivo
                 );
 
-
-        const imageUrl =
-            urlPublica.data.publicUrl;
-
-
         console.log(
-            "ARKA — imagem enviada:",
-            imageUrl
+            "URL da imagem:",
+            publicUrl.data.publicUrl
         );
-
-
-        // ====================================
-        // 4. SALVAR OBSERVAÇÃO
-        // ====================================
-
-        if (botaoSalvar) {
-
-            botaoSalvar.innerText =
-                "Salvando registro...";
-
-        }
-
 
         mostrarMensagem(
-            "💾 Salvando observação...",
-            ""
-        );
-
-
-        const resultadoBanco =
-            await supabaseARKA
-                .from("observations")
-                .insert([
-                    {
-
-                        species:
-                            "Crotalus durissus",
-
-                        common_name:
-                            "Cascavel",
-
-                        image_url:
-                            imageUrl,
-
-                        latitude:
-                            null,
-
-                        longitude:
-                            null,
-
-                        location_name:
-                            "Teste ARKA Genesis",
-
-                        notes:
-                            "Observação criada pelo ARKA Genesis."
-
-                    }
-                ])
-                .select();
-
-
-        // ====================================
-        // 5. VERIFICAR ERRO DO BANCO
-        // ====================================
-
-        if (resultadoBanco.error) {
-
-            console.error(
-                "ARKA — erro ao salvar observação:",
-                resultadoBanco.error
-            );
-
-
-            mostrarMensagem(
-                "ERRO AO SALVAR: " +
-                resultadoBanco.error.message,
-                "erro"
-            );
-
-
-            if (botaoSalvar) {
-
-                botaoSalvar.disabled =
-                    false;
-
-                botaoSalvar.innerText =
-                    "Tentar novamente";
-
-            }
-
-            return;
-        }
-
-
-        // ====================================
-        // 6. SUCESSO
-        // ====================================
-
-        console.log(
-            "ARKA — observação salva:",
-            resultadoBanco.data
-        );
-
-
-        mostrarMensagem(
-            "✅ Fotografia e observação salvas com sucesso!",
+            "✅ FOTO ENVIADA COM SUCESSO!",
             "sucesso"
         );
 
+        botaoSalvar.disabled = true;
 
-        if (botaoSalvar) {
-
-            botaoSalvar.disabled =
-                true;
-
-            botaoSalvar.innerText =
-                "Observação salva";
-
-        }
-
+        botaoSalvar.innerText =
+            "Foto enviada";
 
     } catch (erro) {
 
         console.error(
-            "ARKA — erro inesperado:",
+            "ARKA — erro no upload:",
             erro
         );
 
-
         mostrarMensagem(
-            "ERRO REAL: " +
+            "ERRO NO UPLOAD: " +
             erro.message,
             "erro"
         );
 
+        botaoSalvar.disabled = false;
 
-        if (botaoSalvar) {
-
-            botaoSalvar.disabled =
-                false;
-
-            botaoSalvar.innerText =
-                "Tentar novamente";
-
-        }
-
+        botaoSalvar.innerText =
+            "Tentar novamente";
     }
-
 }
