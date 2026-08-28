@@ -638,8 +638,8 @@ function obterLocalizacao() {
         if (!navigator.geolocation) {
 
             resolve({
-                Latitude: null,
-                Longitude: null
+                latitude: null,
+                longitude: null
             });
 
             return;
@@ -652,10 +652,10 @@ function obterLocalizacao() {
 
                 resolve({
 
-                    Latitude:
+                    latitude:
                         position.coords.latitude,
 
-                    Longitude:
+                    longitude:
                         position.coords.longitude
 
                 });
@@ -666,8 +666,8 @@ function obterLocalizacao() {
 
                 resolve({
 
-                    Latitude: null,
-                    Longitude: null
+                    latitude: null,
+                    longitude: null
 
                 });
 
@@ -736,19 +736,19 @@ async function salvarObservacao() {
 
         const dados = {
 
-            Species:
+            species:
                 "Crotalus durissus",
 
-            Confidence:
+            confidence:
                 0.94,
 
-            Image_url:
+            image_url:
                 null,
 
-            Latitude:
+            latitude:
                 local.latitude,
 
-            Longitude:
+            longitude:
                 local.longitude
 
         };
