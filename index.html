@@ -877,11 +877,11 @@ function processarImagem(e) {
   if (!arquivo) return;
 
   arquivoSelecionado = arquivo;
-
   preview.src = URL.createObjectURL(arquivo);
   preview.style.display = "block";
 
   analise.innerHTML = "🧠 Preparando imagem...";
+  resultado.style.display = "none";
 
   setTimeout(() => {
     analise.innerHTML = "";
