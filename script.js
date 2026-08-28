@@ -93,7 +93,7 @@ function iniciarBanco() {
             erro
         );
 
-        supabaseARKA = null;
+    
 
     }
 
