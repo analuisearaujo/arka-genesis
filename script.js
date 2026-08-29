@@ -1,3 +1,4 @@
+```javascript
 // ========================================
 // ARKA GENESIS
 // Script principal
@@ -45,7 +46,7 @@ const botaoSalvar =
 
 
 // ========================================
-// VARIÁVEL DA FOTO
+// VARIÁVEIS
 // ========================================
 
 let arquivoSelecionado = null;
@@ -80,9 +81,7 @@ function processarImagem(event) {
   const arquivo =
     event.target.files[0];
 
-  if (!arquivo) {
-    return;
-  }
+  if (!arquivo) return;
 
   arquivoSelecionado =
     arquivo;
@@ -146,8 +145,10 @@ function comprimirImagem(
 
       leitor.onload =
         e => {
+
           img.src =
             e.target.result;
+
         };
 
       leitor.onerror =
@@ -263,10 +264,89 @@ function comprimirImagem(
 
 
 // ========================================
+// OBTER GPS
+// ========================================
+
+function obterLocalizacao() {
+
+  return new Promise(
+    (resolve) => {
+
+      if (
+        !navigator.geolocation
+      ) {
+
+        resolve({
+          latitude: null,
+          longitude: null
+        });
+
+        return;
+
+      }
+
+
+      navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+          resolve({
+
+            latitude:
+              position.coords.latitude,
+
+            longitude:
+              position.coords.longitude
+
+          });
+
+        },
+
+        function(error) {
+
+          console.warn(
+            "ARKA — GPS não disponível:",
+            error.message
+          );
+
+          resolve({
+
+            latitude: null,
+            longitude: null
+
+          });
+
+        },
+
+        {
+
+          enableHighAccuracy:
+            true,
+
+          timeout:
+            15000,
+
+          maximumAge:
+            0
+
+        }
+
+      );
+
+    }
+  );
+
+}
+
+
+// ========================================
 // SALVAR OBSERVAÇÃO
 // ========================================
 
 async function salvarObservacao() {
+
+
+  // ---------- VERIFICAR FOTO ----------
 
   if (!arquivoSelecionado) {
 
@@ -280,16 +360,47 @@ async function salvarObservacao() {
   }
 
 
+  // ---------- DESABILITAR BOTÃO ----------
+
   botaoSalvar.disabled =
     true;
 
   botaoSalvar.innerText =
-    "Preparando...";
+    "Obtendo localização...";
 
 
   try {
 
-    // ---------- COMPRIMIR ----------
+
+    // ====================================
+    // GPS
+    // ====================================
+
+    const localizacao =
+      await obterLocalizacao();
+
+
+    const latitude =
+      localizacao.latitude;
+
+    const longitude =
+      localizacao.longitude;
+
+
+    console.log(
+      "ARKA — localização:",
+      latitude,
+      longitude
+    );
+
+
+    // ====================================
+    // COMPRIMIR
+    // ====================================
+
+    botaoSalvar.innerText =
+      "Preparando fotografia...";
+
 
     const imagem =
       await comprimirImagem(
@@ -297,7 +408,9 @@ async function salvarObservacao() {
       );
 
 
-    // ---------- NOME DO ARQUIVO ----------
+    // ====================================
+    // NOME DO ARQUIVO
+    // ====================================
 
     const nomeArquivo =
       "observacao-" +
@@ -305,7 +418,9 @@ async function salvarObservacao() {
       ".jpg";
 
 
-    // ---------- UPLOAD ----------
+    // ====================================
+    // UPLOAD
+    // ====================================
 
     botaoSalvar.innerText =
       "Enviando fotografia...";
@@ -327,6 +442,7 @@ async function salvarObservacao() {
           imagem,
 
           {
+
             cacheControl:
               "3600",
 
@@ -335,17 +451,24 @@ async function salvarObservacao() {
 
             contentType:
               "image/jpeg"
+
           }
 
         );
 
 
-    if (upload.error) {
+    if (
+      upload.error
+    ) {
+
       throw upload.error;
+
     }
 
 
-    // ---------- URL ----------
+    // ====================================
+    // URL PÚBLICA
+    // ====================================
 
     const publicUrl =
       supabaseARKA
@@ -365,7 +488,9 @@ async function salvarObservacao() {
       publicUrl.data.publicUrl;
 
 
-    // ---------- BANCO ----------
+    // ====================================
+    // SALVAR BANCO
+    // ====================================
 
     botaoSalvar.innerText =
       "Salvando observação...";
@@ -381,6 +506,7 @@ async function salvarObservacao() {
         .insert([
 
           {
+
             species:
               "Crotalus durissus",
 
@@ -391,16 +517,17 @@ async function salvarObservacao() {
               imagemUrl,
 
             latitude:
-              null,
+              latitude,
 
             longitude:
-              null,
+              longitude,
 
             location_name:
-              "Teste ARKA Genesis",
+              "Observação ARKA Genesis",
 
             notes:
               "Observação criada pelo ARKA Genesis."
+
           }
 
         ])
@@ -408,16 +535,31 @@ async function salvarObservacao() {
         .select();
 
 
-    if (banco.error) {
+    if (
+      banco.error
+    ) {
+
       throw banco.error;
+
     }
 
 
-    // ---------- SUCESSO ----------
+    // ====================================
+    // SUCESSO
+    // ====================================
+
+    console.log(
+      "ARKA — observação salva:",
+      banco.data
+    );
+
 
     mostrarMensagem(
-      "✅ Fotografia e observação salvas!",
+
+      "✅ Fotografia, localização e observação salvas!",
+
       "sucesso"
+
     );
 
 
@@ -429,16 +571,20 @@ async function salvarObservacao() {
 
   catch (erro) {
 
+
     console.error(
-      "ARKA:",
+      "ARKA — erro:",
       erro
     );
 
 
     mostrarMensagem(
+
       "ERRO REAL: " +
       erro.message,
+
       "erro"
+
     );
 
 
@@ -462,9 +608,8 @@ function mostrarMensagem(
   tipo
 ) {
 
-  if (!mensagem) {
+  if (!mensagem)
     return;
-  }
 
 
   mensagem.innerHTML =
