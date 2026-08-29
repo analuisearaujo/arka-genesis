@@ -1,183 +1,177 @@
 // ========================================
-// ARKA GENESIS — SCRIPT PRINCIPAL
+// ARKA GENESIS
+// Script principal
 // ========================================
 
-// ========================================
-// SUPABASE
-// ========================================
+// ---------- SUPABASE ----------
 
 const SUPABASE_URL =
-    "https://haoqywnqxeydylfzxqzz.supabase.co";
+  "https://haoqywnqxeydylfzxqzz.supabase.co";
 
 const SUPABASE_KEY =
-    "SUA_PUBLISHABLE_KEY_AQUI";
+  "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7";
 
-
-// Criar cliente somente uma vez
 const supabaseARKA =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 
+// ---------- ELEMENTOS ----------
 
-// ========================================
-// ELEMENTOS
-// ========================================
+const camera = document.getElementById("camera");
+const gallery = document.getElementById("gallery");
+const preview = document.getElementById("preview");
+const analise = document.getElementById("analise");
+const resultado = document.getElementById("resultado");
+const mensagem = document.getElementById("mensagem");
+const botaoSalvar = document.getElementById("salvar");
 
-const camera =
-    document.getElementById("camera");
-
-const gallery =
-    document.getElementById("gallery");
-
-const preview =
-    document.getElementById("preview");
-
-const analise =
-    document.getElementById("analise");
-
-const resultado =
-    document.getElementById("resultado");
-
-const mensagem =
-    document.getElementById("mensagem");
-
-const botaoSalvar =
-    document.getElementById("salvar");
-
-
-// ========================================
-// VARIÁVEIS
-// ========================================
+// ---------- VARIÁVEIS ----------
 
 let arquivoSelecionado = null;
 
+// ---------- EVENTOS ----------
+
+camera?.addEventListener("change", processarImagem);
+gallery?.addEventListener("change", processarImagem);
+botaoSalvar?.addEventListener("click", salvarObservacao);
 
 // ========================================
-// CÂMERA
-// ========================================
-
-if (camera) {
-
-    camera.addEventListener(
-        "change",
-        processarImagem
-    );
-
-}
-
-
-// ========================================
-// GALERIA
-// ========================================
-
-if (gallery) {
-
-    gallery.addEventListener(
-        "change",
-        processarImagem
-    );
-
-}
-
-
-// ========================================
-// PROCESSAR IMAGEM
+// PREVIEW DA IMAGEM
 // ========================================
 
 function processarImagem(event) {
 
-    const arquivo =
-        event.target.files &&
-        event.target.files[0];
+  const arquivo = event.target.files[0];
 
+  if (!arquivo) return;
 
-    if (!arquivo) {
-        return;
-    }
+  arquivoSelecionado = arquivo;
 
+  const leitor = new FileReader();
 
-    arquivoSelecionado =
-        arquivo;
+  leitor.onload = function(e) {
 
+    preview.src = e.target.result;
 
-    // Mostrar a imagem imediatamente
-    const leitor =
-        new FileReader();
+    preview.style.display = "block";
 
+    analise.innerHTML =
+      "Imagem carregada com sucesso.";
 
-    leitor.onload =
-        function(evento) {
+    resultado.style.display = "block";
 
-            if (preview) {
+    mostrarMensagem("", "");
 
-                preview.src =
-                    evento.target.result;
+  };
 
-                preview.style.display =
-                    "block";
+  leitor.onerror = function() {
 
-            }
+    analise.innerHTML =
+      "Erro ao carregar a imagem.";
 
+  };
 
-            if (analise) {
+  leitor.readAsDataURL(arquivo);
 
-                analise.innerHTML =
-                    "Imagem carregada com sucesso.";
+}
 
-            }
+// ========================================
+// COMPRIMIR IMAGEM
+// ========================================
 
+function comprimirImagem(arquivo) {
 
-            if (resultado) {
+  return new Promise((resolve, reject) => {
 
-                resultado.style.display =
-                    "block";
+    const leitor = new FileReader();
 
-            }
+    const img = new Image();
 
+    leitor.onload = e => img.src = e.target.result;
 
-            if (mensagem) {
+    leitor.onerror = reject;
 
-                mensagem.innerHTML =
-                    "";
+    img.onload = () => {
 
-            }
+      const canvas =
+        document.createElement("canvas");
 
-        };
+      const max = 1200;
 
+      let largura = img.width;
+      let altura = img.height;
 
-    leitor.onerror =
-        function() {
+      if (largura > altura) {
 
-            if (analise) {
+        if (largura > max) {
 
-                analise.innerHTML =
-                    "Não foi possível carregar a imagem.";
+          altura =
+            altura * (max / largura);
 
-            }
+          largura = max;
 
-        };
+        }
 
+      } else {
+
+        if (altura > max) {
+
+          largura =
+            largura * (max / altura);
+
+          altura = max;
+
+        }
+
+      }
+
+      canvas.width = largura;
+      canvas.height = altura;
+
+      canvas
+        .getContext("2d")
+        .drawImage(
+          img,
+          0,
+          0,
+          largura,
+          altura
+        );
+
+      canvas.toBlob(
+
+        blob => {
+
+          if (!blob) {
+
+            reject(
+              new Error(
+                "Falha ao comprimir."
+              )
+            );
+
+            return;
+          }
+
+          resolve(blob);
+
+        },
+
+        "image/jpeg",
+
+        0.8
+
+      );
+
+    };
 
     leitor.readAsDataURL(arquivo);
 
-}
-
-
-// ========================================
-// BOTÃO SALVAR
-// ========================================
-
-if (botaoSalvar) {
-
-    botaoSalvar.addEventListener(
-        "click",
-        salvarObservacao
-    );
+  });
 
 }
-
 
 // ========================================
 // SALVAR OBSERVAÇÃO
@@ -185,241 +179,142 @@ if (botaoSalvar) {
 
 async function salvarObservacao() {
 
-    if (!arquivoSelecionado) {
-
-        mostrarMensagem(
-            "Escolha uma foto primeiro.",
-            "erro"
-        );
-
-        return;
-    }
-
-
-    botaoSalvar.disabled = true;
-
-    botaoSalvar.innerText =
-        "Enviando fotografia...";
-
+  if (!arquivoSelecionado) {
 
     mostrarMensagem(
-        "📷 Enviando fotografia...",
-        ""
+      "Escolha uma foto primeiro.",
+      "erro"
     );
 
+    return;
 
-    try {
+  }
 
-        // ====================================
-        // CRIAR NOME ÚNICO
-        // ====================================
+  botaoSalvar.disabled = true;
 
-        const extensao =
-            arquivoSelecionado.name
-                .split(".")
-                .pop()
-                .toLowerCase();
+  botaoSalvar.innerText =
+    "Preparando...";
 
+  try {
 
-        const nomeArquivo =
-            "observacao-" +
-            Date.now() +
-            "-" +
-            Math.random()
-                .toString(36)
-                .substring(2) +
-            "." +
-            extensao;
+    // ---------- Comprimir ----------
 
+    const imagem =
+      await comprimirImagem(
+        arquivoSelecionado
+      );
 
-        // ====================================
-        // UPLOAD PARA O STORAGE
-        // ====================================
+    // ---------- Nome ----------
 
-        const upload =
-            await supabaseARKA
-                .storage
-                .from("animal - image")
-                .upload(
-                    nomeArquivo,
-                    arquivoSelecionado,
-                    {
-                        cacheControl:
-                            "3600",
+    const nomeArquivo =
+      "observacao-" +
+      Date.now() +
+      ".jpg";
 
-                        upsert:
-                            false,
+    botaoSalvar.innerText =
+      "Enviando fotografia...";
 
-                        contentType:
-                            arquivoSelecionado.type
-                    }
-                );
+    // ---------- Upload ----------
 
-
-        if (upload.error) {
-
-            throw upload.error;
-
-        }
-
-
-        // ====================================
-        // URL PÚBLICA
-        // ====================================
-
-        const publicUrl =
-            supabaseARKA
-                .storage
-                .from("animal - image")
-                .getPublicUrl(
-                    nomeArquivo
-                );
-
-
-        const imageUrl =
-            publicUrl.data.publicUrl;
-
-
-        console.log(
-            "ARKA — imagem enviada:",
-            imageUrl
+    const upload =
+      await supabaseARKA
+        .storage
+        .from("animal - image")
+        .upload(
+          nomeArquivo,
+          imagem,
+          {
+            cacheControl: "3600",
+            upsert: false,
+            contentType: "image/jpeg"
+          }
         );
 
+    if (upload.error)
+      throw upload.error;
 
-        // ====================================
-        // SALVAR OBSERVAÇÃO
-        // ====================================
+    // ---------- URL ----------
 
-        botaoSalvar.innerText =
-            "Salvando observação...";
-
-
-        mostrarMensagem(
-            "💾 Salvando observação...",
-            ""
+    const { data } =
+      supabaseARKA
+        .storage
+        .from("animal - image")
+        .getPublicUrl(
+          nomeArquivo
         );
 
+    botaoSalvar.innerText =
+      "Salvando observação...";
 
-        const resultadoBanco =
-            await supabaseARKA
-                .from("observations")
-                .insert([
-                    {
+    // ---------- Banco ----------
 
-                        species:
-                            "Crotalus durissus",
+    const banco =
+      await supabaseARKA
+        .from("observations")
+        .insert([
+          {
+            species: "Crotalus durissus",
+            common_name: "Cascavel",
+            image_url: data.publicUrl,
+            latitude: null,
+            longitude: null,
+            location_name: "Teste ARKA Genesis",
+            notes: "Observação criada pelo ARKA Genesis."
+          }
+        ])
+        .select();
 
-                        common_name:
-                            "Cascavel",
+    if (banco.error)
+      throw banco.error;
 
-                        image_url:
-                            imageUrl,
+    mostrarMensagem(
+      "✅ Fotografia e observação salvas!",
+      "sucesso"
+    );
 
-                        latitude:
-                            null,
+    botaoSalvar.innerText =
+      "Observação salva";
 
-                        longitude:
-                            null,
+  }
 
-                        location_name:
-                            "Teste ARKA Genesis",
+  catch (erro) {
 
-                        notes:
-                            "Observação criada pelo ARKA Genesis."
+    console.error(
+      "ARKA:",
+      erro
+    );
 
-                    }
-                ])
-                .select();
+    mostrarMensagem(
+      "ERRO: " +
+      erro.message,
+      "erro"
+    );
 
+    botaoSalvar.disabled = false;
 
-        if (resultadoBanco.error) {
+    botaoSalvar.innerText =
+      "Tentar novamente";
 
-            throw resultadoBanco.error;
-
-        }
-
-
-        // ====================================
-        // SUCESSO
-        // ====================================
-
-        console.log(
-            "ARKA — observação salva:",
-            resultadoBanco.data
-        );
-
-
-        mostrarMensagem(
-            "✅ Fotografia e observação salvas com sucesso!",
-            "sucesso"
-        );
-
-
-        botaoSalvar.innerText =
-            "Observação salva";
-
-
-        botaoSalvar.disabled =
-            true;
-
-    }
-
-
-    catch (erro) {
-
-        console.error(
-            "ARKA — erro:",
-            erro
-        );
-
-
-        mostrarMensagem(
-            "ERRO REAL: " +
-            erro.message,
-            "erro"
-        );
-
-
-        botaoSalvar.disabled =
-            false;
-
-
-        botaoSalvar.innerText =
-            "Tentar novamente";
-
-    }
+  }
 
 }
-
 
 // ========================================
 // MENSAGENS
 // ========================================
 
 function mostrarMensagem(
-    texto,
-    tipo
+  texto,
+  tipo
 ) {
 
-    if (!mensagem) {
-        return;
-    }
+  if (!mensagem) return;
 
+  mensagem.innerHTML = texto;
 
-    mensagem.innerHTML =
-        texto;
+  mensagem.className = "mensagem";
 
-
-    mensagem.className =
-        "mensagem";
-
-
-    if (tipo) {
-
-        mensagem.classList.add(
-            tipo
-        );
-
-    }
+  if (tipo)
+    mensagem.classList.add(tipo);
 
 }
