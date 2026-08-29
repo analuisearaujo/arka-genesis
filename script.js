@@ -290,17 +290,31 @@ function obterLocalizacao() {
 
         function(position) {
 
-          resolve({
+    const latitude =
+        position.coords.latitude;
 
-            latitude:
-              position.coords.latitude,
+    const longitude =
+        position.coords.longitude;
 
-            longitude:
-              position.coords.longitude
+    mostrarMensagem(
+        "📍 GPS encontrado: " +
+        latitude +
+        ", " +
+        longitude,
+        "sucesso"
+    );
 
-          });
+    resolve({
 
-        },
+        latitude:
+            latitude,
+
+        longitude:
+            longitude
+
+    });
+
+},,
 
         function(error) {
 
