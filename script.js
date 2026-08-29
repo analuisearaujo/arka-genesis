@@ -190,6 +190,57 @@ async function salvarObservacao() {
 
   }
 
+  // ========================================
+// OBTER LOCALIZAÇÃO
+// ========================================
+
+let latitude = null;
+let longitude = null;
+
+try {
+
+    const posicao = await new Promise(
+        (resolve, reject) => {
+
+            if (!navigator.geolocation) {
+
+                reject(
+                    new Error(
+                        "Geolocalização não disponível."
+                    )
+                );
+
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                resolve,
+                reject,
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+
+        }
+    );
+
+    latitude =
+        posicao.coords.latitude;
+
+    longitude =
+        posicao.coords.longitude;
+
+} catch (erro) {
+
+    console.warn(
+        "ARKA — localização não obtida:",
+        erro.message
+    );
+
+}
+
   botaoSalvar.disabled = true;
 
   botaoSalvar.innerText =
@@ -256,8 +307,8 @@ async function salvarObservacao() {
             species: "Crotalus durissus",
             common_name: "Cascavel",
             image_url: data.publicUrl,
-            latitude: null,
-            longitude: null,
+            latitude: latitude,
+            longitude: longitude,
             location_name: "Teste ARKA Genesis",
             notes: "Observação criada pelo ARKA Genesis."
           }
