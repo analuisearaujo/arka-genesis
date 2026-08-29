@@ -380,10 +380,50 @@ async function salvarObservacao() {
     true;
 
   botaoSalvar.innerText =
-    "Obtendo localização...";
+  "Preparando...";
 
+try {
 
-  try {
+    // ====================================
+    // GPS
+    // ====================================
+
+    let latitude = null;
+    let longitude = null;
+
+    try {
+
+      const localizacao =
+        await Promise.race([
+
+          obterLocalizacao(),
+
+          new Promise(resolve =>
+            setTimeout(
+              () => resolve({
+                latitude: null,
+                longitude: null
+              }),
+              5000
+            )
+          )
+
+        ]);
+
+      latitude =
+        localizacao.latitude;
+
+      longitude =
+        localizacao.longitude;
+
+    } catch (gpsErro) {
+
+      console.warn(
+        "ARKA — GPS ignorado:",
+        gpsErro
+      );
+
+    } {
 
 
     // ====================================
