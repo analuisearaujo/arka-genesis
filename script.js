@@ -249,20 +249,33 @@ async function salvarObservacao() {
     // ---------- Banco ----------
 
     const banco =
-      await supabaseARKA
-        .from("observations")
-        .insert([
-          {
-            species: "Crotalus durissus",
-            common_name: "Cascavel",
-            image_url: data.publicUrl,
-            latitude: null,
-            longitude: null,
-            location_name: "Teste ARKA Genesis",
-            notes: "Observação criada pelo ARKA Genesis."
-          }
-        ])
-        .select();
+  await supabaseARKA
+    .from("observations")
+    .insert([{
+      species: "Crotalus durissus",
+      common_name: "Cascavel",
+      image_url: imagemUrl,
+      latitude: null,
+      longitude: null,
+      location_name: "Observação ARKA Genesis",
+      notes: "Observação criada pelo ARKA Genesis."
+    }])
+    .select()
+    .single();
+
+    
+const localizacao = await obterLocalizacao();
+
+await supabaseARKA
+  .from("observations")
+  .update({
+    latitude: localizacao.latitude,
+    longitude: localizacao.longitude
+  })
+  .eq("id", idObservacao);
+if (banco.error) throw banco.error;
+
+const idObservacao = banco.data.id;
 
     if (banco.error)
       throw banco.error;
