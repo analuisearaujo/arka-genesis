@@ -1,3 +1,4 @@
+```javascript
 // ========================================
 // ARKA GENESIS
 // Script principal
@@ -45,7 +46,7 @@ const botaoSalvar =
 
 
 // ========================================
-// VARIÁVEIS
+// VARIÁVEL DA FOTO
 // ========================================
 
 let arquivoSelecionado = null;
@@ -80,7 +81,9 @@ function processarImagem(event) {
   const arquivo =
     event.target.files[0];
 
-  if (!arquivo) return;
+  if (!arquivo) {
+    return;
+  }
 
   arquivoSelecionado =
     arquivo;
@@ -144,10 +147,8 @@ function comprimirImagem(
 
       leitor.onload =
         e => {
-
           img.src =
             e.target.result;
-
         };
 
       leitor.onerror =
@@ -263,140 +264,10 @@ function comprimirImagem(
 
 
 // ========================================
-// OBTER GPS
-// ========================================
-
-function obterLocalizacao() {
-
-  return new Promise((resolve) => {
-
-    if (!navigator.geolocation) {
-
-      mostrarMensagem(
-        "❌ Este navegador não oferece geolocalização.",
-        "erro"
-      );
-
-      resolve({
-        latitude: null,
-        longitude: null
-      });
-
-      return;
-    }
-
-    mostrarMensagem(
-      "📍 Obtendo sua localização...",
-      ""
-    );
-
-    navigator.geolocation.getCurrentPosition(
-
-      function(position) {
-
-        const latitude =
-          position.coords.latitude;
-
-        const longitude =
-          position.coords.longitude;
-
-        console.log(
-          "ARKA GPS:",
-          latitude,
-          longitude
-        );
-
-        mostrarMensagem(
-          "📍 Localização encontrada!",
-          "sucesso"
-        );
-
-        resolve({
-          latitude: latitude,
-          longitude: longitude
-        });
-
-      },
-
-      function(error) {
-
-        console.error(
-          "ARKA GPS ERRO:",
-          error.code,
-          error.message
-        );
-
-        let mensagemErro =
-          "❌ Não foi possível obter o GPS.";
-
-        if (error.code === 1) {
-          mensagemErro =
-            "❌ Permissão de localização negada.";
-        }
-
-        if (error.code === 2) {
-          mensagemErro =
-            "❌ Localização indisponível.";
-        }
-
-        if (error.code === 3) {
-          mensagemErro =
-            "❌ Tempo limite para obter localização.";
-        }
-
-        mostrarMensagem(
-          mensagemErro,
-          "erro"
-        );
-
-        resolve({
-          latitude: null,
-          longitude: null
-        });
-
-      },
-
-      {
-        enableHighAccuracy: true,
-        timeout: 30000,
-        maximumAge: 0
-      }
-
-    );
-
-  });
-
-},
-
-        {
-
-          enableHighAccuracy:
-            true,
-
-          timeout:
-            15000,
-
-          maximumAge:
-            0
-
-        }
-
-      );
-
-    }
-  );
-
-}
-
-
-// ========================================
 // SALVAR OBSERVAÇÃO
 // ========================================
 
 async function salvarObservacao() {
-
-
-  // ---------- VERIFICAR FOTO ----------
 
   if (!arquivoSelecionado) {
 
@@ -410,47 +281,16 @@ async function salvarObservacao() {
   }
 
 
-  // ---------- DESABILITAR BOTÃO ----------
-
   botaoSalvar.disabled =
     true;
 
   botaoSalvar.innerText =
-    "Obtendo localização...";
+    "Preparando...";
 
 
   try {
 
-
-    // ====================================
-    // GPS
-    // ====================================
-
-    const localizacao =
-      await obterLocalizacao();
-
-
-    const latitude =
-      localizacao.latitude;
-
-    const longitude =
-      localizacao.longitude;
-
-
-    console.log(
-      "ARKA — localização:",
-      latitude,
-      longitude
-    );
-
-
-    // ====================================
-    // COMPRIMIR
-    // ====================================
-
-    botaoSalvar.innerText =
-      "Preparando fotografia...";
-
+    // ---------- COMPRIMIR ----------
 
     const imagem =
       await comprimirImagem(
@@ -458,9 +298,7 @@ async function salvarObservacao() {
       );
 
 
-    // ====================================
-    // NOME DO ARQUIVO
-    // ====================================
+    // ---------- NOME DO ARQUIVO ----------
 
     const nomeArquivo =
       "observacao-" +
@@ -468,9 +306,7 @@ async function salvarObservacao() {
       ".jpg";
 
 
-    // ====================================
-    // UPLOAD
-    // ====================================
+    // ---------- UPLOAD ----------
 
     botaoSalvar.innerText =
       "Enviando fotografia...";
@@ -492,7 +328,6 @@ async function salvarObservacao() {
           imagem,
 
           {
-
             cacheControl:
               "3600",
 
@@ -501,24 +336,17 @@ async function salvarObservacao() {
 
             contentType:
               "image/jpeg"
-
           }
 
         );
 
 
-    if (
-      upload.error
-    ) {
-
+    if (upload.error) {
       throw upload.error;
-
     }
 
 
-    // ====================================
-    // URL PÚBLICA
-    // ====================================
+    // ---------- URL ----------
 
     const publicUrl =
       supabaseARKA
@@ -538,9 +366,7 @@ async function salvarObservacao() {
       publicUrl.data.publicUrl;
 
 
-    // ====================================
-    // SALVAR BANCO
-    // ====================================
+    // ---------- BANCO ----------
 
     botaoSalvar.innerText =
       "Salvando observação...";
@@ -556,7 +382,6 @@ async function salvarObservacao() {
         .insert([
 
           {
-
             species:
               "Crotalus durissus",
 
@@ -567,17 +392,16 @@ async function salvarObservacao() {
               imagemUrl,
 
             latitude:
-              latitude,
+              null,
 
             longitude:
-              longitude,
+              null,
 
             location_name:
-              "Observação ARKA Genesis",
+              "Teste ARKA Genesis",
 
             notes:
               "Observação criada pelo ARKA Genesis."
-
           }
 
         ])
@@ -585,31 +409,16 @@ async function salvarObservacao() {
         .select();
 
 
-    if (
-      banco.error
-    ) {
-
+    if (banco.error) {
       throw banco.error;
-
     }
 
 
-    // ====================================
-    // SUCESSO
-    // ====================================
-
-    console.log(
-      "ARKA — observação salva:",
-      banco.data
-    );
-
+    // ---------- SUCESSO ----------
 
     mostrarMensagem(
-
-      "✅ Fotografia, localização e observação salvas!",
-
+      "✅ Fotografia e observação salvas!",
       "sucesso"
-
     );
 
 
@@ -621,20 +430,16 @@ async function salvarObservacao() {
 
   catch (erro) {
 
-
     console.error(
-      "ARKA — erro:",
+      "ARKA:",
       erro
     );
 
 
     mostrarMensagem(
-
       "ERRO REAL: " +
       erro.message,
-
       "erro"
-
     );
 
 
@@ -658,8 +463,9 @@ function mostrarMensagem(
   tipo
 ) {
 
-  if (!mensagem)
+  if (!mensagem) {
     return;
+  }
 
 
   mensagem.innerHTML =
