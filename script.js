@@ -17,167 +17,335 @@ const supabaseARKA =
     SUPABASE_KEY
 );
 
-// ---------- ELEMENTOS ----------
 
-const camera = document.getElementById("camera");
-const gallery = document.getElementById("gallery");
-const preview = document.getElementById("preview");
-const analise = document.getElementById("analise");
-const resultado = document.getElementById("resultado");
-const mensagem = document.getElementById("mensagem");
-const botaoSalvar = document.getElementById("salvar");
+// ========================================
+// ELEMENTOS
+// ========================================
 
-// ---------- VARIÁVEIS ----------
+const camera =
+  document.getElementById("camera");
+
+const gallery =
+  document.getElementById("gallery");
+
+const preview =
+  document.getElementById("preview");
+
+const analise =
+  document.getElementById("analise");
+
+const resultado =
+  document.getElementById("resultado");
+
+const mensagem =
+  document.getElementById("mensagem");
+
+const botaoSalvar =
+  document.getElementById("salvar");
+
+
+// ========================================
+// VARIÁVEIS
+// ========================================
 
 let arquivoSelecionado = null;
 
-// ---------- EVENTOS ----------
-
-camera?.addEventListener("change", processarImagem);
-gallery?.addEventListener("change", processarImagem);
-botaoSalvar?.addEventListener("click", salvarObservacao);
 
 // ========================================
-// PREVIEW DA IMAGEM
+// EVENTOS
+// ========================================
+
+camera?.addEventListener(
+  "change",
+  processarImagem
+);
+
+gallery?.addEventListener(
+  "change",
+  processarImagem
+);
+
+botaoSalvar?.addEventListener(
+  "click",
+  salvarObservacao
+);
+
+
+// ========================================
+// PROCESSAR IMAGEM
 // ========================================
 
 function processarImagem(event) {
 
-  const arquivo = event.target.files[0];
+  const arquivo =
+    event.target.files[0];
 
   if (!arquivo) return;
 
-  arquivoSelecionado = arquivo;
+  arquivoSelecionado =
+    arquivo;
 
-  const leitor = new FileReader();
+  const leitor =
+    new FileReader();
 
-  leitor.onload = function(e) {
+  leitor.onload =
+    function(e) {
 
-    preview.src = e.target.result;
+      preview.src =
+        e.target.result;
 
-    preview.style.display = "block";
+      preview.style.display =
+        "block";
 
-    analise.innerHTML =
-      "Imagem carregada com sucesso.";
+      analise.innerHTML =
+        "Imagem carregada com sucesso.";
 
-    resultado.style.display = "block";
+      resultado.style.display =
+        "block";
 
-    mostrarMensagem("", "");
+      mostrarMensagem(
+        "",
+        ""
+      );
 
-  };
+    };
 
-  leitor.onerror = function() {
+  leitor.onerror =
+    function() {
 
-    analise.innerHTML =
-      "Erro ao carregar a imagem.";
+      analise.innerHTML =
+        "Erro ao carregar a imagem.";
 
-  };
+    };
 
-  leitor.readAsDataURL(arquivo);
+  leitor.readAsDataURL(
+    arquivo
+  );
 
 }
+
 
 // ========================================
 // COMPRIMIR IMAGEM
 // ========================================
 
-function comprimirImagem(arquivo) {
+function comprimirImagem(
+  arquivo
+) {
 
-  return new Promise((resolve, reject) => {
+  return new Promise(
+    (resolve, reject) => {
 
-    const leitor = new FileReader();
+      const leitor =
+        new FileReader();
 
-    const img = new Image();
+      const img =
+        new Image();
 
-    leitor.onload = e => img.src = e.target.result;
+      leitor.onload =
+        e => {
 
-    leitor.onerror = reject;
+          img.src =
+            e.target.result;
 
-    img.onload = () => {
+        };
 
-      const canvas =
-        document.createElement("canvas");
+      leitor.onerror =
+        reject;
 
-      const max = 1200;
+      img.onload =
+        () => {
 
-      let largura = img.width;
-      let altura = img.height;
+          const canvas =
+            document.createElement(
+              "canvas"
+            );
 
-      if (largura > altura) {
+          const max =
+            1200;
 
-        if (largura > max) {
+          let largura =
+            img.width;
 
-          altura =
-            altura * (max / largura);
+          let altura =
+            img.height;
 
-          largura = max;
 
-        }
+          if (
+            largura > altura &&
+            largura > max
+          ) {
 
-      } else {
+            altura =
+              altura *
+              (max / largura);
 
-        if (altura > max) {
+            largura =
+              max;
 
-          largura =
-            largura * (max / altura);
+          }
 
-          altura = max;
+          else if (
+            altura > max
+          ) {
 
-        }
+            largura =
+              largura *
+              (max / altura);
+
+            altura =
+              max;
+
+          }
+
+
+          canvas.width =
+            largura;
+
+          canvas.height =
+            altura;
+
+
+          const contexto =
+            canvas.getContext(
+              "2d"
+            );
+
+
+          contexto.drawImage(
+            img,
+            0,
+            0,
+            largura,
+            altura
+          );
+
+
+          canvas.toBlob(
+
+            blob => {
+
+              if (!blob) {
+
+                reject(
+                  new Error(
+                    "Falha ao comprimir a imagem."
+                  )
+                );
+
+                return;
+
+              }
+
+              resolve(
+                blob
+              );
+
+            },
+
+            "image/jpeg",
+
+            0.8
+
+          );
+
+        };
+
+
+      leitor.readAsDataURL(
+        arquivo
+      );
+
+    }
+  );
+
+}
+
+
+// ========================================
+// OBTER GPS
+// ========================================
+
+function obterLocalizacao() {
+
+  return new Promise(
+    (resolve) => {
+
+      if (
+        !navigator.geolocation
+      ) {
+
+        resolve({
+          latitude: null,
+          longitude: null
+        });
+
+        return;
 
       }
 
-      canvas.width = largura;
-      canvas.height = altura;
 
-      canvas
-        .getContext("2d")
-        .drawImage(
-          img,
-          0,
-          0,
-          largura,
-          altura
-        );
+      navigator.geolocation.getCurrentPosition(
 
-      canvas.toBlob(
+        function(position) {
 
-        blob => {
+          resolve({
 
-          if (!blob) {
+            latitude:
+              position.coords.latitude,
 
-            reject(
-              new Error(
-                "Falha ao comprimir."
-              )
-            );
+            longitude:
+              position.coords.longitude
 
-            return;
-          }
-
-          resolve(blob);
+          });
 
         },
 
-        "image/jpeg",
+        function(error) {
 
-        0.8
+          console.warn(
+            "ARKA — GPS não disponível:",
+            error.message
+          );
+
+          resolve({
+
+            latitude: null,
+            longitude: null
+
+          });
+
+        },
+
+        {
+
+          enableHighAccuracy:
+            true,
+
+          timeout:
+            15000,
+
+          maximumAge:
+            0
+
+        }
 
       );
 
-    };
-
-    leitor.readAsDataURL(arquivo);
-
-  });
+    }
+  );
 
 }
+
 
 // ========================================
 // SALVAR OBSERVAÇÃO
 // ========================================
 
 async function salvarObservacao() {
+
+
+  // ---------- VERIFICAR FOTO ----------
 
   if (!arquivoSelecionado) {
 
@@ -190,200 +358,237 @@ async function salvarObservacao() {
 
   }
 
-  let latitude = null;
-let longitude = null;
 
-try {
+  // ---------- DESABILITAR BOTÃO ----------
 
-    const posicao = await new Promise(
-        (resolve, reject) => {
-
-            navigator.geolocation.getCurrentPosition(
-                resolve,
-                reject,
-                {
-                    enableHighAccuracy: true,
-                    timeout: 15000,
-                    maximumAge: 0
-                }
-            );
-
-        }
-    );
-
-    latitude =
-        posicao.coords.latitude;
-
-    longitude =
-        posicao.coords.longitude;
-
-    console.log(
-        "ARKA GPS:",
-        latitude,
-        longitude
-    );
-
-} catch (erro) {
-
-    console.error(
-        "ARKA GPS:",
-        erro
-    );
-
-}
-
-  // ========================================
-// OBTER LOCALIZAÇÃO
-// ========================================
-
-let latitude = null;
-let longitude = null;
-
-try {
-
-    const posicao = await new Promise(
-        (resolve, reject) => {
-
-            if (!navigator.geolocation) {
-
-                reject(
-                    new Error(
-                        "Geolocalização não disponível."
-                    )
-                );
-
-                return;
-            }
-
-            navigator.geolocation.getCurrentPosition(
-                resolve,
-                reject,
-                {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 0
-                }
-            );
-
-        }
-    );
-
-    latitude =
-        posicao.coords.latitude;
-
-    longitude =
-        posicao.coords.longitude;
-
-} catch (erro) {
-
-    console.warn(
-        "ARKA — localização não obtida:",
-        erro.message
-    );
-
-}
-
-  botaoSalvar.disabled = true;
+  botaoSalvar.disabled =
+    true;
 
   botaoSalvar.innerText =
-    "Preparando...";
+    "Obtendo localização...";
+
 
   try {
 
-    // ---------- Comprimir ----------
+
+    // ====================================
+    // GPS
+    // ====================================
+
+    const localizacao =
+      await obterLocalizacao();
+
+
+    const latitude =
+      localizacao.latitude;
+
+    const longitude =
+      localizacao.longitude;
+
+
+    console.log(
+      "ARKA — localização:",
+      latitude,
+      longitude
+    );
+
+
+    // ====================================
+    // COMPRIMIR
+    // ====================================
+
+    botaoSalvar.innerText =
+      "Preparando fotografia...";
+
 
     const imagem =
       await comprimirImagem(
         arquivoSelecionado
       );
 
-    // ---------- Nome ----------
+
+    // ====================================
+    // NOME DO ARQUIVO
+    // ====================================
 
     const nomeArquivo =
       "observacao-" +
       Date.now() +
       ".jpg";
 
+
+    // ====================================
+    // UPLOAD
+    // ====================================
+
     botaoSalvar.innerText =
       "Enviando fotografia...";
 
-    // ---------- Upload ----------
 
     const upload =
       await supabaseARKA
+
         .storage
-        .from("animal - image")
+
+        .from(
+          "animal - image"
+        )
+
         .upload(
+
           nomeArquivo,
+
           imagem,
+
           {
-            cacheControl: "3600",
-            upsert: false,
-            contentType: "image/jpeg"
+
+            cacheControl:
+              "3600",
+
+            upsert:
+              false,
+
+            contentType:
+              "image/jpeg"
+
           }
+
         );
 
-    if (upload.error)
+
+    if (
+      upload.error
+    ) {
+
       throw upload.error;
 
-    // ---------- URL ----------
+    }
 
-    const { data } =
+
+    // ====================================
+    // URL PÚBLICA
+    // ====================================
+
+    const publicUrl =
       supabaseARKA
+
         .storage
-        .from("animal - image")
+
+        .from(
+          "animal - image"
+        )
+
         .getPublicUrl(
           nomeArquivo
         );
 
+
+    const imagemUrl =
+      publicUrl.data.publicUrl;
+
+
+    // ====================================
+    // SALVAR BANCO
+    // ====================================
+
     botaoSalvar.innerText =
       "Salvando observação...";
 
-    // ---------- Banco ----------
 
     const banco =
       await supabaseARKA
-        .from("observations")
+
+        .from(
+          "observations"
+        )
+
         .insert([
+
           {
-            species: "Crotalus durissus",
-            common_name: "Cascavel",
-            image_url: data.publicUrl,
-            latitude: latitude,
-            longitude: longitude,
-            location_name: "Teste ARKA Genesis",
-            notes: "Observação criada pelo ARKA Genesis."
+
+            species:
+              "Crotalus durissus",
+
+            common_name:
+              "Cascavel",
+
+            image_url:
+              imagemUrl,
+
+            latitude:
+              latitude,
+
+            longitude:
+              longitude,
+
+            location_name:
+              "Observação ARKA Genesis",
+
+            notes:
+              "Observação criada pelo ARKA Genesis."
+
           }
+
         ])
+
         .select();
 
-    if (banco.error)
+
+    if (
+      banco.error
+    ) {
+
       throw banco.error;
 
-    mostrarMensagem(
-      "✅ Fotografia e observação salvas!",
-      "sucesso"
+    }
+
+
+    // ====================================
+    // SUCESSO
+    // ====================================
+
+    console.log(
+      "ARKA — observação salva:",
+      banco.data
     );
+
+
+    mostrarMensagem(
+
+      "✅ Fotografia, localização e observação salvas!",
+
+      "sucesso"
+
+    );
+
 
     botaoSalvar.innerText =
       "Observação salva";
+
 
   }
 
   catch (erro) {
 
+
     console.error(
-      "ARKA:",
+      "ARKA — erro:",
       erro
     );
 
+
     mostrarMensagem(
-      "ERRO: " +
+
+      "ERRO REAL: " +
       erro.message,
+
       "erro"
+
     );
 
-    botaoSalvar.disabled = false;
+
+    botaoSalvar.disabled =
+      false;
 
     botaoSalvar.innerText =
       "Tentar novamente";
@@ -391,6 +596,7 @@ try {
   }
 
 }
+
 
 // ========================================
 // MENSAGENS
@@ -401,43 +607,25 @@ function mostrarMensagem(
   tipo
 ) {
 
-  if (!mensagem) return;
+  if (!mensagem)
+    return;
 
-  mensagem.innerHTML = texto;
 
-  mensagem.className = "mensagem";
+  mensagem.innerHTML =
+    texto;
 
-  if (tipo)
-    mensagem.classList.add(tipo);
+
+  mensagem.className =
+    "mensagem";
+
+
+  if (tipo) {
+
+    mensagem.classList.add(
+      tipo
+    );
+
+  }
 
 }
-
-navigator.geolocation.getCurrentPosition(
-
-    function(position) {
-
-        console.log(
-            "ARKA GPS:",
-            position.coords.latitude,
-            position.coords.longitude
-        );
-
-    },
-
-    function(error) {
-
-        console.error(
-            "ARKA GPS ERRO:",
-            error.code,
-            error.message
-        );
-
-    },
-
-    {
-        enableHighAccuracy: true,
-        timeout: 15000,
-        maximumAge: 0
-    }
-
-);
+```
