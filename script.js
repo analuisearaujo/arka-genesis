@@ -190,6 +190,48 @@ async function salvarObservacao() {
 
   }
 
+  let latitude = null;
+let longitude = null;
+
+try {
+
+    const posicao = await new Promise(
+        (resolve, reject) => {
+
+            navigator.geolocation.getCurrentPosition(
+                resolve,
+                reject,
+                {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 0
+                }
+            );
+
+        }
+    );
+
+    latitude =
+        posicao.coords.latitude;
+
+    longitude =
+        posicao.coords.longitude;
+
+    console.log(
+        "ARKA GPS:",
+        latitude,
+        longitude
+    );
+
+} catch (erro) {
+
+    console.error(
+        "ARKA GPS:",
+        erro
+    );
+
+}
+
   // ========================================
 // OBTER LOCALIZAÇÃO
 // ========================================
