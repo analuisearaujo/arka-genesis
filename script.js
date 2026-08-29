@@ -174,6 +174,78 @@ function comprimirImagem(arquivo) {
 }
 
 // ========================================
+// OBTER GPS
+// ========================================
+
+function obterLocalizacao() {
+
+  return new Promise((resolve) => {
+
+    if (!navigator.geolocation) {
+
+      console.warn(
+        "ARKA — geolocalização não disponível."
+      );
+
+      resolve({
+        latitude: null,
+        longitude: null
+      });
+
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+      function(position) {
+
+        const latitude =
+          position.coords.latitude;
+
+        const longitude =
+          position.coords.longitude;
+
+        console.log(
+          "ARKA — GPS encontrado:",
+          latitude,
+          longitude
+        );
+
+        resolve({
+          latitude: latitude,
+          longitude: longitude
+        });
+
+      },
+
+      function(error) {
+
+        console.warn(
+          "ARKA — erro GPS:",
+          error.code,
+          error.message
+        );
+
+        resolve({
+          latitude: null,
+          longitude: null
+        });
+
+      },
+
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0
+      }
+
+    );
+
+  });
+
+}
+
+// ========================================
 // SALVAR OBSERVAÇÃO
 // ========================================
 
