@@ -1,4 +1,3 @@
-```javascript
 // ========================================
 // ARKA GENESIS
 // Script principal
