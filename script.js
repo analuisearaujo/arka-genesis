@@ -1,4 +1,3 @@
-```javascript
 // ========================================
 // ARKA GENESIS
 // Script principal
@@ -290,31 +289,17 @@ function obterLocalizacao() {
 
         function(position) {
 
-    const latitude =
-        position.coords.latitude;
+          resolve({
 
-    const longitude =
-        position.coords.longitude;
+            latitude:
+              position.coords.latitude,
 
-    mostrarMensagem(
-        "📍 GPS encontrado: " +
-        latitude +
-        ", " +
-        longitude,
-        "sucesso"
-    );
+            longitude:
+              position.coords.longitude
 
-    resolve({
+          });
 
-        latitude:
-            latitude,
-
-        longitude:
-            longitude
-
-    });
-
-},,
+        },
 
         function(error) {
 
@@ -380,50 +365,10 @@ async function salvarObservacao() {
     true;
 
   botaoSalvar.innerText =
-  "Preparando...";
+    "Obtendo localização...";
 
-try {
 
-    // ====================================
-    // GPS
-    // ====================================
-
-    let latitude = null;
-    let longitude = null;
-
-    try {
-
-      const localizacao =
-        await Promise.race([
-
-          obterLocalizacao(),
-
-          new Promise(resolve =>
-            setTimeout(
-              () => resolve({
-                latitude: null,
-                longitude: null
-              }),
-              5000
-            )
-          )
-
-        ]);
-
-      latitude =
-        localizacao.latitude;
-
-      longitude =
-        localizacao.longitude;
-
-    } catch (gpsErro) {
-
-      console.warn(
-        "ARKA — GPS ignorado:",
-        gpsErro
-      );
-
-    } {
+  try {
 
 
     // ====================================
