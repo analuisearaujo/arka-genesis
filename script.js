@@ -369,3 +369,33 @@ function mostrarMensagem(
     mensagem.classList.add(tipo);
 
 }
+
+navigator.geolocation.getCurrentPosition(
+
+    function(position) {
+
+        console.log(
+            "ARKA GPS:",
+            position.coords.latitude,
+            position.coords.longitude
+        );
+
+    },
+
+    function(error) {
+
+        console.error(
+            "ARKA GPS ERRO:",
+            error.code,
+            error.message
+        );
+
+    },
+
+    {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0
+    }
+
+);
