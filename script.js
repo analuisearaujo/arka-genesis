@@ -248,6 +248,15 @@ async function salvarObservacao() {
 
     // ---------- Banco ----------
 
+const publicUrl =
+  supabaseARKA
+    .storage
+    .from("animal - image")
+    .getPublicUrl(nomeArquivo);
+
+const imagemUrl =
+  publicUrl.data.publicUrl;
+    
     const banco =
   await supabaseARKA
     .from("observations")
