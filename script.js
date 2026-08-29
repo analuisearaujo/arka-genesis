@@ -263,27 +263,51 @@ async function salvarObservacao() {
     .select()
     .single();
 
-    
-const localizacao = await obterLocalizacao();
 
-await supabaseARKA
-  .from("observations")
-  .update({
-    latitude: localizacao.latitude,
-    longitude: localizacao.longitude
-  })
-  .eq("id", idObservacao);
-if (banco.error) throw banco.error;
+// Verificar se a observação foi criada
+if (banco.error) {
+  throw banco.error;
+}
 
-const idObservacao = banco.data.id;
 
-    if (banco.error)
-      throw banco.error;
+// Pegar o UUID da observação recém-criada
+const idObservacao =
+  banco.data.id;
 
-    mostrarMensagem(
-      "✅ Fotografia e observação salvas!",
-      "sucesso"
+
+// Obter localização
+const localizacao =
+  await obterLocalizacao();
+
+
+// Atualizar EXATAMENTE essa observação
+const atualizacao =
+  await supabaseARKA
+    .from("observations")
+    .update({
+      latitude:
+        localizacao.latitude,
+
+      longitude:
+        localizacao.longitude
+    })
+    .eq(
+      "id",
+      idObservacao
     );
+
+
+// Verificar erro do GPS/update
+if (atualizacao.error) {
+  throw atualizacao.error;
+}
+
+
+// Sucesso
+mostrarMensagem(
+  "✅ Fotografia, localização e observação salvas!",
+  "sucesso"
+);;
 
     botaoSalvar.innerText =
       "Observação salva";
