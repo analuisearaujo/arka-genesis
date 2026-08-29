@@ -268,54 +268,105 @@ function comprimirImagem(
 
 function obterLocalizacao() {
 
-  return new Promise(
-    (resolve) => {
+  return new Promise((resolve) => {
 
-      if (
-        !navigator.geolocation
-      ) {
+    if (!navigator.geolocation) {
+
+      mostrarMensagem(
+        "❌ Este navegador não oferece geolocalização.",
+        "erro"
+      );
+
+      resolve({
+        latitude: null,
+        longitude: null
+      });
+
+      return;
+    }
+
+    mostrarMensagem(
+      "📍 Obtendo sua localização...",
+      ""
+    );
+
+    navigator.geolocation.getCurrentPosition(
+
+      function(position) {
+
+        const latitude =
+          position.coords.latitude;
+
+        const longitude =
+          position.coords.longitude;
+
+        console.log(
+          "ARKA GPS:",
+          latitude,
+          longitude
+        );
+
+        mostrarMensagem(
+          "📍 Localização encontrada!",
+          "sucesso"
+        );
+
+        resolve({
+          latitude: latitude,
+          longitude: longitude
+        });
+
+      },
+
+      function(error) {
+
+        console.error(
+          "ARKA GPS ERRO:",
+          error.code,
+          error.message
+        );
+
+        let mensagemErro =
+          "❌ Não foi possível obter o GPS.";
+
+        if (error.code === 1) {
+          mensagemErro =
+            "❌ Permissão de localização negada.";
+        }
+
+        if (error.code === 2) {
+          mensagemErro =
+            "❌ Localização indisponível.";
+        }
+
+        if (error.code === 3) {
+          mensagemErro =
+            "❌ Tempo limite para obter localização.";
+        }
+
+        mostrarMensagem(
+          mensagemErro,
+          "erro"
+        );
 
         resolve({
           latitude: null,
           longitude: null
         });
 
-        return;
+      },
 
+      {
+        enableHighAccuracy: true,
+        timeout: 30000,
+        maximumAge: 0
       }
 
+    );
 
-      navigator.geolocation.getCurrentPosition(
+  });
 
-        function(position) {
-
-          resolve({
-
-            latitude:
-              position.coords.latitude,
-
-            longitude:
-              position.coords.longitude
-
-          });
-
-        },
-
-        function(error) {
-
-          console.warn(
-            "ARKA — GPS não disponível:",
-            error.message
-          );
-
-          resolve({
-
-            latitude: null,
-            longitude: null
-
-          });
-
-        },
+},
 
         {
 
