@@ -1,4 +1,3 @@
-```javascript
 // ========================================
 // ARKA GENESIS
 // Script principal
@@ -18,335 +17,167 @@ const supabaseARKA =
     SUPABASE_KEY
 );
 
+// ---------- ELEMENTOS ----------
 
-// ========================================
-// ELEMENTOS
-// ========================================
+const camera = document.getElementById("camera");
+const gallery = document.getElementById("gallery");
+const preview = document.getElementById("preview");
+const analise = document.getElementById("analise");
+const resultado = document.getElementById("resultado");
+const mensagem = document.getElementById("mensagem");
+const botaoSalvar = document.getElementById("salvar");
 
-const camera =
-  document.getElementById("camera");
-
-const gallery =
-  document.getElementById("gallery");
-
-const preview =
-  document.getElementById("preview");
-
-const analise =
-  document.getElementById("analise");
-
-const resultado =
-  document.getElementById("resultado");
-
-const mensagem =
-  document.getElementById("mensagem");
-
-const botaoSalvar =
-  document.getElementById("salvar");
-
-
-// ========================================
-// VARIÁVEIS
-// ========================================
+// ---------- VARIÁVEIS ----------
 
 let arquivoSelecionado = null;
 
+// ---------- EVENTOS ----------
+
+camera?.addEventListener("change", processarImagem);
+gallery?.addEventListener("change", processarImagem);
+botaoSalvar?.addEventListener("click", salvarObservacao);
 
 // ========================================
-// EVENTOS
-// ========================================
-
-camera?.addEventListener(
-  "change",
-  processarImagem
-);
-
-gallery?.addEventListener(
-  "change",
-  processarImagem
-);
-
-botaoSalvar?.addEventListener(
-  "click",
-  salvarObservacao
-);
-
-
-// ========================================
-// PROCESSAR IMAGEM
+// PREVIEW DA IMAGEM
 // ========================================
 
 function processarImagem(event) {
 
-  const arquivo =
-    event.target.files[0];
+  const arquivo = event.target.files[0];
 
   if (!arquivo) return;
 
-  arquivoSelecionado =
-    arquivo;
+  arquivoSelecionado = arquivo;
 
-  const leitor =
-    new FileReader();
+  const leitor = new FileReader();
 
-  leitor.onload =
-    function(e) {
+  leitor.onload = function(e) {
 
-      preview.src =
-        e.target.result;
+    preview.src = e.target.result;
 
-      preview.style.display =
-        "block";
+    preview.style.display = "block";
 
-      analise.innerHTML =
-        "Imagem carregada com sucesso.";
+    analise.innerHTML =
+      "Imagem carregada com sucesso.";
 
-      resultado.style.display =
-        "block";
+    resultado.style.display = "block";
 
-      mostrarMensagem(
-        "",
-        ""
-      );
+    mostrarMensagem("", "");
 
-    };
+  };
 
-  leitor.onerror =
-    function() {
+  leitor.onerror = function() {
 
-      analise.innerHTML =
-        "Erro ao carregar a imagem.";
+    analise.innerHTML =
+      "Erro ao carregar a imagem.";
 
-    };
+  };
 
-  leitor.readAsDataURL(
-    arquivo
-  );
+  leitor.readAsDataURL(arquivo);
 
 }
-
 
 // ========================================
 // COMPRIMIR IMAGEM
 // ========================================
 
-function comprimirImagem(
-  arquivo
-) {
+function comprimirImagem(arquivo) {
 
-  return new Promise(
-    (resolve, reject) => {
+  return new Promise((resolve, reject) => {
 
-      const leitor =
-        new FileReader();
+    const leitor = new FileReader();
 
-      const img =
-        new Image();
+    const img = new Image();
 
-      leitor.onload =
-        e => {
+    leitor.onload = e => img.src = e.target.result;
 
-          img.src =
-            e.target.result;
+    leitor.onerror = reject;
 
-        };
+    img.onload = () => {
 
-      leitor.onerror =
-        reject;
+      const canvas =
+        document.createElement("canvas");
 
-      img.onload =
-        () => {
+      const max = 1200;
 
-          const canvas =
-            document.createElement(
-              "canvas"
-            );
+      let largura = img.width;
+      let altura = img.height;
 
-          const max =
-            1200;
+      if (largura > altura) {
 
-          let largura =
-            img.width;
+        if (largura > max) {
 
-          let altura =
-            img.height;
+          altura =
+            altura * (max / largura);
 
-
-          if (
-            largura > altura &&
-            largura > max
-          ) {
-
-            altura =
-              altura *
-              (max / largura);
-
-            largura =
-              max;
-
-          }
-
-          else if (
-            altura > max
-          ) {
-
-            largura =
-              largura *
-              (max / altura);
-
-            altura =
-              max;
-
-          }
-
-
-          canvas.width =
-            largura;
-
-          canvas.height =
-            altura;
-
-
-          const contexto =
-            canvas.getContext(
-              "2d"
-            );
-
-
-          contexto.drawImage(
-            img,
-            0,
-            0,
-            largura,
-            altura
-          );
-
-
-          canvas.toBlob(
-
-            blob => {
-
-              if (!blob) {
-
-                reject(
-                  new Error(
-                    "Falha ao comprimir a imagem."
-                  )
-                );
-
-                return;
-
-              }
-
-              resolve(
-                blob
-              );
-
-            },
-
-            "image/jpeg",
-
-            0.8
-
-          );
-
-        };
-
-
-      leitor.readAsDataURL(
-        arquivo
-      );
-
-    }
-  );
-
-}
-
-
-// ========================================
-// OBTER GPS
-// ========================================
-
-function obterLocalizacao() {
-
-  return new Promise(
-    (resolve) => {
-
-      if (
-        !navigator.geolocation
-      ) {
-
-        resolve({
-          latitude: null,
-          longitude: null
-        });
-
-        return;
-
-      }
-
-
-      navigator.geolocation.getCurrentPosition(
-
-        function(position) {
-
-          resolve({
-
-            latitude:
-              position.coords.latitude,
-
-            longitude:
-              position.coords.longitude
-
-          });
-
-        },
-
-        function(error) {
-
-          console.warn(
-            "ARKA — GPS não disponível:",
-            error.message
-          );
-
-          resolve({
-
-            latitude: null,
-            longitude: null
-
-          });
-
-        },
-
-        {
-
-          enableHighAccuracy:
-            true,
-
-          timeout:
-            15000,
-
-          maximumAge:
-            0
+          largura = max;
 
         }
 
+      } else {
+
+        if (altura > max) {
+
+          largura =
+            largura * (max / altura);
+
+          altura = max;
+
+        }
+
+      }
+
+      canvas.width = largura;
+      canvas.height = altura;
+
+      canvas
+        .getContext("2d")
+        .drawImage(
+          img,
+          0,
+          0,
+          largura,
+          altura
+        );
+
+      canvas.toBlob(
+
+        blob => {
+
+          if (!blob) {
+
+            reject(
+              new Error(
+                "Falha ao comprimir."
+              )
+            );
+
+            return;
+          }
+
+          resolve(blob);
+
+        },
+
+        "image/jpeg",
+
+        0.8
+
       );
 
-    }
-  );
+    };
+
+    leitor.readAsDataURL(arquivo);
+
+  });
 
 }
-
 
 // ========================================
 // SALVAR OBSERVAÇÃO
 // ========================================
 
 async function salvarObservacao() {
-
-
-  // ---------- VERIFICAR FOTO ----------
 
   if (!arquivoSelecionado) {
 
@@ -359,237 +190,107 @@ async function salvarObservacao() {
 
   }
 
-
-  // ---------- DESABILITAR BOTÃO ----------
-
-  botaoSalvar.disabled =
-    true;
+  botaoSalvar.disabled = true;
 
   botaoSalvar.innerText =
-    "Obtendo localização...";
-
+    "Preparando...";
 
   try {
 
-
-    // ====================================
-    // GPS
-    // ====================================
-
-    const localizacao =
-      await obterLocalizacao();
-
-
-    const latitude =
-      localizacao.latitude;
-
-    const longitude =
-      localizacao.longitude;
-
-
-    console.log(
-      "ARKA — localização:",
-      latitude,
-      longitude
-    );
-
-
-    // ====================================
-    // COMPRIMIR
-    // ====================================
-
-    botaoSalvar.innerText =
-      "Preparando fotografia...";
-
+    // ---------- Comprimir ----------
 
     const imagem =
       await comprimirImagem(
         arquivoSelecionado
       );
 
-
-    // ====================================
-    // NOME DO ARQUIVO
-    // ====================================
+    // ---------- Nome ----------
 
     const nomeArquivo =
       "observacao-" +
       Date.now() +
       ".jpg";
 
-
-    // ====================================
-    // UPLOAD
-    // ====================================
-
     botaoSalvar.innerText =
       "Enviando fotografia...";
 
+    // ---------- Upload ----------
 
     const upload =
       await supabaseARKA
-
         .storage
-
-        .from(
-          "animal - image"
-        )
-
+        .from("animal - image")
         .upload(
-
           nomeArquivo,
-
           imagem,
-
           {
-
-            cacheControl:
-              "3600",
-
-            upsert:
-              false,
-
-            contentType:
-              "image/jpeg"
-
+            cacheControl: "3600",
+            upsert: false,
+            contentType: "image/jpeg"
           }
-
         );
 
-
-    if (
-      upload.error
-    ) {
-
+    if (upload.error)
       throw upload.error;
 
-    }
+    // ---------- URL ----------
 
-
-    // ====================================
-    // URL PÚBLICA
-    // ====================================
-
-    const publicUrl =
+    const { data } =
       supabaseARKA
-
         .storage
-
-        .from(
-          "animal - image"
-        )
-
+        .from("animal - image")
         .getPublicUrl(
           nomeArquivo
         );
 
-
-    const imagemUrl =
-      publicUrl.data.publicUrl;
-
-
-    // ====================================
-    // SALVAR BANCO
-    // ====================================
-
     botaoSalvar.innerText =
       "Salvando observação...";
 
+    // ---------- Banco ----------
 
     const banco =
       await supabaseARKA
-
-        .from(
-          "observations"
-        )
-
+        .from("observations")
         .insert([
-
           {
-
-            species:
-              "Crotalus durissus",
-
-            common_name:
-              "Cascavel",
-
-            image_url:
-              imagemUrl,
-
-            latitude:
-              latitude,
-
-            longitude:
-              longitude,
-
-            location_name:
-              "Observação ARKA Genesis",
-
-            notes:
-              "Observação criada pelo ARKA Genesis."
-
+            species: "Crotalus durissus",
+            common_name: "Cascavel",
+            image_url: data.publicUrl,
+            latitude: null,
+            longitude: null,
+            location_name: "Teste ARKA Genesis",
+            notes: "Observação criada pelo ARKA Genesis."
           }
-
         ])
-
         .select();
 
-
-    if (
-      banco.error
-    ) {
-
+    if (banco.error)
       throw banco.error;
 
-    }
-
-
-    // ====================================
-    // SUCESSO
-    // ====================================
-
-    console.log(
-      "ARKA — observação salva:",
-      banco.data
-    );
-
-
     mostrarMensagem(
-
-      "✅ Fotografia, localização e observação salvas!",
-
+      "✅ Fotografia e observação salvas!",
       "sucesso"
-
     );
-
 
     botaoSalvar.innerText =
       "Observação salva";
-
 
   }
 
   catch (erro) {
 
-
     console.error(
-      "ARKA — erro:",
+      "ARKA:",
       erro
     );
 
-
     mostrarMensagem(
-
-      "ERRO REAL: " +
+      "ERRO: " +
       erro.message,
-
       "erro"
-
     );
 
-
-    botaoSalvar.disabled =
-      false;
+    botaoSalvar.disabled = false;
 
     botaoSalvar.innerText =
       "Tentar novamente";
@@ -597,7 +298,6 @@ async function salvarObservacao() {
   }
 
 }
-
 
 // ========================================
 // MENSAGENS
@@ -608,25 +308,13 @@ function mostrarMensagem(
   tipo
 ) {
 
-  if (!mensagem)
-    return;
+  if (!mensagem) return;
 
+  mensagem.innerHTML = texto;
 
-  mensagem.innerHTML =
-    texto;
+  mensagem.className = "mensagem";
 
-
-  mensagem.className =
-    "mensagem";
-
-
-  if (tipo) {
-
-    mensagem.classList.add(
-      tipo
-    );
-
-  }
+  if (tipo)
+    mensagem.classList.add(tipo);
 
 }
-```
