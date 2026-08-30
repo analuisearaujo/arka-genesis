@@ -127,7 +127,8 @@ async function carregarMapa() {
   if (!elementoMapa || typeof L === "undefined") return;
 
   const mapa = L.map("mapaObservacoes").setView([-14.2, -51.9], 4);
-
+  document.getElementById("mapaObservacoes")._leaflet_map = mapa;
+  
   L.tileLayer(
     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     {
@@ -181,7 +182,16 @@ async function carregarMapa() {
 
 }
 
-window.addEventListener("load", carregarMapa);
+document.addEventListener("DOMContentLoaded", carregarMapa);
+
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    const mapa = document.getElementById("mapaObservacoes");
+    if (mapa && mapa._leaflet_map) {
+      mapa._leaflet_map.invalidateSize();
+    }
+  }, 300);
+});
 
   leitor.onerror =
     function() {
