@@ -115,6 +115,74 @@ function processarImagem(event) {
 
     };
 
+  // ========================================
+// ARKA MAP
+// ========================================
+
+async function carregarMapa() {
+
+  const elementoMapa =
+    document.getElementById("mapaObservacoes");
+
+  if (!elementoMapa || typeof L === "undefined") return;
+
+  const mapa = L.map("mapaObservacoes").setView([-14.2, -51.9], 4);
+
+  L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      attribution: "© OpenStreetMap"
+    }
+  ).addTo(mapa);
+
+  const { data, error } =
+    await supabaseARKA
+      .from("observations")
+      .select("*")
+      .not("latitude", "is", null)
+      .not("longitude", "is", null);
+
+  if (error) {
+    console.error("Erro ao carregar mapa:", error);
+    return;
+  }
+
+  const limites = [];
+
+  data.forEach(obs => {
+
+    const marcador = L.marker([
+      obs.latitude,
+      obs.longitude
+    ]).addTo(mapa);
+
+    marcador.bindPopup(`
+      <div style="max-width:220px">
+        <img src="${obs.image_url}"
+             style="width:100%;border-radius:10px;margin-bottom:8px;">
+        <strong>${obs.species}</strong><br>
+        <em>${obs.common_name || "Sem nome comum"}</em><br><br>
+        ${obs.notes || ""}
+      </div>
+    `);
+
+    limites.push([
+      obs.latitude,
+      obs.longitude
+    ]);
+
+  });
+
+  if (limites.length > 0) {
+    mapa.fitBounds(limites, {
+      padding: [40, 40]
+    });
+  }
+
+}
+
+window.addEventListener("load", carregarMapa);
+
   leitor.onerror =
     function() {
 
