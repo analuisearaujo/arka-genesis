@@ -170,7 +170,49 @@
             margin: 20px 0;
             color: #C9B05A;
         }
+.campo {
+    margin-top: 20px;
+}
 
+.campo label {
+    display: block;
+    margin-bottom: 8px;
+    color: #D4AF37;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.campo input,
+.campo textarea {
+    width: 100%;
+    padding: 14px;
+    background: #050505;
+    color: #ffffff;
+    border: 1px solid #333;
+    border-radius: 12px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    outline: none;
+}
+
+.campo input:focus,
+.campo textarea:focus {
+    border-color: #D4AF37;
+}
+
+.localizacao {
+    margin-top: 20px;
+    padding: 14px;
+    background: #050505;
+    border: 1px solid #222;
+    border-radius: 12px;
+    color: #D4AF37;
+    font-size: 14px;
+}
+
+#statusGPS {
+    color: #999;
+}
         .salvar {
             width: 100%;
             margin-top: 20px;
@@ -373,15 +415,50 @@
                     Possível identificação:
                     <strong>
                         Crotalus durissus
-                    </strong>
+                    <div class="status">
 
-                </div>
+    Possível identificação:
+    <strong id="especie">
+        Crotalus durissus
+    </strong>
 
-                <p>
-                    Esta identificação é apenas
-                    uma demonstração da interface.
-                    A IA real ainda será desenvolvida.
-                </p>
+</div>
+
+<div class="campo">
+
+    <label for="nomeComum">
+        Nome comum
+    </label>
+
+    <input
+        id="nomeComum"
+        type="text"
+        value="Cascavel"
+        placeholder="Nome comum">
+
+</div>
+
+<div class="campo">
+
+    <label for="observacoes">
+        Observações
+    </label>
+
+    <textarea
+        id="observacoes"
+        rows="4"
+        placeholder="Descreva o que você observou..."></textarea>
+
+</div>
+
+<div class="localizacao">
+
+    📍 Localização GPS
+    <span id="statusGPS">
+        Será obtida ao salvar
+    </span>
+
+</div>
 
                 <button
                     id="salvar"
