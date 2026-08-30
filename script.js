@@ -43,6 +43,11 @@ const mensagem =
 const botaoSalvar =
   document.getElementById("salvar");
 
+const observacoes =
+  document.getElementById("observacoes");
+
+const nomeComum =
+  document.getElementById("nomeComum");
 
 // ========================================
 // VARIÁVEIS
@@ -522,7 +527,7 @@ async function salvarObservacao() {
               "Crotalus durissus",
 
             common_name:
-              "Cascavel",
+              nomeComum.value,
 
             image_url:
               imagemUrl,
@@ -537,7 +542,7 @@ async function salvarObservacao() {
               "Observação ARKA Genesis",
 
             notes:
-              "Observação criada pelo ARKA Genesis."
+              observacoes.value,
 
           }
 
