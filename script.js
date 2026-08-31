@@ -722,4 +722,6 @@ function mostrarMensagem(
 
   }
 console.log("ARKA TESTE VERSÃO NOVA 123");
-}
+window.addEventListener("load", () => {
+  alert(typeof L);
+});}
