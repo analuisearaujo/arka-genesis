@@ -121,14 +121,15 @@ function processarImagem(event) {
 
 async function carregarMapa() {
 
-  const elementoMapa =
-    document.getElementById("mapaObservacoes");
+  const mapaDiv = document.getElementById("mapaObservacoes");
 
-  if (!elementoMapa || typeof L === "undefined") return;
+  if (!mapaDiv) return;
 
-  const mapa = L.map("mapaObservacoes").setView([-14.2, -51.9], 4);
-  document.getElementById("mapaObservacoes")._leaflet_map = mapa;
-  
+  mapaDiv.innerHTML = "";
+  mapaDiv.style.background = "#111";
+
+  const mapa = L.map(mapaDiv);
+
   L.tileLayer(
     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     {
@@ -136,76 +137,51 @@ async function carregarMapa() {
     }
   ).addTo(mapa);
 
-  const { data, error } =
-    await supabaseARKA
-      .from("observations")
-      .select("*")
-      .not("latitude", "is", null)
-      .not("longitude", "is", null);
+  mapa.setView([-14.235, -51.925], 4);
+
+  const { data, error } = await supabaseARKA
+    .from("observations")
+    .select("*")
+    .not("latitude", "is", null)
+    .not("longitude", "is", null);
 
   if (error) {
-    console.error("Erro ao carregar mapa:", error);
+    console.error(error);
     return;
   }
 
-  const limites = [];
+  const bounds = [];
 
   data.forEach(obs => {
 
-    const marcador = L.marker([
-      obs.latitude,
-      obs.longitude
-    ]).addTo(mapa);
+    L.marker([obs.latitude, obs.longitude])
+      .addTo(mapa)
+      .bindPopup(`
+        <div style="width:200px">
+          <img src="${obs.image_url}" style="width:100%;border-radius:10px;">
+          <h4>${obs.species}</h4>
+          <p>${obs.common_name || ""}</p>
+          <p>${obs.notes || ""}</p>
+        </div>
+      `);
 
-    marcador.bindPopup(`
-      <div style="max-width:220px">
-        <img src="${obs.image_url}"
-             style="width:100%;border-radius:10px;margin-bottom:8px;">
-        <strong>${obs.species}</strong><br>
-        <em>${obs.common_name || "Sem nome comum"}</em><br><br>
-        ${obs.notes || ""}
-      </div>
-    `);
-
-    limites.push([
-      obs.latitude,
-      obs.longitude
-    ]);
+    bounds.push([obs.latitude, obs.longitude]);
 
   });
 
-  if (limites.length > 0) {
-    mapa.fitBounds(limites, {
-      padding: [40, 40]
-    });
-  }
-
-}
-
-document.addEventListener("DOMContentLoaded", carregarMapa);
-
-window.addEventListener("load", () => {
   setTimeout(() => {
-    const mapa = document.getElementById("mapaObservacoes");
-    if (mapa && mapa._leaflet_map) {
-      mapa._leaflet_map.invalidateSize();
+
+    mapa.invalidateSize();
+
+    if (bounds.length) {
+      mapa.fitBounds(bounds, { padding: [30, 30] });
     }
-  }, 300);
-});
 
-  leitor.onerror =
-    function() {
-
-      analise.innerHTML =
-        "Erro ao carregar a imagem.";
-
-    };
-
-  leitor.readAsDataURL(
-    arquivo
-  );
+  }, 100);
 
 }
+
+window.addEventListener("load", carregarMapa);
 
 
 // ========================================
