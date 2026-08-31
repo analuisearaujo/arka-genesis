@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARKA Map</title>
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+body{
+margin:0;
+background:#050505;
+color:white;
+font-family:Arial,sans-serif;
+}
+header{
+padding:18px 24px;
+border-bottom:1px solid #222;
+}
+.logo{
+color:#D4AF37;
+font-size:24px;
+font-weight:bold;
+letter-spacing:4px;
+}
+#map{
+height:calc(100vh - 70px);
+width:100%;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+<div class="logo">ARKA MAP</div>
+</header>
+
+<div id="map"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+const supabase = window.supabase.createClient(
+"https://haoqywnqxeydylfzxqzz.supabase.co",
+"sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7"
+);
+
+const mapa = L.map("map").setView([-14.235,-51.925],4);
+
+L.tileLayer(
+"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+{
+attribution:"© OpenStreetMap"
+}
+).addTo(mapa);
+
+async function carregar(){
+
+const {data,error}=await supabase
+.from("observations")
+.select("*")
+.not("latitude","is",null)
+.not("longitude","is",null);
+
+if(error){
+alert(error.message);
+return;
+}
+
+const bounds=[];
+
+data.forEach(obs=>{
+
+L.marker([obs.latitude,obs.longitude])
+.addTo(mapa)
+.bindPopup(`
+<div style="width:200px">
+<img src="${obs.image_url}"
+style="width:100%;border-radius:8px;margin-bottom:8px;">
+<b>${obs.species}</b><br>
+${obs.common_name || ""}<br><br>
+${obs.notes || ""}
+</div>
+`);
+
+bounds.push([obs.latitude,obs.longitude]);
+
+});
+
+if(bounds.length){
+mapa.fitBounds(bounds,{padding:[40,40]});
+}
+
+}
+
+carregar();
+
+</script>
+
+</body>
+</html>
