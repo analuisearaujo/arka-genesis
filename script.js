@@ -115,69 +115,87 @@ function processarImagem(event) {
 
     };
 
-  // ========================================
+   // ========================================
 // ARKA MAP
 // ========================================
 
 async function carregarMapa() {
 
-  const mapaDiv = document.getElementById("mapaObservacoes");
+  const mapaDiv =
+    document.getElementById("mapaObservacoes");
 
   if (!mapaDiv) return;
 
-  mapaDiv.innerHTML = "";
-  mapaDiv.style.background = "#111";
+  try {
 
-  const mapa = L.map(mapaDiv);
-
-  L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    {
-      attribution: "© OpenStreetMap"
+    if (typeof L === "undefined") {
+      mapaDiv.innerHTML = "<div style='padding:20px;color:#D4AF37'>❌ Leaflet não carregou.</div>";
+      return;
     }
-  ).addTo(mapa);
 
-  mapa.setView([-14.235, -51.925], 4);
+    const mapa =
+      L.map("mapaObservacoes").setView([-14.235, -51.925], 4);
 
-  const { data, error } = await supabaseARKA
-    .from("observations")
-    .select("*")
-    .not("latitude", "is", null)
-    .not("longitude", "is", null);
+    L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        attribution: "© OpenStreetMap"
+      }
+    ).addTo(mapa);
 
-  if (error) {
-    console.error(error);
-    return;
-  }
+    const { data, error } =
+      await supabaseARKA
+        .from("observations")
+        .select("*")
+        .not("latitude", "is", null)
+        .not("longitude", "is", null);
 
-  const bounds = [];
+    if (error) throw error;
 
-  data.forEach(obs => {
+    const limites = [];
 
-    L.marker([obs.latitude, obs.longitude])
+    data.forEach(obs => {
+
+      L.marker([
+        obs.latitude,
+        obs.longitude
+      ])
       .addTo(mapa)
       .bindPopup(`
-        <div style="width:200px">
-          <img src="${obs.image_url}" style="width:100%;border-radius:10px;">
-          <h4>${obs.species}</h4>
-          <p>${obs.common_name || ""}</p>
-          <p>${obs.notes || ""}</p>
+        <div style="max-width:220px">
+          <img src="${obs.image_url}" style="width:100%;border-radius:10px">
+          <strong>${obs.species}</strong><br>
+          ${obs.common_name || ""}<br><br>
+          ${obs.notes || ""}
         </div>
       `);
 
-    bounds.push([obs.latitude, obs.longitude]);
+      limites.push([obs.latitude, obs.longitude]);
 
-  });
+    });
 
-  setTimeout(() => {
+    setTimeout(() => {
+      mapa.invalidateSize();
 
-    mapa.invalidateSize();
+      if (limites.length)
+        mapa.fitBounds(limites, {
+          padding: [30, 30]
+        });
 
-    if (bounds.length) {
-      mapa.fitBounds(bounds, { padding: [30, 30] });
-    }
+    }, 200);
 
-  }, 100);
+  }
+
+  catch (erro) {
+
+    mapaDiv.innerHTML =
+      `<div style="padding:20px;color:#ff7777">
+        ❌ ${erro.message}
+      </div>`;
+
+    console.error(erro);
+
+  }
 
 }
 
