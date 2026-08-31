@@ -1,62 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ARKA Map</title>
-
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-
-<style>
-body{
-margin:0;
-background:#050505;
-color:white;
-font-family:Arial,sans-serif;
-}
-header{
-padding:18px 24px;
-border-bottom:1px solid #222;
-}
-.logo{
-color:#D4AF37;
-font-size:24px;
-font-weight:bold;
-letter-spacing:4px;
-}
-#map{
-height:calc(100vh - 70px);
-width:100%;
-}
-</style>
-
+  <meta charset="UTF-8">
+  <title>Teste ARKA</title>
+  <style>
+    body{
+      margin:0;
+      background:#050505;
+      color:#D4AF37;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+      font-family:Arial,sans-serif;
+      font-size:32px;
+    }
+  </style>
 </head>
 <body>
-
-<header>
-<div class="logo">ARKA MAP</div>
-</header>
-
-<div id="map"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<script>
-window.onerror = function(msg){
-  document.body.innerHTML =
-    "<pre style='color:#fff;background:#111;padding:20px'>" + msg + "</pre>";
-};
-
-document.getElementById("map").innerHTML =
-  "<div style='color:#D4AF37;padding:20px'>Teste iniciado...</div>";
-
-setTimeout(() => {
-  document.getElementById("map").innerHTML =
-    "<div style='color:#00ff88;padding:20px'>JavaScript funcionando.</div>";
-}, 1000);
-</script>
-
+  TESTE ARKA MAPA
 </body>
 </html>
