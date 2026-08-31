@@ -44,62 +44,18 @@ width:100%;
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
+window.onerror = function(msg){
+  document.body.innerHTML =
+    "<pre style='color:#fff;background:#111;padding:20px'>" + msg + "</pre>";
+};
 
-const supabase = window.supabase.createClient(
-"https://haoqywnqxeydylfzxqzz.supabase.co",
-"sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7"
-);
+document.getElementById("map").innerHTML =
+  "<div style='color:#D4AF37;padding:20px'>Teste iniciado...</div>";
 
-const mapa = L.map("map").setView([-14.235,-51.925],4);
-
-L.tileLayer(
-"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-{
-attribution:"© OpenStreetMap"
-}
-).addTo(mapa);
-
-async function carregar(){
-
-const {data,error}=await supabase
-.from("observations")
-.select("*")
-.not("latitude","is",null)
-.not("longitude","is",null);
-
-if(error){
-alert(error.message);
-return;
-}
-
-const bounds=[];
-
-data.forEach(obs=>{
-
-L.marker([obs.latitude,obs.longitude])
-.addTo(mapa)
-.bindPopup(`
-<div style="width:200px">
-<img src="${obs.image_url}"
-style="width:100%;border-radius:8px;margin-bottom:8px;">
-<b>${obs.species}</b><br>
-${obs.common_name || ""}<br><br>
-${obs.notes || ""}
-</div>
-`);
-
-bounds.push([obs.latitude,obs.longitude]);
-
-});
-
-if(bounds.length){
-mapa.fitBounds(bounds,{padding:[40,40]});
-}
-
-}
-
-carregar();
-
+setTimeout(() => {
+  document.getElementById("map").innerHTML =
+    "<div style='color:#00ff88;padding:20px'>JavaScript funcionando.</div>";
+}, 1000);
 </script>
 
 </body>
