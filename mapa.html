@@ -150,20 +150,54 @@ grupoMarcadores.addLayer(
 mapa.addLayer(grupoMarcadores);
 
 .bindPopup(`
-<div class="arka-popup">
+<div style="
+width:230px;
+background:#111;
+color:white;
+padding:10px;
+border-radius:14px;
+font-family:Arial,sans-serif;
+">
 
-<img src="${obs.image_url}">
+<img
+src="${obs.image_url}"
+style="
+width:100%;
+height:140px;
+object-fit:cover;
+border-radius:10px;
+margin-bottom:10px;
+">
 
-<div style="color:#D4AF37;font-weight:bold;font-size:16px;">
+<div style="
+color:#D4AF37;
+font-size:17px;
+font-weight:bold;
+">
 ${obs.species}
 </div>
 
-<div style="color:#999;font-size:13px;margin-bottom:10px;">
-${obs.common_name||"Sem nome comum"}
+<div style="
+color:#9f9f9f;
+font-size:13px;
+margin:3px 0 12px;
+">
+${obs.common_name || "Sem nome comum"}
 </div>
 
-<div style="font-size:13px;">
-${obs.notes||"Sem observações"}
+<div style="
+font-size:13px;
+line-height:1.5;
+margin-bottom:10px;
+">
+${obs.notes || "Sem observações"}
+</div>
+
+<div style="
+font-size:11px;
+color:#666;
+">
+📍 ${obs.latitude.toFixed(5)}, ${obs.longitude.toFixed(5)}
 </div>
 
 </div>
