@@ -85,6 +85,14 @@ const {data,error}=await supabaseARKA
 .not("latitude","is",null)
 .not("longitude","is",null);
 
+  if (error) {
+  alert("ERRO: " + error.message);
+  console.error(error);
+  return;
+}
+
+alert("Observações encontradas: " + data.length);
+
 if(error){
 console.error(error);
 return;
