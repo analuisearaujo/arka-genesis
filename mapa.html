@@ -23,8 +23,30 @@
 </head>
 <body>
 
+  <div id="erroDebug"
+     style="display:none;
+            position:fixed;
+            top:10px;
+            left:10px;
+            right:10px;
+            background:#8B0000;
+            color:white;
+            padding:12px;
+            border-radius:8px;
+            z-index:9999;
+            font-family:monospace;
+            white-space:pre-wrap;">
+</div>
 <div id="map"></div>
-
+  
+<script>
+window.onerror = function(msg, url, line, col) {
+  const erro = document.getElementById("erroDebug");
+  erro.style.display = "block";
+  erro.textContent = `ERRO: ${msg}\nLinha: ${line}:${col}`;
+};
+</script>
+  
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
