@@ -237,32 +237,6 @@ limites.push([obs.latitude, obs.longitude]);
   }
 
 
-const painel =
-document.getElementById("painelObservacao");
-
-const painelImagem =
-document.getElementById("painelImagem");
-
-const painelEspecie =
-document.getElementById("painelEspecie");
-
-const painelNomeComum =
-document.getElementById("painelNomeComum");
-
-const painelNotas =
-document.getElementById("painelNotas");
-
-const painelCoordenadas =
-document.getElementById("painelCoordenadas");
-
-document
-.getElementById("painelFechar")
-.onclick = () => {
-
-painel.classList.remove("aberto");
-
-};
-
 function abrirPainel(obs){
 
 painelImagem.src =
