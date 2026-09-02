@@ -176,15 +176,27 @@ async function carregarObservacoes(){
 
   const limites=[];
 
-  data.forEach(obs=>{
+  data.forEach(obs => {
 
-    const marcador = L.marker(
-  [obs.latitude, obs.longitude],
-  { icon: iconeARKA }
-).addTo(mapa);
+  const marcador = L.marker(
+    [obs.latitude, obs.longitude],
+    { icon: iconeARKA }
+  ).addTo(mapa);
 
-marcador.on("click", () => {
-  abrirPainel(obs);
+  marcador.bindPopup(`
+    <div style="text-align:center">
+      <strong style="color:#D4AF37">${obs.species}</strong><br>
+      <small>${obs.common_name || "Sem nome comum"}</small>
+    </div>
+  `);
+
+  marcador.on("click", () => {
+    abrirPainel(obs);
+    marcador.openPopup();
+  });
+
+  limites.push([obs.latitude, obs.longitude]);
+
 });
 
     limites.push([obs.latitude, obs.longitude]);
