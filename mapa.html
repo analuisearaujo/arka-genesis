@@ -188,6 +188,7 @@ function abrirPainel(obs){
   painel.classList.add("aberto");
 }
 
+
 async function carregarObservacoes(){
 
   const { data, error } = await supabaseARKA
@@ -196,32 +197,45 @@ async function carregarObservacoes(){
     .not("latitude","is",null)
     .not("longitude","is",null);
 
-  if (error) {
+  if(error){
     throw error;
   }
 
-  const limites = [];
+  const bounds = new maplibregl.LngLatBounds();
 
   data.forEach(obs => {
 
-const popup = new maplibregl.Popup({ offset: 20 }).setHTML(`
-  <div style="text-align:center">
-    <strong style="color:#D4AF37">${obs.species}</strong><br>
-    <small>${obs.common_name || "Sem nome comum"}</small>
-  </div>
-`);
+    const popup = new maplibregl.Popup({
+      offset: 25
+    }).setHTML(`
+      <div style="text-align:center">
+        <strong style="color:#D4AF37">${obs.species}</strong><br>
+        <small>${obs.common_name || "Sem nome comum"}</small>
+      </div>
+    `);
 
-new maplibregl.Marker({ color: "#D4AF37" })
-  .setLngLat([obs.longitude, obs.latitude])
-  .setPopup(popup)
-  .addTo(mapa);
+    const marcador = new maplibregl.Marker({
+      color: "#D4AF37"
+    })
+      .setLngLat([obs.longitude, obs.latitude])
+      .setPopup(popup)
+      .addTo(mapa);
 
-mapa.addControl(new maplibregl.NavigationControl(), "top-right");
+    marcador.getElement().addEventListener("click", () => {
+      abrirPainel(obs);
+    });
 
-mapa.on("load", () => {
-  carregarObservacoes();
-});
+    bounds.extend([obs.longitude, obs.latitude]);
 
+  });
+
+  if(!bounds.isEmpty()){
+    mapa.fitBounds(bounds,{
+      padding:60
+    });
+  }
+
+}
 if(limites.length){
 
 const bounds=new maplibregl.LngLatBounds();
