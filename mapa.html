@@ -148,18 +148,12 @@ const supabaseARKA = window.supabase.createClient(
 );
 
 const mapa = new maplibregl.Map({
-  container:"map",
-  style:"https://tiles.openfreemap.org/styles/dark",
-  center:[-51.925,-14.235],
-  zoom:4
+  container: "map",
+  style: "https://tiles.openfreemap.org/styles/dark",
+  center: [-51.925, -14.235],
+  zoom: 4
 });
 
-L.tileLayer(
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  {
-    attribution: "© OpenStreetMap"
-  }
-).addTo(mapa);
 
 const iconeARKA = L.divIcon({
   className: "",
