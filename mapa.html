@@ -136,14 +136,12 @@ Linha: ${line}:${col}`;
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-
-const supabaseARKA=
-window.supabase.createClient(
-"https://haoqywnqxeydylfzxqzz.supabase.co",
-"sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7"
+const supabaseARKA = window.supabase.createClient(
+  "https://haoqywnqxeydylfzxqzz.supabase.co",
+  "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7"
 );
 
-const mapa=L.map("map").setView([-14.235,-51.925],4);
+const mapa = L.map("map").setView([-14.235, -51.925], 4);
 
 L.tileLayer(
   "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
@@ -152,91 +150,83 @@ L.tileLayer(
   }
 ).addTo(mapa);
 
-const iconeARKA=L.divIcon({
-className:"",
-html:`
-<div style="
-width:20px;
-height:20px;
-background:#D4AF37;
-border:3px solid #050505;
-border-radius:50%;
-box-shadow:0 0 12px rgba(212,175,55,.6);
-"></div>`,
-iconSize:[20,20],
-iconAnchor:[10,10]
+const iconeARKA = L.divIcon({
+  className: "",
+  html: `<div style="
+    width:20px;
+    height:20px;
+    background:#D4AF37;
+    border:3px solid #050505;
+    border-radius:50%;
+    box-shadow:0 0 12px rgba(212,175,55,.6);
+  "></div>`,
+  iconSize:[20,20],
+  iconAnchor:[10,10]
 });
 
-const painel=document.getElementById("painelObservacao");
-const painelImagem=document.getElementById("painelImagem");
-const painelEspecie=document.getElementById("painelEspecie");
-const painelNomeComum=document.getElementById("painelNomeComum");
-const painelNotas=document.getElementById("painelNotas");
-const painelCoordenadas=document.getElementById("painelCoordenadas");
+const painel = document.getElementById("painelObservacao");
+const painelImagem = document.getElementById("painelImagem");
+const painelEspecie = document.getElementById("painelEspecie");
+const painelNomeComum = document.getElementById("painelNomeComum");
+const painelNotas = document.getElementById("painelNotas");
+const painelCoordenadas = document.getElementById("painelCoordenadas");
 
-document.getElementById("painelFechar").onclick=()=>{
-painel.classList.remove("aberto");
+document.getElementById("painelFechar").onclick = () => {
+  painel.classList.remove("aberto");
 };
 
 function abrirPainel(obs){
-
-painelImagem.src=obs.image_url;
-painelEspecie.textContent=obs.species;
-painelNomeComum.textContent=obs.common_name||"Sem nome comum";
-painelNotas.textContent=obs.notes||"Sem observações";
-painelCoordenadas.textContent=
-`📍 ${obs.latitude.toFixed(5)}, ${obs.longitude.toFixed(5)}`;
-
-painel.classList.add("aberto");
-
+  painelImagem.src = obs.image_url;
+  painelEspecie.textContent = obs.species;
+  painelNomeComum.textContent = obs.common_name || "Sem nome comum";
+  painelNotas.textContent = obs.notes || "Sem observações";
+  painelCoordenadas.textContent =
+    `📍 ${obs.latitude.toFixed(5)}, ${obs.longitude.toFixed(5)}`;
+  painel.classList.add("aberto");
 }
 
 async function carregarObservacoes(){
 
-const {data,error}=await supabaseARKA
-.from("observations")
-.select("*")
-.not("latitude","is",null)
-.not("longitude","is",null);
+  const { data, error } = await supabaseARKA
+    .from("observations")
+    .select("*")
+    .not("latitude","is",null)
+    .not("longitude","is",null);
 
-if(error){
-throw error;
+  if (error) {
+    throw error;
+  }
+
+  const limites = [];
+
+  data.forEach(obs => {
+
+    const marcador = L.marker(
+      [obs.latitude, obs.longitude],
+      { icon: iconeARKA }
+    ).addTo(mapa);
+
+    marcador.bindPopup(`
+      <div style="text-align:center">
+        <strong style="color:#D4AF37">${obs.species}</strong><br>
+        <small>${obs.common_name || "Sem nome comum"}</small>
+      </div>
+    `);
+
+    marcador.on("click", () => {
+      abrirPainel(obs);
+      marcador.openPopup();
+    });
+
+    limites.push([obs.latitude, obs.longitude]);
+
+  });
+
+  if (limites.length) {
+    mapa.fitBounds(limites, { padding: [40, 40] });
+  }
+
 }
-
-const limites=[];
-
-data.forEach(obs=>{
-
-const marcador=L.marker(
-[obs.latitude,obs.longitude],
-{icon:iconeARKA}
-).addTo(mapa);
-
-marcador.bindPopup(`
-<div style="text-align:center">
-<strong style="color:#D4AF37">${obs.species}</strong><br>
-<small>${obs.common_name||"Sem nome comum"}</small>
-</div>
-`);
-
-marcador.on("click",()=>{
-abrirPainel(obs);
-marcador.openPopup();
-});
-
-limites.push([obs.latitude,obs.longitude]);
-
-});
-
-if(limites.length){
-  mapa.fitBounds(limites,{padding:[40,40]});
-}
-
-} 
 
 carregarObservacoes();
-
 </script>
-
-</body>
-</html>
