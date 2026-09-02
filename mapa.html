@@ -178,9 +178,14 @@ async function carregarObservacoes(){
 
   data.forEach(obs=>{
 
-    L.marker([obs.latitude, obs.longitude], {icon: iconeARKA})
-      .addTo(mapa)
-      .on("click", () => abrirPainel(obs));
+    const marcador = L.marker(
+  [obs.latitude, obs.longitude],
+  { icon: iconeARKA }
+).addTo(mapa);
+
+marcador.on("click", () => {
+  abrirPainel(obs);
+});
 
     limites.push([obs.latitude, obs.longitude]);
 
