@@ -224,17 +224,13 @@ async function carregarObservacoes(){
 `);
     
  marcador.on("click", () => {
-    abrirPainel(obs);
-    marcador.openPopup();
-  });
-
-  limites.push([obs.latitude, obs.longitude]);
-
+  abrirPainel(obs);
+  marcador.openPopup();
 });
 
-    limites.push([obs.latitude, obs.longitude]);
+limites.push([obs.latitude, obs.longitude]);
 
-  });
+});
 
   if(limites.length){
     mapa.fitBounds(limites,{padding:[40,40]});
