@@ -194,71 +194,18 @@ function abrirPainel(obs){
   painel.classList.add("aberto");
 }
 
-async function carregarObservacoes(){
+  limites.push([obs.latitude, obs.longitude]);
 
-  const { data, error } = await supabaseARKA
-    .from("observations")
-    .select("*")
-    .not("latitude","is",null)
-    .not("longitude","is",null);
+  });
 
-  if(error){
-    alert(error.message);
-    return;
+  if (limites.length) {
+    mapa.fitBounds(limites, { padding: [40, 40] });
   }
-
-  const limites=[];
-
-  data.forEach(obs => {
-
-  const marcador = L.marker(
-    [obs.latitude, obs.longitude],
-    { icon: iconeARKA }
-  ).addTo(mapa);
-
- marcador.bindPopup(`
-  <div style="text-align:center">
-    <strong style="color:#D4AF37">${obs.species}</strong><br>
-    <small>${obs.common_name || "Sem nome comum"}</small>
-  </div>
-`);
-    
- marcador.on("click", () => {
-  abrirPainel(obs);
-  marcador.openPopup();
-});
-
-limites.push([obs.latitude, obs.longitude]);
-
-});
-
-  if(limites.length){
-    mapa.fitBounds(limites,{padding:[40,40]});
-  }
-
-
-function abrirPainel(obs){
-
-painelImagem.src =
-obs.image_url;
-
-painelEspecie.textContent =
-obs.species;
-
-painelNomeComum.textContent =
-obs.common_name || "Sem nome comum";
-
-painelNotas.textContent =
-obs.notes || "Sem observações";
-
-painelCoordenadas.textContent =
-`📍 ${obs.latitude.toFixed(5)}, ${obs.longitude.toFixed(5)}`;
-
-painel.classList.add("aberto");
-
 }
 
+// Executa o carregamento das observações
 carregarObservacoes();
+
 </script>
 
 </body>
