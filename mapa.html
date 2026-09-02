@@ -216,13 +216,13 @@ async function carregarObservacoes(){
     { icon: iconeARKA }
   ).addTo(mapa);
 
-  marcador.bindPopup(`
-    <div style="text-align:center">
-      <strong style="color:#D4AF37">${obs.species}</strong><br>
-      <small>${obs.common_name || "Sem nome comum"}</small>
-    </div>
-  ');
-  
+marcador.bindPopup(`
+  <div style="text-align:center">
+    <strong style="color:#D4AF37">${obs.species}</strong><br>
+    <small>${obs.common_name || "Sem nome comum"}</small>
+  </div>
+`);
+    
  marcador.on("click", () => {
     abrirPainel(obs);
     marcador.openPopup();
