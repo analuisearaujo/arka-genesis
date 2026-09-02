@@ -204,45 +204,23 @@ async function carregarObservacoes(){
 
   data.forEach(obs => {
 
-    const popup = new maplibregl.Popup({
-  offset:20
-}).setHTML(`
-<div style="text-align:center">
-  <strong style="color:#D4AF37">${obs.species}</strong><br>
-  <small>${obs.common_name || "Sem nome comum"}</small>
-</div>
+const popup = new maplibregl.Popup({ offset: 20 }).setHTML(`
+  <div style="text-align:center">
+    <strong style="color:#D4AF37">${obs.species}</strong><br>
+    <small>${obs.common_name || "Sem nome comum"}</small>
+  </div>
 `);
 
-new maplibregl.Marker({
-  color:"#D4AF37"
-})
-.setLngLat([obs.longitude,obs.latitude])
-.setPopup(popup)
-.addTo(mapa);
-        
-    marcador.bindPopup(`
-      <div style="text-align:center">
-        <strong style="color:#D4AF37">${obs.species}</strong><br>
-        <small>${obs.common_name || "Sem nome comum"}</small>
-      </div>
-    `);
+new maplibregl.Marker({ color: "#D4AF37" })
+  .setLngLat([obs.longitude, obs.latitude])
+  .setPopup(popup)
+  .addTo(mapa);
 
-    marcador.on("click", () => {
-      abrirPainel(obs);
-      marcador.openPopup();
-    });
+mapa.addControl(new maplibregl.NavigationControl(), "top-right");
 
-    limites.push([obs.latitude, obs.longitude]);
-
-  });
-
-  if (limites.length) {
-    mapa.fitBounds(limites, { padding: [40, 40] });
-  }
-
-}
-
-carregarObservacoes();
+mapa.on("load", () => {
+  carregarObservacoes();
+});
 
 if(limites.length){
 
