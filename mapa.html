@@ -199,7 +199,7 @@ async function carregarObservacoes(){
     .select("*")
     .not("latitude","is",null)
     .not("longitude","is",null);
-  console.log("Observações:", data);
+  alert("Observações: " + data.length);
 
   if(error){
     throw error;
@@ -209,14 +209,31 @@ async function carregarObservacoes(){
 
   data.forEach(obs => {
 
-    const popup = new maplibregl.Popup({
-      offset: 25
-    }).setHTML(`
-      <div style="text-align:center">
-        <strong style="color:#D4AF37">${obs.species}</strong><br>
-        <small>${obs.common_name || "Sem nome comum"}</small>
-      </div>
-    `);
+  // Cria o ponto dourado
+  const elemento = document.createElement("div");
+  elemento.style.width = "18px";
+  elemento.style.height = "18px";
+  elemento.style.background = "#D4AF37";
+  elemento.style.border = "3px solid #050505";
+  elemento.style.borderRadius = "50%";
+  elemento.style.boxShadow = "0 0 12px rgba(212,175,55,.7)";
+  elemento.style.cursor = "pointer";
+
+  const popup = new maplibregl.Popup({ offset: 20 }).setHTML(`
+    <div style="text-align:center">
+      <strong style="color:#D4AF37">${obs.species}</strong><br>
+      <small>${obs.common_name || "Sem nome comum"}</small>
+    </div>
+  `);
+
+  new maplibregl.Marker({ element: elemento })
+    .setLngLat([Number(obs.longitude), Number(obs.latitude)])
+    .setPopup(popup)
+    .addTo(mapa);
+
+  elemento.addEventListener("click", () => abrirPainel(obs));
+
+});
 
     const elemento = document.createElement("div");
 elemento.style.width = "20px";
