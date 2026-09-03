@@ -3,114 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>ARKA Map v1.0</title>
+<title>ARKA Map</title>
 
 <link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet">
 
 <style>
-html, body{
-    margin:0;
-    width:100%;
-    height:100%;
-    background:#050505;
-    font-family:Arial,sans-serif;
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  background:#050505;
+  font-family:Arial,sans-serif;
 }
 
 #map{
-    position:absolute;
-    inset:0;
+  position:absolute;
+  inset:0;
 }
-
-/* Painel ARKA */
-
-#painelObservacao{
-    position:fixed;
-    left:0;
-    right:0;
-    bottom:-100%;
-    background:#111;
-    color:white;
-    border-radius:28px 28px 0 0;
-    padding:22px;
-    transition:bottom .35s ease;
-    z-index:20;
-    box-shadow:0 -15px 40px rgba(0,0,0,.6);
-}
-
-#painelObservacao.aberto{
-    bottom:0;
-}
-
-#painelImagem{
-    width:100%;
-    height:220px;
-    object-fit:cover;
-    border-radius:16px;
-    margin-bottom:16px;
-}
-
-#painelEspecie{
-    margin:0;
-    color:#D4AF37;
-}
-
-#painelNomeComum{
-    color:#999;
-    margin:6px 0 16px;
-}
-
-#painelNotas{
-    line-height:1.6;
-    margin-bottom:18px;
-}
-
-#painelCoordenadas{
-    color:#777;
-    font-size:13px;
-}
-
-#painelFechar{
-    position:absolute;
-    top:18px;
-    right:18px;
-    font-size:22px;
-    cursor:pointer;
-    color:#aaa;
-}
-
-/* Marcador dourado */
 
 .arka-marker{
-    width:20px;
-    height:20px;
-    border-radius:50%;
-    background:#D4AF37;
-    border:3px solid #050505;
-    box-shadow:0 0 14px rgba(212,175,55,.7);
-    cursor:pointer;
-}
-
-/* Popup */
-
-.maplibregl-popup-content{
-    background:#111;
-    color:white;
-    border-radius:14px;
-    border:1px solid #2d2d2d;
-    box-shadow:0 10px 30px rgba(0,0,0,.45);
-}
-
-.maplibregl-popup-close-button{
-    color:#D4AF37;
-}
-
-.maplibregl-ctrl-group{
-    background:#111;
-}
-
-.maplibregl-ctrl button{
-    background:#111;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:#D4AF37;
+  border:3px solid #050505;
+  box-shadow:0 0 12px rgba(212,175,55,.7);
+  cursor:pointer;
 }
 </style>
 </head>
@@ -119,144 +37,64 @@ html, body{
 
 <div id="map"></div>
 
-<div id="painelObservacao">
-
-<div id="painelFechar">✕</div>
-
-<img id="painelImagem" src="" alt="Observação">
-
-<h2 id="painelEspecie">Espécie</h2>
-
-<p id="painelNomeComum">Nome comum</p>
-
-<div id="painelNotas">Observações</div>
-
-<div id="painelCoordenadas">📍 --</div>
-
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
 
 <script>
-// =====================================
-// SUPABASE
-// =====================================
-
 const supabaseARKA = window.supabase.createClient(
   "https://haoqywnqxeydylfzxqzz.supabase.co",
   "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7"
 );
 
-// =====================================
-// MAPA
-// =====================================
-
 const mapa = new maplibregl.Map({
-    container:"map",
-    style:"https://tiles.openfreemap.org/styles/liberty",
-    center:[-51.925,-14.235],
-    zoom:4
+  container: "map",
+  style: "https://tiles.openfreemap.org/styles/liberty",
+  center: [-51.925,-14.235],
+  zoom: 4
 });
 
-mapa.addControl(
-    new maplibregl.NavigationControl(),
-    "top-right"
-);
+mapa.addControl(new maplibregl.NavigationControl(),"top-right");
 
-// =====================================
-// PAINEL
-// =====================================
+mapa.on("load", async ()=>{
 
-const painel=document.getElementById("painelObservacao");
-const painelImagem=document.getElementById("painelImagem");
-const painelEspecie=document.getElementById("painelEspecie");
-const painelNomeComum=document.getElementById("painelNomeComum");
-const painelNotas=document.getElementById("painelNotas");
-const painelCoordenadas=document.getElementById("painelCoordenadas");
-
-document.getElementById("painelFechar").onclick=()=>{
-    painel.classList.remove("aberto");
-};
-
-function abrirPainel(obs){
-
-    painelImagem.src=obs.image_url;
-    painelEspecie.textContent=obs.species;
-    painelNomeComum.textContent=obs.common_name||"Sem nome comum";
-    painelNotas.textContent=obs.notes||"Sem observações";
-
-    painelCoordenadas.textContent=
-    `📍 ${Number(obs.latitude).toFixed(5)}, ${Number(obs.longitude).toFixed(5)}`;
-
-    painel.classList.add("aberto");
-}
-
-// =====================================
-// OBSERVAÇÕES
-// =====================================
-
-async function carregarObservacoes(){
-
-    const {data,error}=await supabaseARKA
+  const {data,error}=await supabaseARKA
     .from("observations")
     .select("*")
     .not("latitude","is",null)
     .not("longitude","is",null);
 
-    if(error){
-        console.error(error);
-        return;
-    }
+  if(error){
+    console.error(error);
+    return;
+  }
 
-    const bounds=new maplibregl.LngLatBounds();
+  const bounds=new maplibregl.LngLatBounds();
 
-    data.forEach(obs=>{
+  data.forEach(obs=>{
 
-        const elemento=document.createElement("div");
-        elemento.className="arka-marker";
+    const el=document.createElement("div");
+    el.className="arka-marker";
 
-        const popup=new maplibregl.Popup({
-            offset:20
-        }).setHTML(`
-        <div style="text-align:center">
-            <strong style="color:#D4AF37">${obs.species}</strong><br>
-            <small>${obs.common_name||"Sem nome comum"}</small>
+    const popup=new maplibregl.Popup({offset:20})
+      .setHTML(`
+        <div style="padding:6px">
+          <strong style="color:#D4AF37">${obs.species}</strong><br>
+          <small>${obs.common_name||"Sem nome comum"}</small>
         </div>
-        `);
+      `);
 
-        new maplibregl.Marker({
-            element:elemento
-        })
-        .setLngLat([
-            Number(obs.longitude),
-            Number(obs.latitude)
-        ])
-        .setPopup(popup)
-        .addTo(mapa);
+    new maplibregl.Marker({element:el})
+      .setLngLat([Number(obs.longitude),Number(obs.latitude)])
+      .setPopup(popup)
+      .addTo(mapa);
 
-        elemento.addEventListener("click",()=>{
-            abrirPainel(obs);
-        });
+    bounds.extend([Number(obs.longitude),Number(obs.latitude)]);
+  });
 
-        bounds.extend([
-            Number(obs.longitude),
-            Number(obs.latitude)
-        ]);
+  if(!bounds.isEmpty()){
+    mapa.fitBounds(bounds,{padding:60});
+  }
 
-    });
-
-    if(!bounds.isEmpty()){
-        mapa.fitBounds(bounds,{
-            padding:60
-        });
-    }
-
-}
-
-// Espera o mapa carregar completamente
-mapa.on("load",()=>{
-    carregarObservacoes();
 });
 </script>
 
