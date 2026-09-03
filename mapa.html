@@ -152,7 +152,10 @@ const mapa = new maplibregl.Map({
   zoom: 4
 });
 
-
+mapa.on("load", () => {
+  carregarObservacoes();
+});
+  
 const iconeARKA = L.divIcon({
   className: "",
   html: `<div style="
@@ -196,6 +199,7 @@ async function carregarObservacoes(){
     .select("*")
     .not("latitude","is",null)
     .not("longitude","is",null);
+  console.log("Observações:", data);
 
   if(error){
     throw error;
@@ -214,16 +218,28 @@ async function carregarObservacoes(){
       </div>
     `);
 
-    const marcador = new maplibregl.Marker({
-      color: "#D4AF37"
-    })
-      .setLngLat([obs.longitude, obs.latitude])
-      .setPopup(popup)
-      .addTo(mapa);
+    const elemento = document.createElement("div");
+elemento.style.width = "20px";
+elemento.style.height = "20px";
+elemento.style.background = "#D4AF37";
+elemento.style.border = "3px solid #050505";
+elemento.style.borderRadius = "50%";
+elemento.style.boxShadow = "0 0 12px rgba(212,175,55,.7)";
+elemento.style.cursor = "pointer";
 
-    marcador.getElement().addEventListener("click", () => {
-      abrirPainel(obs);
-    });
+const popup = new maplibregl.Popup({ offset: 20 }).setHTML(`
+  <div style="text-align:center">
+    <strong style="color:#D4AF37">${obs.species}</strong><br>
+    <small>${obs.common_name || "Sem nome comum"}</small>
+  </div>
+`);
+
+new maplibregl.Marker({ element: elemento })
+  .setLngLat([obs.longitude, obs.latitude])
+  .setPopup(popup)
+  .addTo(mapa);
+
+elemento.addEventListener("click", () => abrirPainel(obs));
 
     bounds.extend([obs.longitude, obs.latitude]);
 
