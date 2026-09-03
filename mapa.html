@@ -138,7 +138,6 @@ Linha: ${line}:${col}`;
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
-
 <script>
 const supabaseARKA = window.supabase.createClient(
   "https://haoqywnqxeydylfzxqzz.supabase.co",
@@ -152,23 +151,7 @@ const mapa = new maplibregl.Map({
   zoom: 4
 });
 
-mapa.on("load", () => {
-  carregarObservacoes();
-});
-  
-const iconeARKA = L.divIcon({
-  className: "",
-  html: `<div style="
-    width:20px;
-    height:20px;
-    background:#D4AF37;
-    border:3px solid #050505;
-    border-radius:50%;
-    box-shadow:0 0 12px rgba(212,175,55,.6);
-  "></div>`,
-  iconSize:[20,20],
-  iconAnchor:[10,10]
-});
+mapa.addControl(new maplibregl.NavigationControl(), "top-right");
 
 const painel = document.getElementById("painelObservacao");
 const painelImagem = document.getElementById("painelImagem");
@@ -187,10 +170,10 @@ function abrirPainel(obs){
   painelNomeComum.textContent = obs.common_name || "Sem nome comum";
   painelNotas.textContent = obs.notes || "Sem observações";
   painelCoordenadas.textContent =
-    `📍 ${obs.latitude.toFixed(5)}, ${obs.longitude.toFixed(5)}`;
+    `📍 ${Number(obs.latitude).toFixed(5)}, ${Number(obs.longitude).toFixed(5)}`;
+
   painel.classList.add("aberto");
 }
-
 
 async function carregarObservacoes(){
 
@@ -199,87 +182,39 @@ async function carregarObservacoes(){
     .select("*")
     .not("latitude","is",null)
     .not("longitude","is",null);
-  alert("Observações: " + data.length);
 
-  if(error){
-    throw error;
+  if (error) {
+    console.error(error);
+    return;
   }
 
   const bounds = new maplibregl.LngLatBounds();
 
   data.forEach(obs => {
 
-  // Cria o ponto dourado
-  const elemento = document.createElement("div");
-  elemento.style.width = "18px";
-  elemento.style.height = "18px";
-  elemento.style.background = "#D4AF37";
-  elemento.style.border = "3px solid #050505";
-  elemento.style.borderRadius = "50%";
-  elemento.style.boxShadow = "0 0 12px rgba(212,175,55,.7)";
-  elemento.style.cursor = "pointer";
+    const el = document.createElement("div");
+    el.style.width = "18px";
+    el.style.height = "18px";
+    el.style.background = "#D4AF37";
+    el.style.border = "3px solid #050505";
+    el.style.borderRadius = "50%";
+    el.style.boxShadow = "0 0 12px rgba(212,175,55,.7)";
+    el.style.cursor = "pointer";
 
-  const popup = new maplibregl.Popup({ offset: 20 }).setHTML(`
-    <div style="text-align:center">
-      <strong style="color:#D4AF37">${obs.species}</strong><br>
-      <small>${obs.common_name || "Sem nome comum"}</small>
-    </div>
-  `);
+    new maplibregl.Marker({ element: el })
+      .setLngLat([Number(obs.longitude), Number(obs.latitude)])
+      .addTo(mapa);
 
-  new maplibregl.Marker({ element: elemento })
-    .setLngLat([Number(obs.longitude), Number(obs.latitude)])
-    .setPopup(popup)
-    .addTo(mapa);
+    el.addEventListener("click", () => abrirPainel(obs));
 
-  elemento.addEventListener("click", () => abrirPainel(obs));
-
-});
-
-    const elemento = document.createElement("div");
-elemento.style.width = "20px";
-elemento.style.height = "20px";
-elemento.style.background = "#D4AF37";
-elemento.style.border = "3px solid #050505";
-elemento.style.borderRadius = "50%";
-elemento.style.boxShadow = "0 0 12px rgba(212,175,55,.7)";
-elemento.style.cursor = "pointer";
-
-const popup = new maplibregl.Popup({ offset: 20 }).setHTML(`
-  <div style="text-align:center">
-    <strong style="color:#D4AF37">${obs.species}</strong><br>
-    <small>${obs.common_name || "Sem nome comum"}</small>
-  </div>
-`);
-
-new maplibregl.Marker({ element: elemento })
-  .setLngLat([obs.longitude, obs.latitude])
-  .setPopup(popup)
-  .addTo(mapa);
-
-elemento.addEventListener("click", () => abrirPainel(obs));
-
-    bounds.extend([obs.longitude, obs.latitude]);
-
+    bounds.extend([Number(obs.longitude), Number(obs.latitude)]);
   });
 
-  if(!bounds.isEmpty()){
-    mapa.fitBounds(bounds,{
-      padding:60
-    });
+  if (!bounds.isEmpty()) {
+    mapa.fitBounds(bounds, { padding: 60 });
   }
-
 }
-if(limites.length){
 
-const bounds=new maplibregl.LngLatBounds();
-
-limites.forEach(p=>{
-bounds.extend([p[1],p[0]]);
-});
-
-mapa.fitBounds(bounds,{
-padding:60
-});
-
-}
+mapa.on("load", carregarObservacoes);
+  
 </script>
