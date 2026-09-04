@@ -641,9 +641,9 @@ body.tema-tundra{
   radial-gradient(circle at top,#425A66,#22313A,#11181D);
 }
 
-/* ===================================
+/* ===========================
    BIOMAS DO PLANETA
-=================================== */
+=========================== */
 
 #biomas{
   padding:70px 24px;
@@ -655,54 +655,127 @@ body.tema-tundra{
   line-height:1.7;
 }
 
-.biomas-grid{
-  display:flex;
-  flex-direction:column;
-  gap:22px;
-}
+/* Destaque */
 
-.bioma{
+.bioma-destaque{
+
+  position:relative;
+
   overflow:hidden;
+
   border-radius:28px;
-  transition:.3s;
-  border:1px solid rgba(255,255,255,.08);
+
+  margin-bottom:24px;
+
+  border:1px solid rgba(212,175,55,.15);
+
 }
 
-.bioma img{
+.bioma-destaque img{
+
   width:100%;
-  height:220px;
+  height:300px;
   object-fit:cover;
-  display:block;
+
 }
 
-.bioma .card-content{
-  padding:24px;
+.bioma-destaque .overlay{
+
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+
+  padding:26px;
+
+  background:linear-gradient(
+  to top,
+  rgba(0,0,0,.82),
+  rgba(0,0,0,.1));
+
 }
 
-.bioma h3{
-  color:#D4AF37;
-  margin-bottom:10px;
-  font-size:30px;
+.bioma-destaque h3{
+
+  color:#F5D66B;
+  font-size:34px;
+
 }
 
-.bioma p{
-  color:#D5DDD6;
-  line-height:1.6;
-  font-size:18px;
+/* Grid */
+
+.biomas-grid{
+
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
+
 }
 
-.bioma:hover{
+.bioma-card{
+
+  overflow:hidden;
+
+  border-radius:22px;
+
+  transition:.3s;
+
+}
+
+.bioma-card:hover{
+
   transform:translateY(-5px);
+
 }
 
-/* cores */
+.bioma-card img{
 
-.tropical{background:#0F261D;}
+  width:100%;
+  height:150px;
+  object-fit:cover;
+
+}
+
+.bioma-card .info{
+
+  padding:18px;
+
+}
+
+.bioma-card h3{
+
+  color:#D4AF37;
+  font-size:22px;
+  margin-bottom:6px;
+
+}
+
+.bioma-card p{
+
+  color:#D7DDD7;
+  font-size:15px;
+
+}
+
+/* Cores */
+
 .oceano{background:#082033;}
 .savana{background:#3B321F;}
 .deserto{background:#4A321D;}
 .umidas{background:#113236;}
 .taiga{background:#1A3124;}
 .tundra{background:#22313A;}
+
+@media(max-width:768px){
+
+.biomas-grid{
+grid-template-columns:1fr;
+}
+
+.bioma-destaque img{
+height:260px;
+}
+
+}
    
 }
