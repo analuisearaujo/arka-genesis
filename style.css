@@ -1,47 +1,481 @@
-:root {
+/* =========================================
+   ARKA GENESIS 2.0
+   Identidade Oficial
+========================================= */
 
-    /* ARKA COLORS */
+:root{
 
-    --arka-black: #050505;
+  /* Cores principais */
 
-    --arka-surface: #111111;
+  --arka-forest:#0B1F17;
+  --arka-ocean:#003049;
+  --arka-wetland:#2E7D79;
+  --arka-ochre:#A66A2C;
+  --arka-gold:#D4AF37;
+  --arka-light:#F5F5F2;
+  --arka-text:#D8DED8;
+  --arka-card:#10241B;
+  --arka-border:rgba(212,175,55,.12);
 
-    --arka-gold: #D4AF37;
+}
 
-    --arka-white: #FFFFFF;
+/* ========================= */
 
-    --arka-gray: #999999;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
+html{
+  scroll-behavior:smooth;
+}
 
-    /* TYPOGRAPHY */
+body{
 
-    --font-primary:
-        Inter,
-        Arial,
-        sans-serif;
+  background:
+  radial-gradient(circle at top,#123021 0%,var(--arka-forest) 35%,#08120F 100%);
 
+  color:var(--arka-light);
+  font-family:Inter,system-ui,-apple-system,sans-serif;
+  line-height:1.6;
 
-    /* SPACING */
+}
 
-    --space-xs: 8px;
+/* ========================= */
+/* HEADER */
+/* ========================= */
 
-    --space-sm: 12px;
+header{
 
-    --space-md: 20px;
+  position:sticky;
+  top:0;
+  z-index:1000;
 
-    --space-lg: 32px;
+  background:rgba(11,31,23,.88);
+  backdrop-filter:blur(18px);
 
-    --space-xl: 48px;
+  border-bottom:1px solid rgba(255,255,255,.05);
 
+  padding:18px 24px;
 
-    /* RADIUS */
+}
 
-    --radius-sm: 10px;
+.logo{
 
-    --radius-md: 16px;
+  display:flex;
+  align-items:center;
+  gap:14px;
 
-    --radius-lg: 24px;
+}
 
-    --radius-pill: 999px;
+.logo img{
+
+  width:52px;
+  height:52px;
+  object-fit:contain;
+
+}
+
+.logo-texto h1{
+
+  color:var(--arka-gold);
+  letter-spacing:6px;
+  font-size:30px;
+  font-weight:700;
+
+}
+
+.logo-texto span{
+
+  color:var(--arka-text);
+  text-transform:uppercase;
+  letter-spacing:6px;
+  font-size:11px;
+
+}
+
+/* ========================= */
+/* HERO */
+/* ========================= */
+
+.hero{
+
+  padding:72px 26px;
+
+  background:
+  linear-gradient(180deg,
+  rgba(16,36,27,.25),
+  rgba(8,18,15,.9));
+
+}
+
+.hero h1{
+
+  font-size:48px;
+  line-height:1.1;
+  margin-bottom:18px;
+
+}
+
+.hero p{
+
+  color:#C5D1C7;
+  max-width:620px;
+  margin-bottom:34px;
+
+}
+
+/* ========================= */
+/* BOTÕES */
+/* ========================= */
+
+button,
+.btn{
+
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  border:none;
+  border-radius:999px;
+
+  cursor:pointer;
+
+  transition:.25s;
+
+  text-decoration:none;
+
+}
+
+.btn-primary{
+
+  background:var(--arka-gold);
+  color:#111;
+  padding:15px 28px;
+  font-weight:700;
+
+}
+
+.btn-primary:hover{
+
+  transform:translateY(-2px);
+  box-shadow:0 0 20px rgba(212,175,55,.35);
+
+}
+
+.btn-secondary{
+
+  background:transparent;
+  color:var(--arka-light);
+
+  border:1px solid var(--arka-wetland);
+
+  padding:15px 28px;
+
+}
+
+.btn-secondary:hover{
+
+  background:rgba(46,125,121,.15);
+
+}
+
+/* ========================= */
+/* SEÇÕES */
+/* ========================= */
+
+section{
+
+  padding:64px 26px;
+
+}
+
+section h2{
+
+  font-size:34px;
+  margin-bottom:26px;
+  color:var(--arka-gold);
+
+}
+
+/* ========================= */
+/* CARDS */
+/* ========================= */
+
+.card{
+
+  background:var(--arka-card);
+
+  border:1px solid var(--arka-border);
+
+  border-radius:24px;
+
+  overflow:hidden;
+
+  transition:.25s;
+
+}
+
+.card:hover{
+
+  transform:translateY(-6px);
+
+  box-shadow:
+  0 20px 50px rgba(0,0,0,.35),
+  0 0 24px rgba(212,175,55,.08);
+
+}
+
+.card img{
+
+  width:100%;
+  display:block;
+  object-fit:cover;
+
+}
+
+.card-content{
+
+  padding:20px;
+
+}
+
+.card h3{
+
+  color:var(--arka-gold);
+  margin-bottom:8px;
+
+}
+
+.card p{
+
+  color:#B8C4B8;
+
+}
+
+/* ========================= */
+/* GRID */
+/* ========================= */
+
+.grid{
+
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:24px;
+
+}
+
+/* ========================= */
+/* MAPA */
+/* ========================= */
+
+#map{
+
+  width:100%;
+  height:70vh;
+
+  border-radius:28px;
+
+  overflow:hidden;
+
+  border:1px solid rgba(212,175,55,.12);
+
+  box-shadow:
+  0 20px 50px rgba(0,0,0,.45);
+
+}
+
+/* Marcador do ARKA */
+
+.arka-marker{
+
+  width:22px;
+  height:22px;
+
+  border-radius:50%;
+
+  background:var(--arka-gold);
+
+  border:3px solid var(--arka-forest);
+
+  box-shadow:
+  0 0 16px rgba(212,175,55,.7);
+
+  cursor:pointer;
+
+}
+
+/* Painel da observação */
+
+#painelObservacao{
+
+  position:fixed;
+
+  left:0;
+  right:0;
+  bottom:-100%;
+
+  background:#10241B;
+
+  color:var(--arka-light);
+
+  border-radius:28px 28px 0 0;
+
+  padding:24px;
+
+  transition:bottom .35s ease;
+
+  z-index:5000;
+
+  box-shadow:0 -20px 50px rgba(0,0,0,.55);
+
+}
+
+#painelObservacao.aberto{
+
+  bottom:0;
+
+}
+
+#painelImagem{
+
+  width:100%;
+  height:220px;
+  object-fit:cover;
+
+  border-radius:16px;
+
+  margin-bottom:16px;
+
+}
+
+#painelEspecie{
+
+  color:var(--arka-gold);
+  margin-bottom:6px;
+
+}
+
+#painelNomeComum{
+
+  color:#B6C3B6;
+  margin-bottom:18px;
+
+}
+
+#painelNotas{
+
+  margin-bottom:18px;
+
+}
+
+#painelCoordenadas{
+
+  color:#89A59B;
+  font-size:13px;
+
+}
+
+#painelFechar{
+
+  position:absolute;
+  right:18px;
+  top:18px;
+
+  font-size:24px;
+  cursor:pointer;
+
+  color:#C7D4C8;
+
+}
+
+/* ========================= */
+/* POPUPS */
+/* ========================= */
+
+.maplibregl-popup-content{
+
+  background:#10241B;
+  color:white;
+
+  border-radius:14px;
+
+  border:1px solid rgba(212,175,55,.12);
+
+}
+
+.maplibregl-popup-close-button{
+
+  color:var(--arka-gold);
+
+}
+
+/* ========================= */
+/* BADGES */
+/* ========================= */
+
+.badge{
+
+  display:inline-flex;
+  align-items:center;
+
+  background:rgba(46,125,121,.2);
+
+  color:#9EE0D7;
+
+  border-radius:999px;
+
+  padding:6px 12px;
+
+  font-size:12px;
+
+}
+
+/* ========================= */
+/* FOOTER */
+/* ========================= */
+
+footer{
+
+  padding:40px 24px;
+
+  border-top:1px solid rgba(255,255,255,.05);
+
+  text-align:center;
+
+  color:#90A690;
+
+  background:#08120F;
+
+}
+
+/* ========================= */
+/* RESPONSIVO */
+/* ========================= */
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:38px;
+}
+
+.logo img{
+width:46px;
+height:46px;
+}
+
+.logo-texto h1{
+font-size:24px;
+letter-spacing:4px;
+}
+
+.logo-texto span{
+letter-spacing:4px;
+}
+
+#map{
+height:60vh;
+}
 
 }
