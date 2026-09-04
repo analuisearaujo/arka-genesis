@@ -640,5 +640,69 @@ body.tema-tundra{
   background:
   radial-gradient(circle at top,#425A66,#22313A,#11181D);
 }
+
+/* ===================================
+   BIOMAS DO PLANETA
+=================================== */
+
+#biomas{
+  padding:70px 24px;
+}
+
+.biomas-subtitulo{
+  color:#C6D2C8;
+  margin-bottom:30px;
+  line-height:1.7;
+}
+
+.biomas-grid{
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+}
+
+.bioma{
+  overflow:hidden;
+  border-radius:28px;
+  transition:.3s;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.bioma img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  display:block;
+}
+
+.bioma .card-content{
+  padding:24px;
+}
+
+.bioma h3{
+  color:#D4AF37;
+  margin-bottom:10px;
+  font-size:30px;
+}
+
+.bioma p{
+  color:#D5DDD6;
+  line-height:1.6;
+  font-size:18px;
+}
+
+.bioma:hover{
+  transform:translateY(-5px);
+}
+
+/* cores */
+
+.tropical{background:#0F261D;}
+.oceano{background:#082033;}
+.savana{background:#3B321F;}
+.deserto{background:#4A321D;}
+.umidas{background:#113236;}
+.taiga{background:#1A3124;}
+.tundra{background:#22313A;}
    
 }
