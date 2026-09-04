@@ -1,318 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    
-    <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>ARKA Genesis</title>
+<title>ARKA Genesis</title>
 
-    <style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-        * {
-            box-sizing: border-box;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        body {
-            margin: 0;
-            background: #050505;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-        }
+<link rel="icon" href="logo-arka.png">
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 22px 7%;
-            border-bottom: 1px solid #222;
-        }
-
-        .logo {
-            color: #D4AF37;
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 5px;
-        }
-
-        nav {
-            display: flex;
-            gap: 24px;
-        }
-
-        nav a {
-            color: #999;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        nav a:hover {
-            color: #fff;
-        }
-
-        .hero {
-            min-height: 78vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 70px 20px;
-        }
-
-        .hero-content {
-            width: 100%;
-            max-width: 760px;
-        }
-
-        .tag {
-            color: #D4AF37;
-            font-size: 12px;
-            font-weight: bold;
-            letter-spacing: 5px;
-        }
-
-        h1 {
-            margin: 24px 0;
-            font-size: clamp(52px, 10vw, 90px);
-            line-height: 0.95;
-            letter-spacing: -4px;
-        }
-
-        .subtitle {
-            max-width: 600px;
-            margin: 0 auto;
-            color: #999;
-            font-size: 18px;
-            line-height: 1.7;
-        }
-
-        .botoes {
-            max-width: 340px;
-            margin: 38px auto;
-        }
-
-        .botao {
-            display: block;
-            width: 100%;
-            padding: 17px;
-            margin: 12px 0;
-            background: #111;
-            color: #fff;
-            border: 1px solid #333;
-            border-radius: 999px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-        .botao:hover {
-            border-color: #D4AF37;
-            color: #D4AF37;
-        }
-
-        #preview {
-            display: none;
-            width: 100%;
-            max-width: 360px;
-            margin: 30px auto;
-            border-radius: 24px;
-            border: 1px solid #333;
-        }
-
-        #analise {
-            margin-top: 20px;
-            color: #D4AF37;
-        }
-
-        #resultado {
-            display: none;
-            margin-top: 30px;
-        }
-
-        .resultado-card {
-            padding: 28px;
-            background: #111;
-            border: 1px solid #262626;
-            border-radius: 24px;
-            text-align: left;
-        }
-
-        .resultado-topo {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .resultado-topo h2 {
-            margin: 0;
-            color: #D4AF37;
-        }
-
-        .resultado-topo p {
-            margin: 6px 0;
-            color: #999;
-        }
-
-        .badge {
-            padding: 10px 14px;
-            background: #D4AF37;
-            color: #050505;
-            border-radius: 999px;
-            font-weight: bold;
-        }
-
-        .status {
-            margin: 20px 0;
-            color: #C9B05A;
-        }
-.campo {
-    margin-top: 20px;
-}
-
-.campo label {
-    display: block;
-    margin-bottom: 8px;
-    color: #D4AF37;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.campo input,
-.campo textarea {
-    width: 100%;
-    padding: 14px;
-    background: #050505;
-    color: #ffffff;
-    border: 1px solid #333;
-    border-radius: 12px;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    outline: none;
-}
-
-.campo input:focus,
-.campo textarea:focus {
-    border-color: #D4AF37;
-}
-
-.localizacao {
-    margin-top: 20px;
-    padding: 14px;
-    background: #050505;
-    border: 1px solid #222;
-    border-radius: 12px;
-    color: #D4AF37;
-    font-size: 14px;
-}
-
-#statusGPS {
-    color: #999;
-}
-        .salvar {
-            width: 100%;
-            margin-top: 20px;
-            padding: 16px;
-            background: #D4AF37;
-            color: #050505;
-            border: none;
-            border-radius: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .salvar:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .mensagem {
-            margin-top: 15px;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .sucesso {
-            color: #D4AF37;
-        }
-
-        .erro {
-            color: #ff7777;
-        }
-
-        .features {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            padding: 40px 7% 80px;
-        }
-
-        .card {
-            width: 230px;
-            padding: 25px;
-            background: #111;
-            border: 1px solid #222;
-            border-radius: 20px;
-        }
-
-        .card h3 {
-            color: #D4AF37;
-        }
-
-        .card p {
-            color: #888;
-            line-height: 1.5;
-        }
-
-        footer {
-            padding: 30px;
-            text-align: center;
-            border-top: 1px solid #222;
-            color: #555;
-        }
-
-        @media (max-width: 600px) {
-
-            header {
-                padding: 20px;
-            }
-
-            nav {
-                gap: 12px;
-            }
-
-            nav a {
-                font-size: 11px;
-            }
-
-            h1 {
-                font-size: 55px;
-            }
-
-            .hero {
-                padding-top: 50px;
-            }
-
-        }
-            .mapa-section {
-    padding: 80px 20px;
-}
-
-#mapaObservacoes {
-    width: 100%;
-    height: 500px;
-    margin-top: 30px;
-    border-radius: 24px;
-    overflow: hidden;
-    border: 1px solid #333;
-}
-        
-    </style>
+<link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -320,232 +22,205 @@
 
 <header>
 
-    <div class="logo">
-        ARKA
-    </div>
+<div class="logo">
 
-    <nav>
+<img src="logo-arka.png" alt="ARKA Genesis">
 
-        <a href="#">
-            Explorar
-        </a>
+<div class="logo-texto">
 
-        <a href="./mapa.html?v=2004">
-    Mapa
-</a>
+<h1>ARKA</h1>
+<span>Genesis</span>
 
-        <a href="#">
-            Espécies
-        </a>
+</div>
 
-    </nav>
+</div>
 
 </header>
 
 <section class="hero">
 
-    <div class="hero-content">
+<div class="hero-content">
 
-        <div class="tag">
-            ARKA GENESIS
-        </div>
+<img class="hero-logo" src="logo-arka.png" alt="Símbolo ARKA">
 
-        <h1>
-            Conheça a vida.
-        </h1>
+<h1>Explore.<br>Registre.<br>Proteja.</h1>
 
-        <p class="subtitle">
-            Uma nova inteligência para identificar,
-            registrar e compreender a biodiversidade.
-        </p>
+<p>
 
-        <div class="botoes">
+A plataforma global para registrar, monitorar e proteger a biodiversidade.
+Cada observação fortalece a ciência e aproxima pessoas da natureza.
 
-            <label
-                for="camera"
-                class="botao">
+</p>
 
-                📷 Tirar uma foto
+<div class="hero-botoes">
 
-            </label>
+<a href="#registro" class="btn btn-primary">
+Registrar observação
+</a>
 
-            <label
-                for="gallery"
-                class="botao">
-
-                🖼️ Escolher da galeria
-
-            </label>
-
-        </div>
-
-        <input
-            id="camera"
-            type="file"
-            accept="image/*"
-            capture="environment"
-            hidden>
-
-        <input
-            id="gallery"
-            type="file"
-            accept="image/*"
-            hidden>
-
-        <img
-    id="preview"
-    alt="Fotografia selecionada">
-
-        <div id="analise"></div>
-
-        <div id="resultado">
-
-            <div class="resultado-card">
-
-                <div class="resultado-topo">
-
-                    <div>
-
-                        <h2>
-                            ARKA Vision
-                        </h2>
-
-                        <p>
-                            Registro de observação
-                        </p>
-
-                    </div>
-
-                    <div class="badge">
-                        BETA
-                    </div>
-
-                </div>
-
-                <div class="status">
-
-                    Possível identificação:
-                    <strong>
-                        Crotalus durissus
-                    <div class="status">
-
-    Possível identificação:
-    <strong id="especie">
-        Crotalus durissus
-    </strong>
+<a href="mapa.html" class="btn btn-secondary">
+Explorar mapa
+</a>
 
 </div>
 
-<div class="campo">
-
-    <label for="nomeComum">
-        Nome comum
-    </label>
-
-    <input
-        id="nomeComum"
-        type="text"
-        value="Cascavel"
-        placeholder="Nome comum">
-
 </div>
-
-<div class="campo">
-
-    <label for="observacoes">
-        Observações
-    </label>
-
-    <textarea
-        id="observacoes"
-        rows="4"
-        placeholder="Descreva o que você observou..."></textarea>
-
-</div>
-
-<div class="localizacao">
-
-    📍 Localização GPS
-    <span id="statusGPS">
-        Será obtida ao salvar
-    </span>
-
-</div>
-
-                <button
-                    id="salvar"
-                    class="salvar">
-
-                    Salvar observação
-
-                </button>
-
-                <div
-                    id="mensagem"
-                    class="mensagem">
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
 
 </section>
 
-<section class="features">
+<section>
 
-    <div class="card">
+<h2>O ARKA conecta pessoas e biodiversidade.</h2>
 
-        <h3>
-            Identificar
-        </h3>
+<div class="grid">
 
-        <p>
-            Utilize uma fotografia para
-            identificar uma espécie.
-        </p>
+<div class="card">
 
-    </div>
+<div class="card-content">
 
-    <div class="card">
+<h3>📷 Registre</h3>
 
-        <h3>
-            Registrar
-        </h3>
+<p>
 
-        <p>
-            Transforme observações em
-            dados de biodiversidade.
-        </p>
+Fotografe espécies e contribua para um banco global de biodiversidade.
 
-    </div>
+</p>
 
-    <div class="card">
+</div>
 
-        <h3>
-            Explorar
-        </h3>
+</div>
 
-        <p>
-            Explore registros da
-            biodiversidade.
-        </p>
+<div class="card">
 
-    </div>
+<div class="card-content">
+
+<h3>🗺️ Explore</h3>
+
+<p>
+
+Visualize observações em um mapa interativo com localização precisa.
+
+</p>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-content">
+
+<h3>🔬 Descubra</h3>
+
+<p>
+
+Construa conhecimento sobre fauna e flora através de dados organizados.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
 
 </section>
-    
-    
+
+<section>
+
+<h2>Mapa Global</h2>
+
+<p style="margin-bottom:24px;color:#C8D2C8;">
+
+Veja registros distribuídos pelos biomas do planeta.
+
+</p>
+
+<a href="mapa.html">
+
+<AsyncImage query="dark biodiversity map with glowing gold observation markers premium interface" aspectRatio="16:9" width="100%" maxHeight=420 radius=xl/>
+
+</a>
+
+</section>
+
+<section>
+
+<h2>Biomas vivos</h2>
+
+<div class="grid">
+
+<div class="card">
+
+<AsyncImage query="Amazon rainforest aerial dark green" aspectRatio="5:4" width="100%" maxHeight=220 radius=none/>
+
+<div class="card-content">
+
+<h3>Amazônia</h3>
+
+<p>Verde Floresta.</p>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<AsyncImage query="deep ocean aerial dark blue" aspectRatio="5:4" width="100%" maxHeight=220 radius=none/>
+
+<div class="card-content">
+
+<h3>Oceanos</h3>
+
+<p>Azul Profundo.</p>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<AsyncImage query="Brazilian Cerrado landscape golden dry season" aspectRatio="5:4" width="100%" maxHeight=220 radius=none/>
+
+<div class="card-content">
+
+<h3>Cerrado</h3>
+
+<p>Ocre.</p>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<AsyncImage query="Pantanal wetlands aerial teal green" aspectRatio="5:4" width="100%" maxHeight=220 radius=none/>
+
+<div class="card-content">
+
+<h3>Pantanal</h3>
+
+<p>Verde-Azulado.</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
 <footer>
 
-    ARKA Genesis © 2026
+<img src="logo-arka.png" width="42">
+
+<p style="margin-top:14px;">
+
+ARKA Genesis • Tecnologia a serviço da biodiversidade.
+
+</p>
 
 </footer>
 
-<!-- Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4"></script>
-
 </body>
-
 </html>
