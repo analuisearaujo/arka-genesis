@@ -593,5 +593,52 @@ height:60vh;
   transform:translateY(-6px);
   box-shadow:0 20px 45px rgba(0,0,0,.35);
 }   
+
+/* =====================================
+   TEMAS DINÂMICOS DOS BIOMAS
+===================================== */
+
+body{
+  transition:background .6s ease,color .4s ease;
+}
+
+header{
+  transition:background .6s ease;
+}
+
+body.tema-tropical{
+  background:
+  radial-gradient(circle at top,#173B29,#0B1F17,#08120F);
+}
+
+body.tema-oceano{
+  background:
+  radial-gradient(circle at top,#0B4D74,#003049,#021A2A);
+}
+
+body.tema-savana{
+  background:
+  radial-gradient(circle at top,#7A6330,#5A4A1F,#352A12);
+}
+
+body.tema-deserto{
+  background:
+  radial-gradient(circle at top,#8A6236,#6A4523,#3A2513);
+}
+
+body.tema-umidas{
+  background:
+  radial-gradient(circle at top,#2A7075,#1A4D52,#0B2426);
+}
+
+body.tema-taiga{
+  background:
+  radial-gradient(circle at top,#2A5034,#1C3326,#0E1A12);
+}
+
+body.tema-tundra{
+  background:
+  radial-gradient(circle at top,#425A66,#22313A,#11181D);
+}
    
 }
