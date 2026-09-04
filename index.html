@@ -233,5 +233,21 @@ ARKA Genesis • Tecnologia a serviço da biodiversidade.
 
 </footer>
 
+<script>
+const biomas=document.querySelectorAll(".bioma");
+
+biomas.forEach(card=>{
+
+card.addEventListener("click",()=>{
+
+const tema=card.dataset.tema;
+
+document.body.className=tema;
+
+});
+
+});
+</script>
+
 </body>
 </html>
