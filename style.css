@@ -98,6 +98,42 @@ header{
 /* ========================= */
 /* HERO */
 /* ========================= */
+.hero-content{
+
+max-width:700px;
+
+}
+
+.hero-logo{
+
+width:110px;
+margin-bottom:28px;
+
+filter:drop-shadow(0 0 22px rgba(212,175,55,.25));
+
+}
+
+.hero-botoes{
+
+display:flex;
+gap:16px;
+flex-wrap:wrap;
+
+}
+
+.hero h1{
+
+font-family:"Cinzel",serif;
+font-weight:700;
+letter-spacing:2px;
+
+}
+
+.logo-texto h1{
+
+font-family:"Cinzel",serif;
+
+}
 
 .hero{
 
