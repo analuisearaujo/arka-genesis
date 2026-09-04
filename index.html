@@ -262,8 +262,15 @@ biomas.forEach(card=>{
 card.addEventListener("click",()=>{
 
 const tema=card.dataset.tema;
+const bioma=card.dataset.bioma;
 
 document.body.className=tema;
+
+setTimeout(()=>{
+
+window.location.href=`mapa.html?bioma=${bioma}`;
+
+},350);
 
 });
 
