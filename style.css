@@ -514,4 +514,84 @@ letter-spacing:4px;
 height:60vh;
 }
 
+/* =========================
+   BIOMAS DO PLANETA
+========================= */
+
+#biomas{
+  padding:70px 26px;
+}
+
+.biomas-subtitulo{
+  color:#BFCBC0;
+  margin-bottom:34px;
+  line-height:1.7;
+}
+
+.bioma{
+  overflow:hidden;
+  border-radius:24px;
+  transition:.3s;
+}
+
+.bioma img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+}
+
+.bioma .card-content{
+  padding:22px;
+}
+
+.bioma h3{
+  margin-bottom:10px;
+}
+
+.bioma p{
+  color:#C7D2C8;
+}
+
+/* Cores individuais */
+
+.tropical{
+  background:#0F261D;
+  border:1px solid rgba(34,139,34,.35);
+}
+
+.oceano{
+  background:#082033;
+  border:1px solid rgba(0,119,182,.35);
+}
+
+.savana{
+  background:#3B321F;
+  border:1px solid rgba(205,133,63,.35);
+}
+
+.deserto{
+  background:#4A321D;
+  border:1px solid rgba(210,140,60,.35);
+}
+
+.umidas{
+  background:#113236;
+  border:1px solid rgba(46,125,121,.35);
+}
+
+.taiga{
+  background:#1A3124;
+  border:1px solid rgba(76,175,80,.35);
+}
+
+.tundra{
+  background:#22313A;
+  border:1px solid rgba(176,190,197,.35);
+}
+
+.bioma:hover{
+  transform:translateY(-6px);
+  box-shadow:0 20px 45px rgba(0,0,0,.35);
+}   
+   
 }
