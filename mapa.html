@@ -210,7 +210,8 @@ mapa.on("load", async ()=>{
   if(!bounds.isEmpty()){
     mapa.fitBounds(bounds,{padding:60});
   }
-
+marcador.on("click", () => {
+  abrirPainel(obs);
 });
 
 const painel = document.getElementById("painelObservacao");
