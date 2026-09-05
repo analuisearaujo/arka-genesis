@@ -777,5 +777,56 @@ height:260px;
 }
 
 }
+
+.register-section{
+  padding:80px 20px;
+}
+
+.register-section .container{
+  max-width:700px;
+  margin:auto;
+}
+
+.upload-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+  margin:30px 0;
+}
+
+.upload-card{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:120px;
+  border:2px dashed rgba(212,175,55,.5);
+  border-radius:20px;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.upload-card:hover{
+  border-color:#d4af37;
+}
+
+.input-field{
+  width:100%;
+  padding:16px;
+  margin-bottom:16px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.05);
+  color:white;
+  font-size:16px;
+}
+
+.input-field::placeholder{
+  color:rgba(255,255,255,.6);
+}
+
+#preview{
+  object-fit:cover;
+  max-height:420px;
+}
    
 }
