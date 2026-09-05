@@ -63,8 +63,8 @@ async function enviarImagem(file) {
   // Remove caracteres que podem quebrar o caminho
   const nomeLimpo = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
 
-  // Salva dentro de uma pasta "observacoes"
-  const caminho = `observacoes/${Date.now()}-${nomeLimpo}`;
+  // Salva dentro de uma pasta "observations"
+  const caminho = `observations/${Date.now()}-${nomeLimpo}`;
 
   const { data, error } = await supabaseARKA.storage
     .from("animal-image")
