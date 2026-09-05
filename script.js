@@ -60,21 +60,20 @@ async function obterLocalizacao() {
 // ---------- Upload ----------
 
 async function enviarImagem(file) {
-  // Remove caracteres que podem quebrar o caminho
-  const nomeLimpo = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-
-  // Salva dentro de uma pasta "observacoes"
-  const caminho = `observacoes/${Date.now()}-${nomeLimpo}`;
+  const nome = `${Date.now()}-${file.name.replace(/[^\w.-]/g, "_")}`;
 
   const { data, error } = await supabaseARKA.storage
     .from("animal - image")
-    .upload(caminho, file);
+    .upload(nome, file);
 
-  if (error) throw error;
+  if (error) {
+    alert("ERRO NO UPLOAD: " + JSON.stringify(error));
+    throw error;
+  }
 
   const { data: urlData } = supabaseARKA.storage
     .from("animal - image")
-    .getPublicUrl(caminho);
+    .getPublicUrl(nome);
 
   return urlData.publicUrl;
 }
