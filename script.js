@@ -115,7 +115,10 @@ async function registrarObservacao() {
     if (observacao) observacao.value = "";
   } catch (err) {
   console.error("ERRO REAL:", err);
-  alert("ERRO REAL: " + JSON.stringify(err));
+
+  let mensagem = err?.message || err?.error_description || JSON.stringify(err);
+
+  alert("ERRO REAL:\n" + mensagem);
   } finally {
     btnRegistrar.disabled = false;
     btnRegistrar.textContent = "Registrar observação";
