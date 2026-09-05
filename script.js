@@ -94,12 +94,12 @@ async function registrarObservacao() {
     const { error } = await supabaseARKA
       .from("observations")
       .insert({
-        Species: especie.value || "Não identificado",
-        Confidence: null,
-        Image_url: imagemUrl,
-        Latitude: localizacao?.lat ?? null,
-        Longitude: localizacao?.lon ?? null,
-        Notes: observacao?.value || null
+        species: especie.value || "Não identificado",
+        confidence: null,
+        image_url: imagemUrl,
+        latitude: localizacao?.lat ?? null,
+        longitude: localizacao?.lon ?? null,
+        notes: observacao?.value || null
       });
 
     if (error) throw error;
