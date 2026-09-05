@@ -37,6 +37,36 @@ html,body{
 
 <div id="map"></div>
 
+<div id="painelObservacao">
+
+  <div id="painelBarra"></div>
+
+  <button id="painelFechar">✕</button>
+
+  <img id="painelImagem" src="" alt="Observação">
+
+  <div class="painelConteudo">
+
+    <h2 id="painelEspecie">Espécie</h2>
+
+    <p id="painelNomeComum">Nome comum</p>
+
+    <div class="infoLinha">
+      📅 <span id="painelData">--</span>
+    </div>
+
+    <div class="infoLinha">
+      📍 <span id="painelCoordenadas">--</span>
+    </div>
+
+    <p id="painelNotas">Sem observações.</p>
+
+    <button id="btnVerEspecie">Ver espécie</button>
+
+  </div>
+
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
 
