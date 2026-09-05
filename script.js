@@ -67,13 +67,13 @@ async function enviarImagem(file) {
   const caminho = `observations/${Date.now()}-${nomeLimpo}`;
 
   const { data, error } = await supabaseARKA.storage
-    .from("animal-image")
+    .from("animal - image")
     .upload(caminho, file);
 
   if (error) throw error;
 
   const { data: urlData } = supabaseARKA.storage
-    .from("animal-image")
+    .from("animal - image")
     .getPublicUrl(caminho);
 
   return urlData.publicUrl;
