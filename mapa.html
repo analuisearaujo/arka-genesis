@@ -212,6 +212,35 @@ mapa.on("load", async ()=>{
   }
 
 });
+
+const painel = document.getElementById("painelObservacao");
+const painelImagem = document.getElementById("painelImagem");
+const painelEspecie = document.getElementById("painelEspecie");
+const painelNomeComum = document.getElementById("painelNomeComum");
+const painelData = document.getElementById("painelData");
+const painelCoordenadas = document.getElementById("painelCoordenadas");
+const painelNotas = document.getElementById("painelNotas");
+
+document.getElementById("painelFechar").onclick = () => {
+  painel.classList.remove("aberto");
+};
+
+function abrirPainel(obs){
+
+  painelImagem.src = obs.image_url || "";
+  painelEspecie.textContent = obs.species || "Espécie desconhecida";
+  painelNomeComum.textContent = obs.common_name || "Sem nome comum";
+  painelNotas.textContent = obs.notes || "Sem observações";
+
+  painelCoordenadas.textContent =
+    `${Number(obs.latitude).toFixed(5)}, ${Number(obs.longitude).toFixed(5)}`;
+
+  painelData.textContent = obs.created_at
+    ? new Date(obs.created_at).toLocaleDateString("pt-BR")
+    : "Data indisponível";
+
+  painel.classList.add("aberto");
+}
 </script>
 
 </body>
