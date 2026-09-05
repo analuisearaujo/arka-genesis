@@ -98,7 +98,6 @@ async function registrarObservacao() {
       .from("observations")
       .insert({
         species: especie.value || "Não identificado",
-        confidence: null,
         image_url: imagemUrl,
         latitude: localizacao?.lat ?? null,
         longitude: localizacao?.lon ?? null,
