@@ -67,6 +67,47 @@ Explorar mapa
 
 </section>
 
+<section id="registro" class="register-section">
+  <div class="container">
+
+    <h2>Registrar observação</h2>
+    <p>Fotografe um animal, registre a localização e contribua com a biodiversidade.</p>
+
+    <div class="upload-grid">
+
+      <label class="upload-card">
+        <input type="file" id="camera" accept="image/*" capture="environment" hidden>
+        <span>📷 Tirar foto</span>
+      </label>
+
+      <label class="upload-card">
+        <input type="file" id="gallery" accept="image/*" hidden>
+        <span>🖼️ Escolher da galeria</span>
+      </label>
+
+    </div>
+
+    <img id="preview" style="display:none; width:100%; border-radius:18px; margin:20px 0;">
+
+    <input
+      id="species"
+      type="text"
+      placeholder="Espécie (opcional)"
+      class="input-field">
+
+    <textarea
+      id="notes"
+      placeholder="Observações..."
+      rows="4"
+      class="input-field"></textarea>
+
+    <button id="btnRegistrar" type="button" class="btn btn-primary">
+      Salvar observação
+    </button>
+
+  </div>
+</section>
+
 <section>
 
 <h2>O ARKA conecta pessoas e biodiversidade.</h2>
