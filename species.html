@@ -268,17 +268,31 @@ mapa.addControl(new maplibregl.NavigationControl(),"top-right");
 
 (async()=>{
 
-const {data,error}=await supabaseARKA
-.from("observations")
-.select("*")
-.eq("species",especie);
+const { data, error } = await supabaseARKA
+  .from("observations")
+  .select("*");
 
-if(error){
+if (error) {
   console.error(error);
   return;
 }
 
-if(!data?.length)return;
+// Procura tanto pelo nome científico quanto pelo nome comum
+const obs = data.find(item => {
+  const cientifico = (item.species || "").toLowerCase();
+  const comum = (item.common_name || "").toLowerCase();
+  const busca = (especie || "").toLowerCase();
+
+  return cientifico.includes(busca) || comum.includes(busca);
+});
+
+if (!obs) return;
+
+// Conta quantas observações dessa espécie existem
+const totalDaEspecie = data.filter(item => {
+  const cientifico = (item.species || "").toLowerCase();
+  return cientifico === (obs.species || "").toLowerCase();
+}).length;
 
 const obs=data[0];
 
