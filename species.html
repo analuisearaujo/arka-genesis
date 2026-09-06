@@ -315,7 +315,7 @@ const totalDaEspecie = data.filter(item =>
 foto.src=obs.image_url || obs.Image_url || "";
 nome.textContent=obs.species;
 comum.textContent=obs.common_name || "Sem nome comum";
-totalObs.textContent=data.length;
+totalObs.textContent = totalDaEspecie;
 
 new maplibregl.Marker({color:"#D4AF37"})
 .setLngLat([Number(obs.longitude),Number(obs.latitude)])
