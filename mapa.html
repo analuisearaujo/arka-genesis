@@ -227,6 +227,8 @@ document.getElementById("painelFechar").onclick = () => {
 };
 
 function abrirPainel(obs){
+  
+  console.log(obs);
 
   painelImagem.src = obs.image_url || "";
   painelEspecie.textContent = obs.species || "Espécie desconhecida";
