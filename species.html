@@ -294,8 +294,24 @@ const totalDaEspecie = data.filter(item => {
   return cientifico === (obs.species || "").toLowerCase();
 }).length;
 
-const obs=data[0];
 
+const busca = (especie || "").toLowerCase();
+
+const obs = data.find(item => {
+  const cientifico = (item.species || "").toLowerCase();
+  const comum = (item.common_name || "").toLowerCase();
+
+  return cientifico.includes(busca) || comum.includes(busca);
+});
+
+if (!obs) {
+  console.error("Espécie não encontrada:", especie);
+  return;
+}
+
+const totalDaEspecie = data.filter(item =>
+  (item.species || "").toLowerCase() === (obs.species || "").toLowerCase()
+).length;
 foto.src=obs.image_url || obs.Image_url || "";
 nome.textContent=obs.species;
 comum.textContent=obs.common_name || "Sem nome comum";
