@@ -162,31 +162,7 @@ const supabaseARKA = window.supabase.createClient(
   "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7"
 );
 
-const mapa = new maplibregl.Map({
-  container: "map",
-  style: "https://tiles.openfreemap.org/styles/fiord",
-  center: [-51.925,-14.235],
-  zoom: 4
-});
-
-mapa.addControl(new maplibregl.NavigationControl(),"top-right");
-
-mapa.on("load", async ()=>{
-
-  const {data,error}=await supabaseARKA
-    .from("observations")
-    .select("*")
-    .not("latitude","is",null)
-    .not("longitude","is",null);
-
-  if(error){
-    console.error(error);
-    return;
-  }
-
-  const bounds=new maplibregl.LngLatBounds();
-
-  const painel = document.getElementById("painelObservacao");
+const painel = document.getElementById("painelObservacao");
 const painelImagem = document.getElementById("painelImagem");
 const painelEspecie = document.getElementById("painelEspecie");
 const painelNomeComum = document.getElementById("painelNomeComum");
@@ -199,7 +175,6 @@ document.getElementById("painelFechar").onclick = () => {
 };
 
 function abrirPainel(obs){
-
   painelImagem.src = obs.image_url || obs.Image_url || "";
   painelEspecie.textContent = obs.species || "Espécie desconhecida";
   painelNomeComum.textContent = obs.common_name || "Sem nome comum";
@@ -215,33 +190,58 @@ function abrirPainel(obs){
   painel.classList.add("aberto");
 }
 
-data.forEach(obs => {
+const mapa = new maplibregl.Map({
+  container: "map",
+  style: "https://tiles.openfreemap.org/styles/fiord",
+  center: [-51.925, -14.235],
+  zoom: 4
+});
 
-  const el = document.createElement("div");
-  el.className = "arka-marker";
+mapa.addControl(new maplibregl.NavigationControl(), "top-right");
 
-  el.addEventListener("click", (e) => {
-    e.stopPropagation();
-    abrirPainel(obs);
+mapa.on("load", async function(){
+
+  const { data, error } = await supabaseARKA
+    .from("observations")
+    .select("*")
+    .not("latitude","is",null)
+    .not("longitude","is",null);
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  const bounds = new maplibregl.LngLatBounds();
+
+  data.forEach(function(obs){
+
+    const el = document.createElement("div");
+    el.className = "arka-marker";
+
+    el.addEventListener("click", function(e){
+      e.stopPropagation();
+      abrirPainel(obs);
+    });
+
+    new maplibregl.Marker({ element: el })
+      .setLngLat([Number(obs.longitude), Number(obs.latitude)])
+      .addTo(mapa);
+
+    bounds.extend([Number(obs.longitude), Number(obs.latitude)]);
   });
 
-  new maplibregl.Marker({ element: el })
-    .setLngLat([Number(obs.longitude), Number(obs.latitude)])
-    .addTo(mapa);
+  if(!bounds.isEmpty()){
+    mapa.fitBounds(bounds,{ padding:60 });
+  }
 
-  bounds.extend([Number(obs.longitude), Number(obs.latitude)]);
+  mapa.on("click", function(){
+    painel.classList.remove("aberto");
+  });
+
 });
 
-if (!bounds.isEmpty()) {
-  mapa.fitBounds(bounds, { padding: 60 });
-}
-
-mapa.on("click", () => {
-  painel.classList.remove("aberto");
-});
-  
+mapa.on("error", function(e){
+  console.error("Erro MapLibre:", e);
 });
 </script>
-
-</body>
-</html>
