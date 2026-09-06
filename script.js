@@ -16,16 +16,18 @@ const observacao = document.getElementById("notes");
 let imagemSelecionada = null;
 let localizacao = null;
 
-// ---------- Prévia da imagem ----------
+// ----------------------------
+// Prévia da imagem
+// ----------------------------
 
-function mostrarImagem(file) {
-  if (!file) return;
+function mostrarImagem(file){
+  if(!file) return;
 
   imagemSelecionada = file;
 
   const reader = new FileReader();
 
-  reader.onload = e => {
+  reader.onload = e=>{
     preview.src = e.target.result;
     preview.style.display = "block";
   };
@@ -33,98 +35,185 @@ function mostrarImagem(file) {
   reader.readAsDataURL(file);
 }
 
-camera?.addEventListener("change", e => mostrarImagem(e.target.files[0]));
-gallery?.addEventListener("change", e => mostrarImagem(e.target.files[0]));
+camera?.addEventListener("change",e=>mostrarImagem(e.target.files[0]));
+gallery?.addEventListener("change",e=>mostrarImagem(e.target.files[0]));
 
-// ---------- Localização ----------
+// ----------------------------
+// Localização
+// ----------------------------
 
-async function obterLocalizacao() {
-  return new Promise(resolve => {
-    if (!navigator.geolocation) return resolve(null);
+async function obterLocalizacao(){
+
+  return new Promise(resolve=>{
+
+    if(!navigator.geolocation) return resolve(null);
 
     navigator.geolocation.getCurrentPosition(
-      pos =>
-        resolve({
-          lat: pos.coords.latitude,
-          lon: pos.coords.longitude
-        }),
-      () => resolve(null),
+
+      pos=>resolve({
+        lat:pos.coords.latitude,
+        lon:pos.coords.longitude
+      }),
+
+      ()=>resolve(null),
+
       {
-        enableHighAccuracy: true,
-        timeout: 10000
+        enableHighAccuracy:true,
+        timeout:10000
       }
+
     );
+
   });
+
 }
 
-// ---------- Upload ----------
+// ----------------------------
+// Identificação da espécie
+// ----------------------------
 
-async function enviarImagem(file) {
-  const nome = `${Date.now()}-${file.name.replace(/[^\w.-]/g, "_")}`;
+async function identificarEspecie(file){
 
-  const { data, error } = await supabaseARKA.storage
+  try{
+
+    const formData = new FormData();
+    formData.append("image",file);
+
+    // Endpoint que vamos criar depois
+    const resposta = await fetch("/api/identify",{
+      method:"POST",
+      body:formData
+    });
+
+    if(!resposta.ok) throw new Error("IA indisponível");
+
+    const resultado = await resposta.json();
+
+    return {
+      scientific_name:resultado.scientific_name,
+      common_name:resultado.common_name,
+      confidence:resultado.confidence
+    };
+
+  }catch(e){
+
+    console.log("Identificação indisponível.");
+
+    return null;
+
+  }
+
+}
+
+// ----------------------------
+// Upload
+// ----------------------------
+
+async function enviarImagem(file){
+
+  const nome=`${Date.now()}-${file.name.replace(/[^\w.-]/g,"_")}`;
+
+  const {error}=await supabaseARKA.storage
     .from("animal - image")
-    .upload(nome, file);
+    .upload(nome,file);
 
-  if (error) {
-    alert("ERRO NO UPLOAD: " + JSON.stringify(error));
+  if(error){
+    alert("ERRO NO UPLOAD: "+JSON.stringify(error));
     throw error;
   }
 
-  const { data: urlData } = supabaseARKA.storage
+  const {data:urlData}=supabaseARKA.storage
     .from("animal - image")
     .getPublicUrl(nome);
 
   return urlData.publicUrl;
+
 }
 
-// ---------- Registrar ----------
+// ----------------------------
+// Registrar observação
+// ----------------------------
 
-async function registrarObservacao() {
-  try {
-    btnRegistrar.disabled = true;
-    btnRegistrar.textContent = "Salvando...";
+async function registrarObservacao(){
 
-    if (!imagemSelecionada) {
+  try{
+
+    btnRegistrar.disabled=true;
+    btnRegistrar.textContent="Identificando espécie...";
+
+    if(!imagemSelecionada){
       alert("Escolha uma imagem primeiro.");
       return;
     }
 
-    localizacao = await obterLocalizacao();
+    localizacao=await obterLocalizacao();
 
-    const imagemUrl = await enviarImagem(imagemSelecionada);
+    const identificacao=await identificarEspecie(imagemSelecionada);
 
-    const { error } = await supabaseARKA
+    if(identificacao){
+
+      especie.value=identificacao.scientific_name;
+
+      alert(
+`Espécie identificada!
+
+${identificacao.scientific_name}
+${identificacao.common_name||""}
+
+Confiança: ${identificacao.confidence||"--"}%`
+      );
+
+    }
+
+    btnRegistrar.textContent="Enviando imagem...";
+
+    const imagemUrl=await enviarImagem(imagemSelecionada);
+
+    btnRegistrar.textContent="Salvando observação...";
+
+    const {error}=await supabaseARKA
       .from("observations")
       .insert({
-        species: especie.value || "Não identificado",
-        image_url: imagemUrl,
-        latitude: localizacao?.lat ?? null,
-        longitude: localizacao?.lon ?? null,
-        notes: observacao?.value || null
+
+        species:especie.value||"Não identificado",
+        common_name:identificacao?.common_name||null,
+        confidence:identificacao?.confidence||null,
+
+        image_url:imagemUrl,
+
+        latitude:localizacao?.lat??null,
+        longitude:localizacao?.lon??null,
+
+        notes:observacao?.value||null
+
       });
 
-    if (error) throw error;
+    if(error) throw error;
 
     alert("Observação registrada com sucesso!");
 
-    preview.style.display = "none";
-    preview.src = "";
+    preview.style.display="none";
+    preview.src="";
 
-    imagemSelecionada = null;
-    especie.value = "";
+    imagemSelecionada=null;
 
-    if (observacao) observacao.value = "";
-  } catch (err) {
-  console.error("ERRO REAL:", err);
+    especie.value="";
 
-  let mensagem = err?.message || err?.error_description || JSON.stringify(err);
+    if(observacao) observacao.value="";
 
-  alert("ERRO REAL:\n" + mensagem);
-  } finally {
-    btnRegistrar.disabled = false;
-    btnRegistrar.textContent = "Registrar observação";
+  }catch(err){
+
+    console.error(err);
+
+    alert("ERRO:\n"+(err.message||JSON.stringify(err)));
+
+  }finally{
+
+    btnRegistrar.disabled=false;
+    btnRegistrar.textContent="Registrar observação";
+
   }
+
 }
 
-btnRegistrar?.addEventListener("click", registrarObservacao);
+btnRegistrar?.addEventListener("click",registrarObservacao);
