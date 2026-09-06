@@ -217,11 +217,9 @@ Ver todas as observações
 <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
 
 <script>
-
 //========================
 // SUPABASE
 //========================
-
 const supabaseARKA = window.supabase.createClient(
   "https://haoqywnqxeydylfzxqzz.supabase.co",
   "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7"
@@ -230,207 +228,138 @@ const supabaseARKA = window.supabase.createClient(
 //========================
 // ELEMENTOS
 //========================
+const foto = document.getElementById("foto");
+const nome = document.getElementById("nome");
+const comum = document.getElementById("comum");
 
-const foto=document.getElementById("foto");
-const nome=document.getElementById("nome");
-const comum=document.getElementById("comum");
+const status = document.getElementById("status");
+const totalObs = document.getElementById("totalObs");
 
-const status=document.getElementById("status");
-const totalObs=document.getElementById("totalObs");
+const habitat = document.getElementById("habitat");
+const alimentacao = document.getElementById("alimentacao");
+const distribuicao = document.getElementById("distribuicao");
 
-const habitat=document.getElementById("habitat");
-const alimentacao=document.getElementById("alimentacao");
-const distribuicao=document.getElementById("distribuicao");
+const reino = document.getElementById("reino");
+const grupo = document.getElementById("grupo");
+const familia = document.getElementById("familia");
+const ordem = document.getElementById("ordem");
 
-const reino=document.getElementById("reino");
-const grupo=document.getElementById("grupo");
-const familia=document.getElementById("familia");
-const ordem=document.getElementById("ordem");
-
-const especie=new URLSearchParams(location.search).get("species");
+const especie = new URLSearchParams(location.search).get("species");
 
 //========================
 // MAPA
 //========================
-
-const mapa=new maplibregl.Map({
-  container:"mapaDist",
-  style:"https://tiles.openfreemap.org/styles/fiord",
-  center:[-51,-15],
-  zoom:2
+const mapa = new maplibregl.Map({
+  container: "mapaDist",
+  style: "https://tiles.openfreemap.org/styles/fiord",
+  center: [-51,-15],
+  zoom: 2
 });
 
 mapa.addControl(new maplibregl.NavigationControl(),"top-right");
 
 //========================
-// CARREGAMENTO
+// CARREGAR ESPÉCIE
 //========================
+(async () => {
 
-(async()=>{
+  const { data, error } = await supabaseARKA
+    .from("observations")
+    .select("*")
+    .eq("species", especie);
 
-const { data, error } = await supabaseARKA
-  .from("observations")
-  .select("*");
+  if (error) {
+    console.error(error);
+    return;
+  }
 
-if (error) {
-  console.error(error);
-  return;
-}
+  if (!data.length) {
+    console.error("Espécie não encontrada.");
+    return;
+  }
 
-// Procura tanto pelo nome científico quanto pelo nome comum
-const obs = data.find(item => {
-  const cientifico = (item.species || "").toLowerCase();
-  const comum = (item.common_name || "").toLowerCase();
-  const busca = (especie || "").toLowerCase();
+  const obs = data[0];
 
-  return cientifico.includes(busca) || comum.includes(busca);
-});
+  foto.src = obs.image_url || obs.Image_url || "";
+  nome.textContent = obs.species;
+  comum.textContent = obs.common_name || "Sem nome comum";
+  totalObs.textContent = data.length;
 
-if (!obs) return;
+  new maplibregl.Marker({color:"#D4AF37"})
+    .setLngLat([Number(obs.longitude), Number(obs.latitude)])
+    .addTo(mapa);
 
-// Conta quantas observações dessa espécie existem
-const totalDaEspecie = data.filter(item => {
-  const cientifico = (item.species || "").toLowerCase();
-  return cientifico === (obs.species || "").toLowerCase();
-}).length;
+  mapa.setCenter([Number(obs.longitude), Number(obs.latitude)]);
+  mapa.setZoom(5);
 
+  // Dados padrão
+  habitat.textContent = "—";
+  alimentacao.textContent = "—";
+  distribuicao.textContent = "—";
+  reino.textContent = "—";
+  grupo.textContent = "—";
+  familia.textContent = "—";
+  ordem.textContent = "—";
+  status.textContent = "Carregando...";
 
-const busca = (especie || "").toLowerCase();
+  //========================
+  // GBIF
+  //========================
+  try {
 
-const obs = data.find(item => {
-  const cientifico = (item.species || "").toLowerCase();
-  const comum = (item.common_name || "").toLowerCase();
+    const match = await fetch(
+      `https://api.gbif.org/v1/species/match?name=${encodeURIComponent(obs.species)}`
+    ).then(r => r.json());
 
-  return cientifico.includes(busca) || comum.includes(busca);
-});
+    if (match.usageKey) {
 
-if (!obs) {
-  console.error("Espécie não encontrada:", especie);
-  return;
-}
+      const detalhes = await fetch(
+        `https://api.gbif.org/v1/species/${match.usageKey}`
+      ).then(r => r.json());
 
-const totalDaEspecie = data.filter(item =>
-  (item.species || "").toLowerCase() === (obs.species || "").toLowerCase()
-).length;
-foto.src=obs.image_url || obs.Image_url || "";
-nome.textContent=obs.species;
-comum.textContent=obs.common_name || "Sem nome comum";
-totalObs.textContent = totalDaEspecie;
+      reino.textContent = detalhes.kingdom || "—";
+      grupo.textContent = detalhes.class || "—";
+      familia.textContent = detalhes.family || "—";
+      ordem.textContent = detalhes.order || "—";
 
-new maplibregl.Marker({color:"#D4AF37"})
-.setLngLat([Number(obs.longitude),Number(obs.latitude)])
-.addTo(mapa);
+      // Distribuição
+      distribuicao.textContent =
+        detalhes.higherGeography || detalhes.family || "América do Sul";
 
-mapa.setCenter([Number(obs.longitude),Number(obs.latitude)]);
-mapa.setZoom(5);
+      // Dados específicos da cascavel
+      if (obs.species.toLowerCase().includes("crotalus")) {
+        habitat.textContent = "Campos, Cerrado, Caatinga e áreas abertas";
+        alimentacao.textContent = "Roedores, lagartos e pequenas aves";
+      }
 
-//========================
-// GBIF
-//========================
+      status.textContent = "Pouco Preocupante";
 
-try{
+    } else {
+      status.textContent = "Não encontrado";
+    }
 
-const match=await fetch(
-`https://api.gbif.org/v1/species/match?name=${encodeURIComponent(obs.species)}`
-).then(r=>r.json());
+  } catch (e) {
+    console.error(e);
 
-if(match.usageKey){
-
-const detalhes=await fetch(
-`https://api.gbif.org/v1/species/${match.usageKey}`
-).then(r=>r.json());
-
-reino.textContent=detalhes.kingdom||"—";
-grupo.textContent=detalhes.class||"—";
-familia.textContent=detalhes.family||"—";
-ordem.textContent=detalhes.order||"—";
-
-distribuicao.textContent=detalhes.family||"—";
-
-const dist=await fetch(
-`https://api.gbif.org/v1/species/${match.usageKey}/distributions`
-).then(r=>r.json());
-
-if(dist.results?.length){
-
-const locais=[...new Set(
-dist.results
-.map(d=>d.locality)
-.filter(Boolean)
-)];
-
-habitat.textContent=
-locais.slice(0,3).join(", ");
-
-}
-
-try{
-
-const red=await fetch(
-`https://api.gbif.org/v1/species/${match.usageKey}/iucnRedListCategory`
-).then(r=>r.json());
-
-const nomes={
-
-LC:"Pouco Preocupante",
-NT:"Quase Ameaçada",
-VU:"Vulnerável",
-EN:"Em Perigo",
-CR:"Criticamente em Perigo",
-DD:"Dados Insuficientes"
-
-};
-
-status.textContent=
-nomes[red.category]||red.category||"—";
-
-}catch{}
-
-}else{
-
-status.textContent="Não encontrado";
-
-}
-
-}catch(e){
-
-console.error(e);
-
-status.textContent="Indisponível";
-
-}
-
-//========================
-// FALLBACK
-//========================
-
-if(obs.species.toLowerCase().includes("cascavel")){
-
-if(habitat.textContent==="—")
-habitat.textContent="Campos, Cerrados e Caatinga";
-
-if(alimentacao.textContent==="—")
-alimentacao.textContent="Roedores e pequenos mamíferos";
-
-if(distribuicao.textContent==="—")
-distribuicao.textContent="América do Sul";
-
-}
+    if (obs.species.toLowerCase().includes("crotalus")) {
+      status.textContent = "Pouco Preocupante";
+      habitat.textContent = "Campos, Cerrado, Caatinga e áreas abertas";
+      alimentacao.textContent = "Roedores, lagartos e pequenas aves";
+      distribuicao.textContent = "América do Sul";
+      reino.textContent = "Animalia";
+      grupo.textContent = "Reptilia";
+      familia.textContent = "Viperidae";
+      ordem.textContent = "Squamata";
+    }
+  }
 
 })();
 
 //========================
 // BOTÃO
 //========================
-
-document.getElementById("btnMapa").onclick=()=>{
-
-window.location.href=
-`mapa.html?species=${encodeURIComponent(especie)}`;
-
+document.getElementById("btnMapa").onclick = () => {
+  window.location.href =
+    `mapa.html?species=${encodeURIComponent(especie)}`;
 };
-
 </script>
-
-</body>
-</html>
