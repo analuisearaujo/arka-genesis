@@ -5,171 +5,118 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Espécie | ARKA Genesis</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
-background:#06110D;
-color:#F5F5F2;
-font-family:Arial,sans-serif;
+  background:#06110D;
+  color:#F5F5F2;
+  font-family:Arial,sans-serif;
 }
 
 .hero{
-position:relative;
-height:320px;
-overflow:hidden;
+  position:relative;
+  height:320px;
+  overflow:hidden;
 }
 
 .hero img{
-width:100%;
-height:100%;
-object-fit:cover;
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 .voltar{
-position:absolute;
-top:20px;
-left:20px;
-
-background:rgba(0,0,0,.45);
-color:white;
-
-border:none;
-
-width:44px;
-height:44px;
-
-border-radius:50%;
-
-font-size:22px;
+  position:absolute;
+  top:20px;
+  left:20px;
+  width:44px;
+  height:44px;
+  border:none;
+  border-radius:50%;
+  background:rgba(0,0,0,.45);
+  color:white;
+  font-size:22px;
 }
 
 .overlay{
-
-position:absolute;
-left:0;
-right:0;
-bottom:0;
-
-padding:28px;
-
-background:linear-gradient(to top,
-rgba(0,0,0,.85),
-transparent);
-
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  padding:28px;
+  background:linear-gradient(to top,rgba(0,0,0,.85),transparent);
 }
 
 .overlay h1{
-
-font-size:42px;
-color:#D4AF37;
-
+  color:#D4AF37;
+  font-size:42px;
 }
 
 .overlay p{
-
-margin-top:6px;
-font-size:18px;
-
-color:#D7DDD7;
-
+  color:#D7DDD7;
+  margin-top:6px;
 }
 
 .container{
-
-padding:28px;
-
+  padding:28px;
 }
 
 .card{
-
-background:#0B1A15;
-
-border:1px solid rgba(212,175,55,.12);
-
-border-radius:24px;
-
-padding:22px;
-
-margin-bottom:20px;
-
+  background:#0B1A15;
+  border:1px solid rgba(212,175,55,.12);
+  border-radius:24px;
+  padding:22px;
+  margin-bottom:20px;
 }
 
 .card h2{
-
-color:#D4AF37;
-margin-bottom:14px;
-
+  color:#D4AF37;
+  margin-bottom:16px;
 }
 
 .grid{
-
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:14px;
-
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
 }
 
 .item{
-
-background:#10241C;
-
-border-radius:18px;
-
-padding:16px;
-
+  background:#10241C;
+  border-radius:18px;
+  padding:16px;
 }
 
 .label{
-
-font-size:13px;
-color:#9EB0A2;
-
-margin-bottom:6px;
-
+  font-size:13px;
+  color:#9EB0A2;
+  margin-bottom:6px;
 }
 
 .valor{
-
-font-size:18px;
-font-weight:bold;
-
+  font-size:18px;
+  font-weight:bold;
 }
 
 #mapaDist{
-
-height:220px;
-
-border-radius:18px;
-
-overflow:hidden;
-
+  height:220px;
+  border-radius:18px;
+  overflow:hidden;
 }
 
 button.acao{
-
-width:100%;
-
-padding:18px;
-
-border:none;
-
-border-radius:18px;
-
-background:#D4AF37;
-
-color:#08120F;
-
-font-size:18px;
-font-weight:bold;
-
+  width:100%;
+  padding:18px;
+  border:none;
+  border-radius:18px;
+  background:#D4AF37;
+  color:#08120F;
+  font-size:18px;
+  font-weight:bold;
 }
 </style>
-
-<link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet">
 
 </head>
 
@@ -182,8 +129,8 @@ font-weight:bold;
 <button class="voltar" onclick="history.back()">←</button>
 
 <div class="overlay">
-<h1 id="nome">Espécie</h1>
-<p id="comum">Nome comum</p>
+  <h1 id="nome">Espécie</h1>
+  <p id="comum">Nome comum</p>
 </div>
 
 </div>
@@ -256,14 +203,11 @@ font-weight:bold;
 </div>
 
 <div class="card">
-
 <h2>Onde ela ocorre</h2>
-
 <div id="mapaDist"></div>
-
 </div>
 
-<button class="acao">
+<button class="acao" id="btnMapa">
 Ver todas as observações
 </button>
 
@@ -274,59 +218,188 @@ Ver todas as observações
 
 <script>
 
+//========================
+// SUPABASE
+//========================
+
 const supabaseARKA = window.supabase.createClient(
-"https://haoqywnqxeydylfzxqzz.supabase.co",
-"sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7"
+  "https://haoqywnqxeydylfzxqzz.supabase.co",
+  "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7"
 );
 
-const especie = new URLSearchParams(location.search)
-.get("species");
+//========================
+// ELEMENTOS
+//========================
 
-const mapa = new maplibregl.Map({
+const foto=document.getElementById("foto");
+const nome=document.getElementById("nome");
+const comum=document.getElementById("comum");
 
-container:"mapaDist",
-style:"https://tiles.openfreemap.org/styles/fiord",
-center:[-51,-15],
-zoom:2
+const status=document.getElementById("status");
+const totalObs=document.getElementById("totalObs");
 
+const habitat=document.getElementById("habitat");
+const alimentacao=document.getElementById("alimentacao");
+const distribuicao=document.getElementById("distribuicao");
+
+const reino=document.getElementById("reino");
+const grupo=document.getElementById("grupo");
+const familia=document.getElementById("familia");
+const ordem=document.getElementById("ordem");
+
+const especie=new URLSearchParams(location.search).get("species");
+
+//========================
+// MAPA
+//========================
+
+const mapa=new maplibregl.Map({
+  container:"mapaDist",
+  style:"https://tiles.openfreemap.org/styles/fiord",
+  center:[-51,-15],
+  zoom:2
 });
+
+mapa.addControl(new maplibregl.NavigationControl(),"top-right");
+
+//========================
+// CARREGAMENTO
+//========================
 
 (async()=>{
 
-const {data}=await supabaseARKA
+const {data,error}=await supabaseARKA
 .from("observations")
 .select("*")
 .eq("species",especie);
+
+if(error){
+  console.error(error);
+  return;
+}
 
 if(!data?.length)return;
 
 const obs=data[0];
 
-foto.src=obs.image_url;
+foto.src=obs.image_url || obs.Image_url || "";
 nome.textContent=obs.species;
-comum.textContent=obs.common_name||"Sem nome comum";
+comum.textContent=obs.common_name || "Sem nome comum";
 totalObs.textContent=data.length;
 
 new maplibregl.Marker({color:"#D4AF37"})
-.setLngLat([obs.longitude,obs.latitude])
+.setLngLat([Number(obs.longitude),Number(obs.latitude)])
 .addTo(mapa);
 
-mapa.setCenter([obs.longitude,obs.latitude]);
+mapa.setCenter([Number(obs.longitude),Number(obs.latitude)]);
 mapa.setZoom(5);
 
-/* Dados temporários */
+//========================
+// GBIF
+//========================
 
-if(obs.species.toLowerCase().includes("cascavel (crotalus-durissus)")){
+try{
 
-status.textContent="Pouco Preocupante";
-habitat.textContent="Campos e Cerrados";
-alimentacao.textContent="Roedores";
+const match=await fetch(
+`https://api.gbif.org/v1/species/match?name=${encodeURIComponent(obs.species)}`
+).then(r=>r.json());
+
+if(match.usageKey){
+
+const detalhes=await fetch(
+`https://api.gbif.org/v1/species/${match.usageKey}`
+).then(r=>r.json());
+
+reino.textContent=detalhes.kingdom||"—";
+grupo.textContent=detalhes.class||"—";
+familia.textContent=detalhes.family||"—";
+ordem.textContent=detalhes.order||"—";
+
+distribuicao.textContent=detalhes.family||"—";
+
+const dist=await fetch(
+`https://api.gbif.org/v1/species/${match.usageKey}/distributions`
+).then(r=>r.json());
+
+if(dist.results?.length){
+
+const locais=[...new Set(
+dist.results
+.map(d=>d.locality)
+.filter(Boolean)
+)];
+
+habitat.textContent=
+locais.slice(0,3).join(", ");
+
+}
+
+try{
+
+const red=await fetch(
+`https://api.gbif.org/v1/species/${match.usageKey}/iucnRedListCategory`
+).then(r=>r.json());
+
+const nomes={
+
+LC:"Pouco Preocupante",
+NT:"Quase Ameaçada",
+VU:"Vulnerável",
+EN:"Em Perigo",
+CR:"Criticamente em Perigo",
+DD:"Dados Insuficientes"
+
+};
+
+status.textContent=
+nomes[red.category]||red.category||"—";
+
+}catch{}
+
+}else{
+
+status.textContent="Não encontrado";
+
+}
+
+}catch(e){
+
+console.error(e);
+
+status.textContent="Indisponível";
+
+}
+
+//========================
+// FALLBACK
+//========================
+
+if(obs.species.toLowerCase().includes("cascavel")){
+
+if(habitat.textContent==="—")
+habitat.textContent="Campos, Cerrados e Caatinga";
+
+if(alimentacao.textContent==="—")
+alimentacao.textContent="Roedores e pequenos mamíferos";
+
+if(distribuicao.textContent==="—")
 distribuicao.textContent="América do Sul";
-grupo.textContent="Répteis";
 
 }
 
 })();
+
+//========================
+// BOTÃO
+//========================
+
+document.getElementById("btnMapa").onclick=()=>{
+
+window.location.href=
+`mapa.html?species=${encodeURIComponent(especie)}`;
+
+};
+
 </script>
 
 </body>
