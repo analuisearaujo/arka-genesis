@@ -186,35 +186,7 @@ mapa.on("load", async ()=>{
 
   const bounds=new maplibregl.LngLatBounds();
 
-  data.forEach(obs=>{
-
-    const el=document.createElement("div");
-    el.className="arka-marker";
-
-    const popup=new maplibregl.Popup({offset:20})
-      .setHTML(`
-        <div style="padding:6px">
-          <strong style="color:#D4AF37">${obs.species}</strong><br>
-          <small>${obs.common_name||"Sem nome comum"}</small>
-        </div>
-      `);
-
-    new maplibregl.Marker({element:el})
-      .setLngLat([Number(obs.longitude),Number(obs.latitude)])
-      .setPopup(popup)
-      .addTo(mapa);
-
-    bounds.extend([Number(obs.longitude),Number(obs.latitude)]);
-  });
-
-  if(!bounds.isEmpty()){
-    mapa.fitBounds(bounds,{padding:60});
-  }
-marcador.on("click", () => {
-  abrirPainel(obs);
-});
-
-const painel = document.getElementById("painelObservacao");
+  const painel = document.getElementById("painelObservacao");
 const painelImagem = document.getElementById("painelImagem");
 const painelEspecie = document.getElementById("painelEspecie");
 const painelNomeComum = document.getElementById("painelNomeComum");
@@ -228,7 +200,7 @@ document.getElementById("painelFechar").onclick = () => {
 
 function abrirPainel(obs){
 
-  painelImagem.src = obs.image_url || "";
+  painelImagem.src = obs.image_url || obs.Image_url || "";
   painelEspecie.textContent = obs.species || "Espécie desconhecida";
   painelNomeComum.textContent = obs.common_name || "Sem nome comum";
   painelNotas.textContent = obs.notes || "Sem observações";
@@ -242,6 +214,31 @@ function abrirPainel(obs){
 
   painel.classList.add("aberto");
 }
+
+data.forEach(obs => {
+
+  const el = document.createElement("div");
+  el.className = "arka-marker";
+
+  el.addEventListener("click", (e) => {
+    e.stopPropagation();
+    abrirPainel(obs);
+  });
+
+  new maplibregl.Marker({ element: el })
+    .setLngLat([Number(obs.longitude), Number(obs.latitude)])
+    .addTo(mapa);
+
+  bounds.extend([Number(obs.longitude), Number(obs.latitude)]);
+});
+
+if (!bounds.isEmpty()) {
+  mapa.fitBounds(bounds, { padding: 60 });
+}
+
+mapa.on("click", () => {
+  painel.classList.remove("aberto");
+});
 </script>
 
 </body>
