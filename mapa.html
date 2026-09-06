@@ -187,6 +187,11 @@ function abrirPainel(obs){
     ? new Date(obs.created_at).toLocaleDateString("pt-BR")
     : "Data indisponível";
 
+  document.getElementById("btnVerEspecie").onclick = () => {
+  const especie = encodeURIComponent(obs.species || "");
+  window.location.href = `species.html?species=${especie}`;
+};
+
   painel.classList.add("aberto");
 }
 
