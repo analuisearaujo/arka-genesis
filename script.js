@@ -79,30 +79,24 @@ async function identificarEspecie(file){
     const formData = new FormData();
     formData.append("image",file);
 
-    // Endpoint que vamos criar depois
-    const resposta = await fetch("/api/identify",{
-      method:"POST",
-      body:formData
-    });
+    const formData = new FormData();
+formData.append("image", file);
 
-    if(!resposta.ok) throw new Error("IA indisponível");
-
-    const resultado = await resposta.json();
-
-    return {
-      scientific_name:resultado.scientific_name,
-      common_name:resultado.common_name,
-      confidence:resultado.confidence
-    };
-
-  }catch(e){
-
-    console.log("Identificação indisponível.");
-
-    return null;
-
+const resposta = await fetch(
+  "https://haoqywnqxeydylfzxqzz.supabase.co/functions/v1/identify-species",
+  {
+    method: "POST",
+    body: formData
   }
+);
 
+const resultado = await resposta.json();
+
+return {
+  scientific_name: resultado.scientific_name,
+  common_name: resultado.common_name || "",
+  confidence: resultado.confidence
+};
 }
 
 // ----------------------------
