@@ -20,19 +20,17 @@ let localizacao = null;
 // Prévia da imagem
 // ----------------------------
 
-function mostrarImagem(file){
-  if(!file) return;
+function mostrarImagem(file) {
+  if (!file || !preview) return;
 
   imagemSelecionada = file;
 
-  const reader = new FileReader();
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
 
-  reader.onload = e=>{
-    preview.src = e.target.result;
-    preview.style.display = "block";
+  preview.onload = () => {
+    URL.revokeObjectURL(preview.src);
   };
-
-  reader.readAsDataURL(file);
 }
 
 camera?.addEventListener("change",e=>mostrarImagem(e.target.files[0]));
