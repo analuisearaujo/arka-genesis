@@ -76,7 +76,7 @@ Explorar mapa
     <div class="upload-grid">
 
       <label class="upload-card">
-        <input id="gallery" type="file" accept="image/*">
+        <input type="file" id="camera" accept="image/*" capture="environment" hidden>
         <span>📷 Tirar foto</span>
       </label>
 
@@ -88,7 +88,7 @@ Explorar mapa
     </div>
 
     
-<img id="preview" src="" alt="Prévia" style="display:none;">
+<img id="preview" style="display:none; width:100%; border-radius:18px; margin:20px 0;">
     
     <input
       id="species"
