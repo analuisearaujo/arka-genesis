@@ -17,6 +17,7 @@ const supabaseARKA = window.supabase.createClient(
 const camera = document.getElementById("camera");
 const gallery = document.getElementById("gallery");
 const preview = document.getElementById("preview");
+console.log("ARKA script carregado");
 
 const btnRegistrar = document.getElementById("btnRegistrar");
 const especie = document.getElementById("species");
@@ -30,6 +31,9 @@ let localizacao = null;
 // ============================
 
 function mostrarImagem(file){
+
+  console.log("mostrarImagem chamou");
+  console.log(file);
 
   if(!file || !preview) return;
 
@@ -45,14 +49,6 @@ function mostrarImagem(file){
   };
 
 }
-
-camera?.addEventListener("change",e=>{
-  mostrarImagem(e.target.files[0]);
-});
-
-gallery?.addEventListener("change",e=>{
-  mostrarImagem(e.target.files[0]);
-});
 
 // ============================
 // Localização
