@@ -33,6 +33,8 @@ function mostrarImagem(file) {
   preview.onload = () => URL.revokeObjectURL(url);
 }
 
+camera?.addEventListener("change", e => mostrarImagem(e.target.files[0]));
+gallery?.addEventListener("change", e => mostrarImagem(e.target.files[0]));
 // ----------------------------
 // Localização
 // ----------------------------
