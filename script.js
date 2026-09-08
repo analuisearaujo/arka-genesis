@@ -1,3 +1,9 @@
+// ============================
+// ARKA Genesis - script.js
+// ============================
+
+// ---------- Supabase ----------
+
 const SUPABASE_URL = "https://haoqywnqxeydylfzxqzz.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_JFc8Bh6QZyFx5iO-7izQ4g_jx8SjxS7";
 
@@ -6,9 +12,12 @@ const supabaseARKA = window.supabase.createClient(
   SUPABASE_ANON_KEY
 );
 
+// ---------- Elementos ----------
+
 const camera = document.getElementById("camera");
 const gallery = document.getElementById("gallery");
 const preview = document.getElementById("preview");
+
 const btnRegistrar = document.getElementById("btnRegistrar");
 const especie = document.getElementById("species");
 const observacao = document.getElementById("notes");
@@ -16,12 +25,13 @@ const observacao = document.getElementById("notes");
 let imagemSelecionada = null;
 let localizacao = null;
 
-// ----------------------------
+// ============================
 // Prévia da imagem
-// ----------------------------
+// ============================
 
-function mostrarImagem(file) {
-  if (!file || !preview) return;
+function mostrarImagem(file){
+
+  if(!file || !preview) return;
 
   imagemSelecionada = file;
 
@@ -30,20 +40,32 @@ function mostrarImagem(file) {
   preview.src = url;
   preview.style.display = "block";
 
-  preview.onload = () => URL.revokeObjectURL(url);
+  preview.onload = () => {
+    URL.revokeObjectURL(url);
+  };
+
 }
 
-camera?.addEventListener("change", e => mostrarImagem(e.target.files[0]));
-gallery?.addEventListener("change", e => mostrarImagem(e.target.files[0]));
-// ----------------------------
+camera?.addEventListener("change",e=>{
+  mostrarImagem(e.target.files[0]);
+});
+
+gallery?.addEventListener("change",e=>{
+  mostrarImagem(e.target.files[0]);
+});
+
+// ============================
 // Localização
-// ----------------------------
+// ============================
 
 async function obterLocalizacao(){
 
   return new Promise(resolve=>{
 
-    if(!navigator.geolocation) return resolve(null);
+    if(!navigator.geolocation){
+      resolve(null);
+      return;
+    }
 
     navigator.geolocation.getCurrentPosition(
 
@@ -65,9 +87,9 @@ async function obterLocalizacao(){
 
 }
 
-// ----------------------------
-// Identificação da espécie
-// ----------------------------
+// ============================
+// IA de identificação
+// ============================
 
 async function identificarEspecie(file){
 
@@ -76,106 +98,115 @@ async function identificarEspecie(file){
     const formData = new FormData();
     formData.append("image",file);
 
-    const formData = new FormData();
-formData.append("image", file);
+    const resposta = await fetch(
+      "https://haoqywnqxeydylfzxqzz.supabase.co/functions/v1/identify-species",
+      {
+        method:"POST",
+        body:formData
+      }
+    );
 
-const resposta = await fetch(
-  "https://haoqywnqxeydylfzxqzz.supabase.co/functions/v1/identify-species",
-  {
-    method: "POST",
-    body: formData
+    if(!resposta.ok){
+      throw new Error("IA indisponível.");
+    }
+
+    const resultado = await resposta.json();
+
+    return{
+
+      scientific_name:resultado.scientific_name || "",
+      common_name:resultado.common_name || "",
+      confidence:resultado.confidence || null
+
+    };
+
+  }catch(e){
+
+    console.log("IA indisponível:",e);
+
+    return null;
+
   }
-);
 
-const resultado = await resposta.json();
-
-return {
-  scientific_name: resultado.scientific_name,
-  common_name: resultado.common_name || "",
-  confidence: resultado.confidence
-};
 }
 
-// ----------------------------
-// Upload
-// ----------------------------
+// ============================
+// Upload da imagem
+// ============================
 
 async function enviarImagem(file){
 
-  const nome=`${Date.now()}-${file.name.replace(/[^\w.-]/g,"_")}`;
+  const nome = `${Date.now()}-${file.name.replace(/[^\w.-]/g,"_")}`;
 
-  const {error}=await supabaseARKA.storage
+  const {error} = await supabaseARKA.storage
     .from("animal - image")
     .upload(nome,file);
 
-  if(error){
-    alert("ERRO NO UPLOAD: "+JSON.stringify(error));
-    throw error;
-  }
+  if(error) throw error;
 
-  const {data:urlData}=supabaseARKA.storage
+  const {data} = supabaseARKA.storage
     .from("animal - image")
     .getPublicUrl(nome);
 
-  return urlData.publicUrl;
+  return data.publicUrl;
 
 }
 
-// ----------------------------
+// ============================
 // Registrar observação
-// ----------------------------
+// ============================
 
 async function registrarObservacao(){
 
   try{
-
-    btnRegistrar.disabled=true;
-    btnRegistrar.textContent="Identificando espécie...";
 
     if(!imagemSelecionada){
       alert("Escolha uma imagem primeiro.");
       return;
     }
 
-    localizacao=await obterLocalizacao();
+    btnRegistrar.disabled = true;
+    btnRegistrar.textContent = "Identificando...";
 
-    const identificacao=await identificarEspecie(imagemSelecionada);
+    localizacao = await obterLocalizacao();
+
+    const identificacao = await identificarEspecie(imagemSelecionada);
 
     if(identificacao){
 
-      especie.value=identificacao.scientific_name;
+      especie.value = identificacao.scientific_name;
 
       alert(
 `Espécie identificada!
 
 ${identificacao.scientific_name}
-${identificacao.common_name||""}
+${identificacao.common_name}
 
-Confiança: ${identificacao.confidence||"--"}%`
+Confiança: ${identificacao.confidence ?? "--"}%`
       );
 
     }
 
-    btnRegistrar.textContent="Enviando imagem...";
+    btnRegistrar.textContent = "Enviando imagem...";
 
-    const imagemUrl=await enviarImagem(imagemSelecionada);
+    const imagemUrl = await enviarImagem(imagemSelecionada);
 
-    btnRegistrar.textContent="Salvando observação...";
+    btnRegistrar.textContent = "Salvando...";
 
-    const {error}=await supabaseARKA
+    const {error} = await supabaseARKA
       .from("observations")
       .insert({
 
-        species:especie.value||"Não identificado",
-        common_name:identificacao?.common_name||null,
-        confidence:identificacao?.confidence||null,
+        species:especie.value || "Não identificado",
+        common_name:identificacao?.common_name || null,
+        confidence:identificacao?.confidence || null,
 
         image_url:imagemUrl,
 
-        latitude:localizacao?.lat??null,
-        longitude:localizacao?.lon??null,
+        latitude:localizacao?.lat ?? null,
+        longitude:localizacao?.lon ?? null,
 
-        notes:observacao?.value||null
+        notes:observacao?.value || null
 
       });
 
@@ -183,25 +214,27 @@ Confiança: ${identificacao.confidence||"--"}%`
 
     alert("Observação registrada com sucesso!");
 
-    preview.style.display="none";
-    preview.src="";
+    preview.src = "";
+    preview.style.display = "none";
 
-    imagemSelecionada=null;
+    imagemSelecionada = null;
 
-    especie.value="";
+    especie.value = "";
 
-    if(observacao) observacao.value="";
+    if(observacao){
+      observacao.value = "";
+    }
 
   }catch(err){
 
     console.error(err);
 
-    alert("ERRO:\n"+(err.message||JSON.stringify(err)));
+    alert("Erro: " + (err.message || JSON.stringify(err)));
 
   }finally{
 
-    btnRegistrar.disabled=false;
-    btnRegistrar.textContent="Registrar observação";
+    btnRegistrar.disabled = false;
+    btnRegistrar.textContent = "Salvar observação";
 
   }
 
