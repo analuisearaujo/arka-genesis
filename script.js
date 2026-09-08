@@ -25,16 +25,13 @@ function mostrarImagem(file) {
 
   imagemSelecionada = file;
 
-  preview.src = URL.createObjectURL(file);
+  const url = URL.createObjectURL(file);
+
+  preview.src = url;
   preview.style.display = "block";
 
-  preview.onload = () => {
-    URL.revokeObjectURL(preview.src);
-  };
+  preview.onload = () => URL.revokeObjectURL(url);
 }
-
-camera?.addEventListener("change",e=>mostrarImagem(e.target.files[0]));
-gallery?.addEventListener("change",e=>mostrarImagem(e.target.files[0]));
 
 // ----------------------------
 // Localização
