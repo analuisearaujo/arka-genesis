@@ -1,12 +1,11 @@
-// ============================================================
+// ======================================================
 // ARKA GENESIS
-// script.js
-// ============================================================
+// SCRIPT PRINCIPAL
+// ======================================================
 
-
-// ============================================================
+// ------------------------------------------------------
 // SUPABASE
-// ============================================================
+// ------------------------------------------------------
 
 const SUPABASE_URL =
   "https://haoqywnqxeydylfzxqzz.supabase.co";
@@ -20,9 +19,9 @@ const supabaseARKA = window.supabase.createClient(
 );
 
 
-// ============================================================
+// ------------------------------------------------------
 // ELEMENTOS DA PÁGINA
-// ============================================================
+// ------------------------------------------------------
 
 const camera = document.getElementById("camera");
 const gallery = document.getElementById("gallery");
@@ -39,80 +38,90 @@ const observacao =
   document.getElementById("notes");
 
 
-// ============================================================
+// ------------------------------------------------------
 // VARIÁVEIS
-// ============================================================
+// ------------------------------------------------------
 
 let imagemSelecionada = null;
+
 let localizacao = null;
 
+let identificacaoAtual = null;
 
-// ============================================================
-// MOSTRAR PRÉVIA DA IMAGEM
-// ============================================================
+
+// ------------------------------------------------------
+// MOSTRAR IMAGEM SELECIONADA
+// ------------------------------------------------------
 
 function mostrarImagem(file) {
-
-  console.log("ARKA: imagem selecionada");
-  console.log(file);
 
   if (!file) {
     return;
   }
 
   if (!preview) {
-    console.error("ARKA: elemento #preview não encontrado.");
+    console.error(
+      "ARKA: elemento #preview não encontrado."
+    );
+
     return;
   }
 
-  // Guarda a imagem escolhida
   imagemSelecionada = file;
 
-  // Cria URL temporária para mostrar a imagem
-  const url = URL.createObjectURL(file);
+  const url =
+    URL.createObjectURL(file);
 
   preview.src = url;
+
   preview.style.display = "block";
 
-  // Libera a URL depois que a imagem carregar
   preview.onload = function () {
-
     URL.revokeObjectURL(url);
-
   };
 
+  console.log(
+    "ARKA: imagem selecionada:",
+    file.name
+  );
 }
 
 
-// ============================================================
-// INPUT DA CÂMERA
-// ============================================================
+// ------------------------------------------------------
+// CÂMERA
+// ------------------------------------------------------
 
-camera?.addEventListener("change", function (event) {
+camera?.addEventListener(
+  "change",
+  function (event) {
 
-  const file = event.target.files?.[0];
+    const file =
+      event.target.files?.[0];
 
-  mostrarImagem(file);
-
-});
-
-
-// ============================================================
-// INPUT DA GALERIA
-// ============================================================
-
-gallery?.addEventListener("change", function (event) {
-
-  const file = event.target.files?.[0];
-
-  mostrarImagem(file);
-
-});
+    mostrarImagem(file);
+  }
+);
 
 
-// ============================================================
-// LOCALIZAÇÃO
-// ============================================================
+// ------------------------------------------------------
+// GALERIA
+// ------------------------------------------------------
+
+gallery?.addEventListener(
+  "change",
+  function (event) {
+
+    const file =
+      event.target.files?.[0];
+
+    mostrarImagem(file);
+  }
+);
+
+
+// ------------------------------------------------------
+// OBTER LOCALIZAÇÃO GPS
+// ------------------------------------------------------
 
 async function obterLocalizacao() {
 
@@ -120,77 +129,80 @@ async function obterLocalizacao() {
 
     if (!navigator.geolocation) {
 
-      console.log(
-        "ARKA: geolocalização não disponível."
+      console.warn(
+        "ARKA: geolocalização não é suportada."
       );
 
       resolve(null);
-      return;
 
+      return;
     }
 
     navigator.geolocation.getCurrentPosition(
 
-      function (posicao) {
+      function (position) {
 
-        const local = {
+        const dados = {
 
-          lat: posicao.coords.latitude,
+          lat:
+            position.coords.latitude,
 
-          lon: posicao.coords.longitude
-
+          lon:
+            position.coords.longitude
         };
 
         console.log(
-          "ARKA: localização obtida",
-          local
+          "ARKA: localização obtida:",
+          dados
         );
 
-        resolve(local);
-
+        resolve(dados);
       },
 
       function (erro) {
 
-        console.log(
-          "ARKA: não foi possível obter localização.",
+        console.warn(
+          "ARKA: não foi possível obter a localização.",
           erro
         );
 
         resolve(null);
-
       },
 
       {
-
         enableHighAccuracy: true,
 
-        timeout: 10000,
+        timeout: 15000,
 
         maximumAge: 0
-
       }
-
     );
-
   });
-
 }
 
 
-// ============================================================
-// IDENTIFICAÇÃO POR IA
-// ============================================================
+// ------------------------------------------------------
+// IDENTIFICAR ESPÉCIE COM IA
+// ------------------------------------------------------
 
-async function identificarEspecie(file) {
+async function identificarEspecie(
+  file,
+  coordenadas
+) {
 
   try {
 
     console.log(
-      "ARKA: enviando imagem para identificação..."
+      "ARKA: iniciando identificação por IA..."
     );
 
-    const formData = new FormData();
+
+    // ----------------------------------------------
+    // FORM DATA
+    // ----------------------------------------------
+
+    const formData =
+      new FormData();
 
     formData.append(
       "image",
@@ -198,79 +210,170 @@ async function identificarEspecie(file) {
     );
 
 
-    const resposta = await fetch(
+    // ----------------------------------------------
+    // ENVIA GPS PARA A EDGE FUNCTION
+    // ----------------------------------------------
 
-      "https://haoqywnqxeydylfzxqzz.supabase.co/functions/v1/identify-species",
+    if (
+      coordenadas &&
+      coordenadas.lat !== null &&
+      coordenadas.lon !== null
+    ) {
 
-      {
-
-        method: "POST",
-
-        body: formData
-
-      }
-
-    );
-
-
-    if (!resposta.ok) {
-
-      const textoErro =
-        await resposta.text();
-
-      console.error(
-        "ARKA: erro da IA:",
-        textoErro
+      formData.append(
+        "latitude",
+        String(coordenadas.lat)
       );
 
-      throw new Error(
-        "A identificação por IA não está disponível no momento."
+      formData.append(
+        "longitude",
+        String(coordenadas.lon)
       );
-
     }
 
 
-    const resultado =
-      await resposta.json();
+    // ----------------------------------------------
+    // CHAMADA DA EDGE FUNCTION
+    // ----------------------------------------------
 
+    const resposta =
+      await fetch(
+
+        SUPABASE_URL +
+          "/functions/v1/identify-species",
+
+        {
+          method: "POST",
+
+          body: formData
+        }
+      );
+
+
+    // ----------------------------------------------
+    // LER RESPOSTA
+    // ----------------------------------------------
+
+    const texto =
+      await resposta.text();
 
     console.log(
-      "ARKA: resultado da IA:",
-      resultado
+      "ARKA: resposta da IA:",
+      texto
     );
 
 
-    return {
+    // ----------------------------------------------
+    // VERIFICAR ERRO HTTP
+    // ----------------------------------------------
+
+    if (!resposta.ok) {
+
+      console.error(
+        "ARKA: erro HTTP da IA:",
+        resposta.status,
+        texto
+      );
+
+      throw new Error(
+        "A identificação por IA falhou."
+      );
+    }
+
+
+    // ----------------------------------------------
+    // CONVERTER JSON
+    // ----------------------------------------------
+
+    let resultado;
+
+    try {
+
+      resultado =
+        JSON.parse(texto);
+
+    } catch (erro) {
+
+      console.error(
+        "ARKA: resposta da IA não é JSON:",
+        texto
+      );
+
+      throw new Error(
+        "A IA retornou uma resposta inválida."
+      );
+    }
+
+
+    // ----------------------------------------------
+    // VERIFICAR ERRO RETORNADO PELA EDGE FUNCTION
+    // ----------------------------------------------
+
+    if (resultado.error) {
+
+      throw new Error(
+        resultado.error
+      );
+    }
+
+
+    // ----------------------------------------------
+    // RESULTADO FINAL
+    // ----------------------------------------------
+
+    const identificacao = {
 
       scientific_name:
-        resultado.scientific_name || "",
+        resultado.scientific_name ||
+        null,
 
       common_name:
-        resultado.common_name || "",
+        resultado.common_name ||
+        null,
 
       confidence:
-        resultado.confidence ?? null
+        resultado.confidence ??
+        null,
 
+      location_name:
+        resultado.location_name ||
+        null,
+
+      latitude:
+        resultado.latitude ??
+        coordenadas?.lat ??
+        null,
+
+      longitude:
+        resultado.longitude ??
+        coordenadas?.lon ??
+        null
     };
 
+
+    console.log(
+      "ARKA: identificação final:",
+      identificacao
+    );
+
+
+    return identificacao;
 
   } catch (erro) {
 
     console.error(
-      "ARKA: IA indisponível:",
+      "ARKA: erro na identificação:",
       erro
     );
 
-    return null;
-
+    throw erro;
   }
-
 }
 
 
-// ============================================================
-// UPLOAD DA IMAGEM PARA O SUPABASE STORAGE
-// ============================================================
+// ------------------------------------------------------
+// ENVIAR IMAGEM PARA O SUPABASE STORAGE
+// ------------------------------------------------------
 
 async function enviarImagem(file) {
 
@@ -279,37 +382,47 @@ async function enviarImagem(file) {
     throw new Error(
       "Nenhuma imagem foi selecionada."
     );
-
   }
 
 
+  // ----------------------------------------------
+  // NOME SEGURO
+  // ----------------------------------------------
+
+  const nomeOriginal =
+    file.name || "imagem.jpg";
+
   const nomeSeguro =
-    file.name.replace(
+    nomeOriginal.replace(
       /[^\w.-]/g,
       "_"
     );
 
+
+  // ----------------------------------------------
+  // CAMINHO DO ARQUIVO
+  // ----------------------------------------------
 
   const caminho =
     `observacoes/${Date.now()}-${nomeSeguro}`;
 
 
   console.log(
-    "ARKA: enviando imagem:",
+    "ARKA: enviando imagem para Storage:",
     caminho
   );
 
 
+  // ----------------------------------------------
+  // UPLOAD
+  // ----------------------------------------------
+
   const {
-
     data,
-
     error
-
-  } = await supabaseARKA.storage
-
+  } = await supabaseARKA
+    .storage
     .from("animal - image")
-
     .upload(
       caminho,
       file
@@ -324,55 +437,62 @@ async function enviarImagem(file) {
     );
 
     throw error;
-
   }
 
 
   console.log(
-    "ARKA: upload concluído:",
+    "ARKA: imagem enviada:",
     data
   );
 
 
+  // ----------------------------------------------
+  // URL PÚBLICA
+  // ----------------------------------------------
+
   const {
-
     data: urlData
+  } =
+    supabaseARKA
+      .storage
+      .from("animal - image")
+      .getPublicUrl(
+        caminho
+      );
 
-  } = supabaseARKA.storage
 
-    .from("animal - image")
-
-    .getPublicUrl(
-      caminho
-    );
-
-
-  if (!urlData?.publicUrl) {
+  if (
+    !urlData ||
+    !urlData.publicUrl
+  ) {
 
     throw new Error(
       "Não foi possível obter a URL pública da imagem."
     );
-
   }
 
 
-  return urlData.publicUrl;
+  console.log(
+    "ARKA: URL da imagem:",
+    urlData.publicUrl
+  );
 
+
+  return urlData.publicUrl;
 }
 
 
-// ============================================================
+// ------------------------------------------------------
 // REGISTRAR OBSERVAÇÃO
-// ============================================================
+// ------------------------------------------------------
 
 async function registrarObservacao() {
 
   try {
 
-
-    // --------------------------------------------------------
-    // Verifica se existe imagem
-    // --------------------------------------------------------
+    // ----------------------------------------------
+    // VERIFICAR IMAGEM
+    // ----------------------------------------------
 
     if (!imagemSelecionada) {
 
@@ -381,88 +501,129 @@ async function registrarObservacao() {
       );
 
       return;
-
     }
 
 
-    // --------------------------------------------------------
-    // Desativa botão
-    // --------------------------------------------------------
+    // ----------------------------------------------
+    // DESABILITAR BOTÃO
+    // ----------------------------------------------
 
     if (btnRegistrar) {
 
       btnRegistrar.disabled = true;
 
       btnRegistrar.textContent =
-        "Identificando...";
-
+        "Obtendo localização...";
     }
 
 
-    // --------------------------------------------------------
-    // Obtém localização
-    // --------------------------------------------------------
+    // ----------------------------------------------
+    // GPS
+    // ----------------------------------------------
 
     localizacao =
       await obterLocalizacao();
 
 
-    // --------------------------------------------------------
-    // IDENTIFICAÇÃO POR IA
-    // --------------------------------------------------------
-
-    const identificacao =
-      await identificarEspecie(
-        imagemSelecionada
-      );
+    console.log(
+      "ARKA: localização:",
+      localizacao
+    );
 
 
-    // --------------------------------------------------------
-    // Preenche espécie automaticamente
-    // --------------------------------------------------------
+    // ----------------------------------------------
+    // IDENTIFICAÇÃO
+    // ----------------------------------------------
 
-    if (identificacao) {
+    if (btnRegistrar) {
 
-      if (
-        especie &&
-        identificacao.scientific_name
-      ) {
-
-        especie.value =
-          identificacao.scientific_name;
-
-      }
-
-
-      console.log(
-        "ARKA: espécie identificada:",
-        identificacao.scientific_name
-      );
-
-
-      console.log(
-        "ARKA: nome comum:",
-        identificacao.common_name
-      );
-
-
-      console.log(
-        "ARKA: confiança:",
-        identificacao.confidence
-      );
-
+      btnRegistrar.textContent =
+        "Identificando espécie...";
     }
 
 
-    // --------------------------------------------------------
-    // Upload
-    // --------------------------------------------------------
+    identificacaoAtual =
+      await identificarEspecie(
+        imagemSelecionada,
+        localizacao
+      );
+
+
+    console.log(
+      "ARKA: resultado da identificação:",
+      identificacaoAtual
+    );
+
+
+    // ----------------------------------------------
+    // COLOCAR NOME CIENTÍFICO NO CAMPO
+    // ----------------------------------------------
+
+    if (
+      especie &&
+      identificacaoAtual?.scientific_name
+    ) {
+
+      especie.value =
+        identificacaoAtual.scientific_name;
+    }
+
+
+    // ----------------------------------------------
+    // MOSTRAR RESULTADO NO CONSOLE
+    // ----------------------------------------------
+
+    console.log(
+      "--------------------------------"
+    );
+
+    console.log(
+      "ARKA GENESIS - IDENTIFICAÇÃO"
+    );
+
+    console.log(
+      "Nome científico:",
+      identificacaoAtual?.scientific_name
+    );
+
+    console.log(
+      "Nome comum:",
+      identificacaoAtual?.common_name
+    );
+
+    console.log(
+      "Confiança:",
+      identificacaoAtual?.confidence
+    );
+
+    console.log(
+      "Localização:",
+      identificacaoAtual?.location_name
+    );
+
+    console.log(
+      "Latitude:",
+      identificacaoAtual?.latitude
+    );
+
+    console.log(
+      "Longitude:",
+      identificacaoAtual?.longitude
+    );
+
+    console.log(
+      "--------------------------------"
+    );
+
+
+    // ----------------------------------------------
+    // UPLOAD DA IMAGEM
+    // ----------------------------------------------
 
     if (btnRegistrar) {
 
       btnRegistrar.textContent =
         "Enviando imagem...";
-
     }
 
 
@@ -472,99 +633,182 @@ async function registrarObservacao() {
       );
 
 
-    console.log(
-      "ARKA: URL da imagem:",
-      imagemUrl
-    );
-
-
-    // --------------------------------------------------------
-    // Salvar observação
-    // --------------------------------------------------------
+    // ----------------------------------------------
+    // PREPARAR DADOS
+    // ----------------------------------------------
 
     if (btnRegistrar) {
 
       btnRegistrar.textContent =
-        "Salvando...";
-
+        "Salvando observação...";
     }
 
 
     const dadosObservacao = {
 
+      // Nome científico
       species:
+        identificacaoAtual?.scientific_name ||
         especie?.value ||
         "Não identificado",
 
+
+      // Nome comum
       common_name:
-        identificacao?.common_name ||
+        identificacaoAtual?.common_name ||
         null,
 
+
+      // Confiança da IA
       confidence:
-        identificacao?.confidence ??
+        identificacaoAtual?.confidence ??
         null,
 
+
+      // Imagem
       image_url:
         imagemUrl,
 
+
+      // GPS
       latitude:
+        identificacaoAtual?.latitude ??
         localizacao?.lat ??
         null,
 
+
       longitude:
+        identificacaoAtual?.longitude ??
         localizacao?.lon ??
         null,
 
-      notes:
-        observacao?.value ||
-        null
 
+      // Nome da localização
+      location_name:
+        identificacaoAtual?.location_name ||
+        null,
+
+
+      // Observações do usuário
+      notes:
+        observacao?.value?.trim() ||
+        null
     };
 
 
     console.log(
-      "ARKA: salvando observação:",
+      "ARKA: dados que serão salvos:",
       dadosObservacao
     );
 
 
+    // ----------------------------------------------
+    // SALVAR NO SUPABASE
+    // ----------------------------------------------
+
     const {
-
+      data,
       error
-
     } = await supabaseARKA
-
       .from("observations")
-
       .insert(
         dadosObservacao
-      );
+      )
+      .select();
 
 
     if (error) {
 
       console.error(
-        "ARKA: erro ao salvar:",
+        "ARKA: erro ao salvar observação:",
         error
       );
 
       throw error;
-
     }
 
 
-    // --------------------------------------------------------
-    // SUCESSO
-    // --------------------------------------------------------
-
-    alert(
-      "Observação registrada com sucesso!"
+    console.log(
+      "ARKA: observação salva:",
+      data
     );
 
 
-    // --------------------------------------------------------
-    // Limpa formulário
-    // --------------------------------------------------------
+    // ----------------------------------------------
+    // SUCESSO
+    // ----------------------------------------------
+
+    let mensagemSucesso =
+      "Observação registrada com sucesso!";
+
+
+    if (
+      identificacaoAtual?.scientific_name
+    ) {
+
+      mensagemSucesso +=
+        "\n\nEspécie: " +
+        identificacaoAtual.scientific_name;
+    }
+
+
+    if (
+      identificacaoAtual?.common_name
+    ) {
+
+      mensagemSucesso +=
+        "\nNome comum: " +
+        identificacaoAtual.common_name;
+    }
+
+
+    if (
+      identificacaoAtual?.confidence !== null &&
+      identificacaoAtual?.confidence !== undefined
+    ) {
+
+      const porcentagem =
+        Math.round(
+          Number(
+            identificacaoAtual.confidence
+          ) * 100
+        );
+
+      mensagemSucesso +=
+        "\nConfiança: " +
+        porcentagem +
+        "%";
+    }
+
+
+    if (
+      identificacaoAtual?.location_name
+    ) {
+
+      mensagemSucesso +=
+        "\nLocalização: " +
+        identificacaoAtual.location_name;
+    }
+
+
+    alert(
+      mensagemSucesso
+    );
+
+
+    // ----------------------------------------------
+    // LIMPAR FORMULÁRIO
+    // ----------------------------------------------
+
+    imagemSelecionada =
+      null;
+
+    localizacao =
+      null;
+
+    identificacaoAtual =
+      null;
+
 
     if (preview) {
 
@@ -572,44 +816,42 @@ async function registrarObservacao() {
 
       preview.style.display =
         "none";
-
     }
-
-
-    imagemSelecionada = null;
 
 
     if (especie) {
 
-      especie.value = "";
-
+      especie.value =
+        "";
     }
 
 
     if (observacao) {
 
-      observacao.value = "";
-
+      observacao.value =
+        "";
     }
 
 
-    // Limpa os inputs de arquivo
     if (camera) {
 
-      camera.value = "";
-
+      camera.value =
+        "";
     }
 
 
     if (gallery) {
 
-      gallery.value = "";
-
+      gallery.value =
+        "";
     }
 
 
   } catch (erro) {
 
+    // ----------------------------------------------
+    // ERRO
+    // ----------------------------------------------
 
     console.error(
       "ARKA: ERRO REAL:",
@@ -617,24 +859,28 @@ async function registrarObservacao() {
     );
 
 
-    const mensagem =
-      erro?.message ||
-      erro?.error_description ||
-      JSON.stringify(erro);
+    let mensagem =
+      "Erro ao registrar observação.";
+
+
+    if (erro?.message) {
+
+      mensagem +=
+        "\n\n" +
+        erro.message;
+    }
 
 
     alert(
-      "Erro ao registrar observação:\n\n" +
       mensagem
     );
 
 
   } finally {
 
-
-    // --------------------------------------------------------
-    // Reativa botão
-    // --------------------------------------------------------
+    // ----------------------------------------------
+    // RESTAURAR BOTÃO
+    // ----------------------------------------------
 
     if (btnRegistrar) {
 
@@ -643,17 +889,14 @@ async function registrarObservacao() {
 
       btnRegistrar.textContent =
         "Salvar observação";
-
     }
-
   }
-
 }
 
 
-// ============================================================
+// ------------------------------------------------------
 // BOTÃO REGISTRAR
-// ============================================================
+// ------------------------------------------------------
 
 btnRegistrar?.addEventListener(
   "click",
@@ -661,10 +904,27 @@ btnRegistrar?.addEventListener(
 );
 
 
-// ============================================================
-// TESTE
-// ============================================================
+// ------------------------------------------------------
+// INICIALIZAÇÃO
+// ------------------------------------------------------
 
 console.log(
-  "ARKA Genesis: script carregado com sucesso."
+  "================================"
+);
+
+console.log(
+  "ARKA Genesis"
+);
+
+console.log(
+  "Sistema de observações carregado."
+);
+
+console.log(
+  "Supabase:",
+  SUPABASE_URL
+);
+
+console.log(
+  "================================"
 );
