@@ -308,7 +308,7 @@ async function enviarImagem(file) {
 
   } = await supabaseARKA.storage
 
-    .from("animal-image")
+    .from("animal - image")
 
     .upload(
       caminho,
@@ -340,7 +340,7 @@ async function enviarImagem(file) {
 
   } = supabaseARKA.storage
 
-    .from("animal-image")
+    .from("animal - image")
 
     .getPublicUrl(
       caminho
