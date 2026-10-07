@@ -185,16 +185,152 @@ async function obterLocalizacao() {
 // IDENTIFICAR ESPÉCIE COM IA
 // ------------------------------------------------------
 
-async function identificarEspecie(
-  file,
-  coordenadas
-) {
+async function identificarEspecie(file, coordenadas) {
 
   try {
 
+    console.log("ARKA: iniciando identificação por IA...");
+
+    const formData = new FormData();
+
+    formData.append("image", file);
+
+    if (
+      coordenadas &&
+      coordenadas.lat !== null &&
+      coordenadas.lon !== null
+    ) {
+      formData.append(
+        "latitude",
+        String(coordenadas.lat)
+      );
+
+      formData.append(
+        "longitude",
+        String(coordenadas.lon)
+      );
+    }
+
     console.log(
-      "ARKA: iniciando identificação por IA..."
+      "ARKA: enviando imagem para identify-species..."
     );
+
+    const resposta = await fetch(
+      SUPABASE_URL +
+        "/functions/v1/identify-species",
+      {
+        method: "POST",
+
+        headers: {
+          "apikey": SUPABASE_ANON_KEY
+        },
+
+        body: formData
+      }
+    );
+
+    const texto = await resposta.text();
+
+    console.log(
+      "ARKA: status da Edge Function:",
+      resposta.status
+    );
+
+    console.log(
+      "ARKA: resposta completa da Edge Function:",
+      texto
+    );
+
+    // ------------------------------------------
+    // MOSTRAR O ERRO REAL
+    // ------------------------------------------
+
+    if (!resposta.ok) {
+
+      let detalhe = texto;
+
+      try {
+        const jsonErro = JSON.parse(texto);
+
+        detalhe =
+          jsonErro.error ||
+          jsonErro.message ||
+          jsonErro.msg ||
+          texto;
+
+      } catch {
+        // resposta não era JSON
+      }
+
+      throw new Error(
+        "Edge Function HTTP " +
+        resposta.status +
+        ": " +
+        detalhe
+      );
+    }
+
+    let resultado;
+
+    try {
+
+      resultado = JSON.parse(texto);
+
+    } catch {
+
+      throw new Error(
+        "A Edge Function retornou algo que não é JSON:\n\n" +
+        texto
+      );
+    }
+
+    console.log(
+      "ARKA: JSON recebido:",
+      resultado
+    );
+
+    if (resultado.error) {
+
+      throw new Error(
+        resultado.error
+      );
+    }
+
+    return {
+
+      scientific_name:
+        resultado.scientific_name || null,
+
+      common_name:
+        resultado.common_name || null,
+
+      confidence:
+        resultado.confidence ?? null,
+
+      location_name:
+        resultado.location_name || null,
+
+      latitude:
+        resultado.latitude ??
+        coordenadas?.lat ??
+        null,
+
+      longitude:
+        resultado.longitude ??
+        coordenadas?.lon ??
+        null
+    };
+
+  } catch (erro) {
+
+    console.error(
+      "ARKA: ERRO REAL DA IA:",
+      erro
+    );
+
+    throw erro;
+  }
+}
 
 
     // ----------------------------------------------
