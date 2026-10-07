@@ -59,18 +59,14 @@ function mostrarImagem(file) {
     return;
   }
 
-  if (!preview) {
-    console.error(
-      "ARKA: elemento #preview não encontrado."
-    );
-
-    return;
-  }
-
   imagemSelecionada = file;
 
-  const url =
-    URL.createObjectURL(file);
+  console.log(
+    "ARKA: imagem selecionada:",
+    file.name
+  );
+
+  const url = URL.createObjectURL(file);
 
   preview.src = url;
 
@@ -79,12 +75,31 @@ function mostrarImagem(file) {
   preview.onload = function () {
     URL.revokeObjectURL(url);
   };
-
-  console.log(
-    "ARKA: imagem selecionada:",
-    file.name
-  );
 }
+
+
+camera?.addEventListener(
+  "change",
+  function (event) {
+
+    const file =
+      event.target.files?.[0];
+
+    mostrarImagem(file);
+  }
+);
+
+
+gallery?.addEventListener(
+  "change",
+  function (event) {
+
+    const file =
+      event.target.files?.[0];
+
+    mostrarImagem(file);
+  }
+);
 
 
 // ------------------------------------------------------
