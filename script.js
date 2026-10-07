@@ -237,17 +237,21 @@ async function identificarEspecie(
     // ----------------------------------------------
 
     const resposta =
-      await fetch(
+  await fetch(
 
-        SUPABASE_URL +
-          "/functions/v1/identify-species",
+    SUPABASE_URL +
+      "/functions/v1/identify-species",
 
-        {
-          method: "POST",
+    {
+      method: "POST",
 
-          body: formData
-        }
-      );
+      headers: {
+        "apikey": SUPABASE_ANON_KEY
+      },
+
+      body: formData
+    }
+  );
 
 
     // ----------------------------------------------
