@@ -76,21 +76,12 @@ Explorar mapa
     <div class="upload-grid">
 
       <label class="upload-card">
-        <input type="file"
-       id="camera"
-       accept="image/*"
-       capture="environment"
-       hidden
-       onchange="previewImagem(event)">
+        <input type="file" id="camera" accept="image/*" capture="environment" hidden>
         <span>📷 Tirar foto</span>
       </label>
 
       <label class="upload-card">
-        <input type="file"
-       id="gallery"
-       accept="image/*"
-       hidden
-       onchange="previewImagem(event)">
+        <input type="file" id="gallery" accept="image/*" hidden>
         <span>🖼️ Escolher da galeria</span>
       </label>
 
@@ -293,7 +284,7 @@ document.body.className=tema;
 
 setTimeout(()=>{
 
-window.location.href=`mapa.html?bioma=${bioma}`;
+window.location.href=mapa.html?bioma=${bioma};
 
 },350);
 
@@ -301,22 +292,7 @@ window.location.href=`mapa.html?bioma=${bioma}`;
 
 });
 </script>
-<script>
-function previewImagem(event){
 
-  const file = event.target.files[0];
-  const preview = document.getElementById("preview");
-
-  if(!file) return;
-
-  preview.src = URL.createObjectURL(file);
-  preview.style.display = "block";
-
-  // Deixa o script.js usar a mesma imagem
-  window.imagemSelecionada = file;
-}
-</script>
-  
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
 </body>
