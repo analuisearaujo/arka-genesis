@@ -301,7 +301,22 @@ window.location.href=`mapa.html?bioma=${bioma}`;
 
 });
 </script>
+<script>
+function previewImagem(event){
 
+  const file = event.target.files[0];
+  const preview = document.getElementById("preview");
+
+  if(!file) return;
+
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+
+  // Deixa o script.js usar a mesma imagem
+  window.imagemSelecionada = file;
+}
+</script>
+  
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
 </body>
