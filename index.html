@@ -76,12 +76,21 @@ Explorar mapa
     <div class="upload-grid">
 
       <label class="upload-card">
-        <input type="file" id="camera" accept="image/*" capture="environment" hidden>
+        <input type="file"
+       id="camera"
+       accept="image/*"
+       capture="environment"
+       hidden
+       onchange="previewImagem(event)">
         <span>📷 Tirar foto</span>
       </label>
 
       <label class="upload-card">
-        <input type="file" id="gallery" accept="image/*" hidden>
+        <input type="file"
+       id="gallery"
+       accept="image/*"
+       hidden
+       onchange="previewImagem(event)">
         <span>🖼️ Escolher da galeria</span>
       </label>
 
