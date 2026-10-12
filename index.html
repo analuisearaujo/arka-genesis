@@ -1,299 +1,267 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050b08">
+  <meta name="description" content="ARKA Genesis: registre, explore e contribua para a conservação da biodiversidade.">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARKA Genesis</title>
 
-<title>ARKA Genesis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<link rel="icon" href="logo-arka.png">
-
-<link rel="stylesheet" href="style.css">
-
+  <link rel="icon" href="logo-arka.png">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-
-<header>
-
-<div class="logo">
-
-<img src="logo-arka.png" alt="ARKA Genesis">
-
-<div class="logo-texto">
-
-<h1>ARKA</h1>
-<span>Genesis</span>
-
-</div>
-
-</div>
-
-</header>
-
-<section class="hero">
-
-<div class="hero-content">
-
-<img class="hero-logo" src="logo-arka.png" alt="Símbolo ARKA">
-
-<h1>Explore.<br>Registre.<br>Proteja.</h1>
-
-<p>
-
-A plataforma global para registrar, monitorar e proteger a biodiversidade.
-Cada observação fortalece a ciência e aproxima pessoas da natureza.
-
-</p>
-
-<div class="hero-botoes">
-
-<a href="#registro" class="btn btn-primary">
-  Registrar observação
-</a>
-<a href="mapa.html" class="btn btn-secondary">
-Explorar mapa
-</a>
-
-</div>
-
-</div>
-
-</section>
-
-<section id="registro" class="register-section">
-  <div class="container">
-
-    <h2>Registrar observação</h2>
-    <p>Fotografe um animal, registre a localização e contribua com a biodiversidade.</p>
-
-    <div class="upload-grid">
-
-      <label class="upload-card">
-        <input type="file" id="camera" accept="image/*" capture="environment" hidden>
-        <span>📷 Tirar foto</span>
-      </label>
-
-      <label class="upload-card">
-        <input type="file" id="gallery" accept="image/*" hidden>
-        <span>🖼️ Escolher da galeria</span>
-      </label>
-
+  <header>
+    <div class="logo">
+      <img src="logo-arka.png" alt="Símbolo ARKA Genesis">
+      <div class="logo-texto">
+        <h1>ARKA</h1>
+        <span>Genesis</span>
+      </div>
     </div>
-
-    
-<img id="preview"
-     src=""
-     alt="Prévia da imagem"
-     style="display:none; width:100%; max-height:420px; object-fit:cover; border-radius:18px; margin:20px 0;">
-    
-    <input
-      id="species"
-      type="text"
-      placeholder="Espécie (opcional)"
-      class="input-field">
-
-    <textarea
-      id="notes"
-      placeholder="Observações..."
-      rows="4"
-      class="input-field"></textarea>
-
-    <button id="btnRegistrar" type="button" class="btn btn-primary">
-      Salvar observação
-    </button>
-
-  </div>
-</section>
-
-<section>
-
-<h2>O ARKA conecta pessoas e biodiversidade.</h2>
-
-<div class="grid">
-
-<div class="card">
-
-<div class="card-content">
-
-<h3>📷 Registre</h3>
-
-<p>
-
-Fotografe espécies e contribua para um banco global de biodiversidade.
-
-</p>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<div class="card-content">
-
-<h3>🗺️ Explore</h3>
-
-<p>
-
-Visualize observações em um mapa interativo com localização precisa.
-
-</p>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<div class="card-content">
-
-<h3>🔬 Descubra</h3>
-
-<p>
-
-Construa conhecimento sobre fauna e flora através de dados organizados.
-
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<section>
-
-<h2>Mapa Global</h2>
-
-<p style="margin-bottom:24px;color:#C8D2C8;">
-
-Veja registros distribuídos pelos biomas do planeta.
-
-</p>
-
-<a href="mapa.html">
-
-<AsyncImage query="dark biodiversity map with glowing gold observation markers premium interface" aspectRatio="16:9" width="100%" maxHeight=420 radius=xl/>
-
-</a>
-
-</section>
-
-<section id="biomas">
-
-<h2>Biomas do Planeta</h2>
-
-<p class="biomas-subtitulo">
-A biodiversidade não tem fronteiras. O ARKA conecta observações dos principais ecossistemas da Terra.
-</p>
-
-<div class="grid">
-
-<div class="card bioma tropical">
-<img src="assets/floresta-tropical.jpeg" alt="Florestas Tropicais">
-<div class="card-content">
-<h3>Florestas Tropicais</h3>
-<p>Amazônia, Congo e Sudeste Asiático.</p>
-</div>
-</div>
-
-<div class="card bioma oceano">
-<img src="assets/oceanos.jpeg" alt="Oceanos">
-<div class="card-content">
-<h3>Oceanos</h3>
-<p>Recifes, mar aberto e regiões costeiras.</p>
-</div>
-</div>
-
-<div class="card bioma savana">
-<img src="assets/savanas.jpeg" alt="Savanas">
-<div class="card-content">
-<h3>Savanas</h3>
-<p>África, Cerrado e Llanos.</p>
-</div>
-</div>
-
-<div class="card bioma deserto">
-<img src="assets/desertos.jpeg" alt="Desertos">
-<div class="card-content">
-<h3>Desertos</h3>
-<p>Saara, Atacama e Gobi.</p>
-</div>
-</div>
-
-<div class="card bioma umidas">
-<img src="assets/areas-umidas.jpeg" alt="Áreas Úmidas">
-<div class="card-content">
-<h3>Áreas Úmidas</h3>
-<p>Pantanal, Everglades e Delta do Okavango.</p>
-</div>
-</div>
-
-<div class="card bioma taiga">
-<img src="assets/taiga.jpeg" alt="Taiga">
-<div class="card-content">
-<h3>Taiga (Floresta Boreal)</h3>
-<p>Canadá, Alasca, Escandinávia e Sibéria.</p>
-</div>
-</div>
-
-<div class="card bioma tundra">
-<img src="assets/tundra-polar.jpeg" alt="Tundra e Regiões Polares">
-<div class="card-content">
-<h3>Tundra e Regiões Polares</h3>
-<p>Ártico, Antártica e montanhas alpinas.</p>
-</div>
-</div>
-
-</div>
-
-</section>
-
-<footer>
-
-<img src="logo-arka.png" width="42">
-
-<p style="margin-top:14px;">
-
-ARKA Genesis • Tecnologia a serviço da biodiversidade.
-
-</p>
-
-</footer>
-
-<script>
-const biomas=document.querySelectorAll(".bioma");
-
-biomas.forEach(card=>{
-
-card.addEventListener("click",()=>{
-
-const tema=card.dataset.tema;
-const bioma=card.dataset.bioma;
-
-document.body.className=tema;
-
-setTimeout(()=>{
-
-window.location.href=mapa.html?bioma=${bioma};
-
-},350);
-
-});
-
-});
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <img class="hero-logo" src="logo-arka.png" alt="Símbolo ARKA">
+
+        <h1>Explore.<br>Registre.<br>Proteja.</h1>
+
+        <p>
+          A plataforma global para registrar, monitorar e proteger
+          a biodiversidade. Cada observação fortalece a ciência
+          e aproxima pessoas da natureza.
+        </p>
+
+        <div class="hero-botoes">
+          <a href="#registro" class="btn btn-primary">
+            Registrar observação
+          </a>
+          <a href="mapa.html" class="btn btn-secondary">
+            Explorar mapa
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="registro" class="register-section">
+      <div class="container">
+        <h2>Registrar observação</h2>
+
+        <p>
+          Fotografe um organismo, registre a localização e
+          contribua para o conhecimento da biodiversidade.
+        </p>
+
+        <div class="upload-grid">
+          <label class="upload-card" for="camera">
+            <input
+              type="file"
+              id="camera"
+              accept="image/*"
+              capture="environment"
+              hidden
+            >
+            <span>📷 Tirar foto</span>
+          </label>
+
+          <label class="upload-card" for="gallery">
+            <input
+              type="file"
+              id="gallery"
+              accept="image/*"
+              hidden
+            >
+            <span>🖼️ Escolher da galeria</span>
+          </label>
+        </div>
+
+        <img
+          id="preview"
+          src=""
+          alt="Prévia da imagem selecionada"
+          style="display:none; width:100%; max-height:420px; object-fit:cover; border-radius:18px; margin:20px 0;"
+        >
+
+        <div id="resultadoIA" class="resultado-ia" hidden aria-live="polite"></div>
+
+        <label for="species">Espécie (opcional)</label>
+        <input
+          id="species"
+          type="text"
+          placeholder="Nome científico, se souber"
+          class="input-field"
+        >
+
+        <label for="notes">Observações</label>
+        <textarea
+          id="notes"
+          placeholder="Descreva o que observou..."
+          rows="4"
+          class="input-field"
+        ></textarea>
+
+        <p id="mensagemRegistro" role="status" aria-live="polite"></p>
+
+        <button
+          id="btnRegistrar"
+          type="button"
+          class="btn btn-primary"
+        >
+          Identificar e salvar observação
+        </button>
+      </div>
+    </section>
+
+    <section>
+      <h2>O ARKA conecta pessoas e biodiversidade.</h2>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-content">
+            <h3>📷 Registre</h3>
+            <p>
+              Fotografe espécies e contribua para um banco
+              de observações da biodiversidade.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-content">
+            <h3>🗺️ Explore</h3>
+            <p>
+              Visualize observações distribuídas pelo mapa
+              e descubra os ambientes onde a vida ocorre.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-content">
+            <h3>🔬 Descubra</h3>
+            <p>
+              Explore informações sobre a fauna, a flora
+              e os demais organismos do planeta.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Mapa Global</h2>
+      <p style="margin-bottom:24px;color:#C8D2C8;">
+        Veja registros distribuídos pelos biomas do planeta.
+      </p>
+
+      <a href="mapa.html" class="mapa-preview-link">
+        <img
+          src="assets/mapa-biodiversidade.jpeg"
+          alt="Prévia do mapa global de biodiversidade"
+          style="display:block;width:100%;max-height:420px;object-fit:cover;border-radius:18px;"
+          onerror="this.style.display='none';document.getElementById('mapaFallback').hidden=false;"
+        >
+        <p id="mapaFallback" hidden>
+          Explore as observações no mapa global.
+        </p>
+      </a>
+
+      <a href="mapa.html" class="btn btn-secondary">
+        Abrir mapa
+      </a>
+    </section>
+
+    <section id="biomas">
+      <h2>Biomas do Planeta</h2>
+
+      <p class="biomas-subtitulo">
+        A biodiversidade não tem fronteiras. O ARKA conecta
+        observações dos principais ecossistemas da Terra.
+      </p>
+
+      <div class="grid">
+        <div class="card bioma tropical" data-bioma="florestas-tropicais">
+          <img src="assets/floresta-tropical.jpeg" alt="Florestas tropicais" loading="lazy">
+          <div class="card-content">
+            <h3>Florestas Tropicais</h3>
+            <p>Amazônia, Congo e Sudeste Asiático.</p>
+            <a href="mapa.html?bioma=florestas-tropicais">Explorar</a>
+          </div>
+        </div>
+
+        <div class="card bioma oceano" data-bioma="oceanos">
+          <img src="assets/oceanos.jpeg" alt="Oceanos" loading="lazy">
+          <div class="card-content">
+            <h3>Oceanos</h3>
+            <p>Recifes, mar aberto e regiões costeiras.</p>
+            <a href="mapa.html?bioma=oceanos">Explorar</a>
+          </div>
+        </div>
+
+        <div class="card bioma savana" data-bioma="savanas">
+          <img src="assets/savanas.jpeg" alt="Savanas" loading="lazy">
+          <div class="card-content">
+            <h3>Savanas</h3>
+            <p>África, Cerrado e Llanos.</p>
+            <a href="mapa.html?bioma=savanas">Explorar</a>
+          </div>
+        </div>
+
+        <div class="card bioma deserto" data-bioma="desertos">
+          <img src="assets/desertos.jpeg" alt="Desertos" loading="lazy">
+          <div class="card-content">
+            <h3>Desertos</h3>
+            <p>Saara, Atacama e Gobi.</p>
+            <a href="mapa.html?bioma=desertos">Explorar</a>
+          </div>
+        </div>
+
+        <div class="card bioma umidas" data-bioma="areas-umidas">
+          <img src="assets/areas-umidas.jpeg" alt="Áreas úmidas" loading="lazy">
+          <div class="card-content">
+            <h3>Áreas Úmidas</h3>
+            <p>Pantanal, Everglades e Delta do Okavango.</p>
+            <a href="mapa.html?bioma=areas-umidas">Explorar</a>
+          </div>
+        </div>
+
+        <div class="card bioma taiga" data-bioma="taiga">
+          <img src="assets/taiga.jpeg" alt="Taiga" loading="lazy">
+          <div class="card-content">
+            <h3>Taiga (Floresta Boreal)</h3>
+            <p>Canadá, Alasca, Escandinávia e Sibéria.</p>
+            <a href="mapa.html?bioma=taiga">Explorar</a>
+          </div>
+        </div>
+
+        <div class="card bioma tundra" data-bioma="tundra-polar">
+          <img src="assets/tundra-polar.jpeg" alt="Tundra e regiões polares" loading="lazy">
+          <div class="card-content">
+            <h3>Tundra e Regiões Polares</h3>
+            <p>Ártico, Antártica e montanhas alpinas.</p>
+            <a href="mapa.html?bioma=tundra-polar">Explorar</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <img src="logo-arka.png" width="42" alt="ARKA Genesis">
+    <p style="margin-top:14px;">
+      ARKA Genesis • Tecnologia a serviço da biodiversidade.
+    </p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
 </body>
 </html>
