@@ -262,6 +262,49 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="script.js"></script>
+  
+<script src="script.js"></script>
+
+<script>
+(function () {
+  const camera = document.getElementById("camera");
+  const gallery = document.getElementById("gallery");
+  const preview = document.getElementById("preview");
+
+  function mostrarPrevia(event) {
+    const file = event.target.files && event.target.files[0];
+
+    if (!file || !preview) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Selecione um arquivo de imagem.");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function () {
+      preview.src = reader.result;
+      preview.style.display = "block";
+      preview.hidden = false;
+    };
+
+    reader.onerror = function () {
+      alert("Não foi possível abrir essa imagem.");
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  if (camera) {
+    camera.addEventListener("change", mostrarPrevia);
+  }
+
+  if (gallery) {
+    gallery.addEventListener("change", mostrarPrevia);
+  }
+})();
+</script>
+
 </body>
 </html>
